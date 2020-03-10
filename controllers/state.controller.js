@@ -1,6 +1,7 @@
 exports.StateController = function(app, dbcon, mongo) {
     console.log('Pravljenje kontrolera. Mongo je: ', mongo);
 
+    const StateModel = require('../models/mysql/state.model.js').StateModel(dbcon);
     const StateCollectionModel = require('../models/mongodb/state.model.js').StateCollectionModel(mongo);
 
     app.get('/getAllStates', (req, res) => {
