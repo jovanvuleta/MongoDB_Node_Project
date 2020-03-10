@@ -1,0 +1,3 @@
+exports.StateCollectionModel = function(mongo) {
+    
+}
