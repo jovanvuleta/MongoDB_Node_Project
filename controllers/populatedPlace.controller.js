@@ -16,7 +16,7 @@ exports.PopulatedPlaceController = function (app, dbcon) {
                 });
             })
     });
-    //adding comments just so branch can be visible
+    //adding comments just so branch can be visiblee
 
 
     app.get('/addPopulatedPlace', (req, res) => {
