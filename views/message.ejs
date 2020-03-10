@@ -1,0 +1,18 @@
+<%- include('header') %>
+
+    <% if( typeof successMessage !== 'undefined' ) { %>
+        <br>
+        <div class="alert alert-success" role="alert">
+            <%= successMessage %> <%- link %>
+        </div>
+        <br>
+    
+    <% } else if( typeof errorMessage !== 'undefined' ) { %>
+        <br>
+        <div class="alert alert-danger" role="alert">
+            <%= errorMessage %> <%- link %>
+        </div>
+        <br>
+    <% } %>
+    
+<%- include('footer') %>

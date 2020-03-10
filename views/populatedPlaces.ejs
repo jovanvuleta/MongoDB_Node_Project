@@ -1,0 +1,43 @@
+<%- include('header') %>
+
+    <% if (populatedPlaces.length === 0) { %>
+        <br>
+        <div class="alert alert-info" role="alert">
+            <p>There are no populated places to show, click <a href="/addPopulatedPlace">here</a> to add a new populated place.</p>    
+        </div>
+        <br>
+    <% } else { %>
+        <br>
+        <a type="button" class="btn btn-primary" href="/addPopulatedPlace">Add new populated place</a>
+        <br><br>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">State ID</th>
+                    <th scope="col">State Name</th>
+                    <th scope="col">Populated Place Name</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">PTT CODE</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% populatedPlaces.forEach(function(populatedPlace, index) { %>
+                <tr>
+                    <td><strong><%= index+1 %></strong></td>
+                    <td><%= populatedPlace.DR_IDENTIFIKATOR %></td>
+                    <td><%= populatedPlace.DR_NAZIV %></td>
+                    <td><%= populatedPlace.NM_NAZIV %></td>
+                    <td><%= populatedPlace.NM_IDENTIFIKATOR %></td>
+                    <td><%= populatedPlace.NM_PTT_CODE %></td>
+                    <td><a type="button" class="btn btn-warning" href="/editPopulatedPlaceById/<%= populatedPlace.NM_IDENTIFIKATOR %>">Edit</a></td>
+                    <td><a type="button" class="btn btn-danger" onClick="return confirm('Are you sure you want to delete this city?');" href="/deletePopulatedPlaceById/<%= populatedPlace.NM_IDENTIFIKATOR %>">Delete</a></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+
+<%- include('footer') %>

@@ -1,0 +1,29 @@
+<%- include('header') %>
+    
+    <form method="post" action="/editPopulatedPlaceById/<%= populatedPlace.NM_IDENTIFIKATOR %>">
+        <div class="form-group">
+            <label for="stateId">State ID</label>
+            <select class="custom-select" id="stateId" name="stateId" required>
+                <% states.forEach(function(state, index) { %>
+                    <option value="<%= state.DR_IDENTIFIKATOR %>" <% if (state.DR_IDENTIFIKATOR == populatedPlace.DR_IDENTIFIKATOR) { %> selected <% } %>>
+                        <%= state.DR_IDENTIFIKATOR %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="populatedPlaceID">ID</label>
+            <input type="text" class="form-control" id="id" name="id" value="<%= populatedPlace.NM_IDENTIFIKATOR %>">
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="<%= populatedPlace.NM_NAZIV %>"">
+        </div>
+        <div class="form-group">
+            <label for="pttCode">PTT Code</label>
+            <input type="text" class="form-control" id="pttCode" name="pttCode" value="<%= populatedPlace.NM_PTT_CODE %>"">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+<%- include('footer') %>
