@@ -1,0 +1,24 @@
+<%- include('header') %>
+
+    <form method="post" action="/addInstitution">
+        <div class="form-group">
+            <label for="institutionId">Institution ID</label>
+            <input type="text" class="form-control" id="institutionId" name="institutionId">
+        </div>
+        <div class="form-group">
+            <label for="institutionName">Institution name</label>
+            <input type="text" class="form-control" id="institutionName" name="institutionName">
+        </div>
+        <div class="form-group">
+            <label for="institutionType">Institution type</label>
+            <select class="custom-select" id="institutionType" name="institutionType" required>
+                <option selected disabled value="">Select institution type...</option>
+                <% institutions.forEach(function(institution, index) { %>
+                <option value="<%= institution.TIP_UST %>"><%= institution.TIP_UST %></option>
+                <% }); %>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+<%- include('footer') %>
