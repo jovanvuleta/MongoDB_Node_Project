@@ -2,8 +2,16 @@
 
     <form method="post" action="/editInstitutionById/<%= institution.VU_IDENTIFIKATOR %>">
         <div class="form-group">
-            <label for="exampleInputEmail1">Institution ID</label>
-            <input type="text" class="form-control" id="institutionId" name="institutionId" value="<%= institution.VU_IDENTIFIKATOR %>">
+            <label for="stateId">State</label>
+            <select class="custom-select" id="stateId" name="stateId" required>
+                <% states.forEach(function(state, index) { %>
+                    <%if (state.DR_IDENTIFIKATOR === institution.DR_IDENTIFIKATOR) { %>
+                        <option selected value="<%= state.DR_IDENTIFIKATOR %>"><%= state.DR_NAZIV %></option>
+                    <% } else { %>  
+                        <option value="<%= state.DR_IDENTIFIKATOR %>"><%= state.DR_NAZIV %></option>
+                    <% } %>
+                <% }); %>
+            </select>
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Institution name</label>
@@ -12,9 +20,22 @@
         <div class="form-group">
             <label for="institutionType">Institution type</label>
             <select class="custom-select" id="institutionType" name="institutionType" required>
-                <option selected disabled value="">Select institution type...</option>
                 <% types.forEach(function(type, index) { %>
-                <option value="<%= type.TIP_UST %>"><%= type.TIP_UST %></option>
+                    <%if (type.TIP_UST === institution.TIP_UST) { %>
+                        <option selected value="<%= type.TIP_UST %>"><%= type.TIP_NAZIV %></option>
+                    <% } else { %>  
+                        <option value="<%= type.TIP_UST %>"><%= type.TIP_NAZIV %></option>
+                    <% } %>
+                <% }); %>
+            </select>
+            <label for="ownershipType">Ownership type</label>
+            <select class="custom-select" id="ownershipType" name="ownershipType" required>
+                <% ownerships.forEach(function(own, index) { %>
+                    <%if (own.VV_OZNAKA === institution.VV_OZNAKA) { %>
+                        <option selected value="<%= own.VV_OZNAKA %>"><%= own.VV_NAZIV %></option>
+                    <% } else { %>  
+                        <option value="<%= own.VV_OZNAKA %>"><%= own.VV_NAZIV %></option>
+                    <% } %>
                 <% }); %>
             </select>
         </div>

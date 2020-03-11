@@ -26,10 +26,10 @@ exports.StateModel = function(dbcon) {
             });
         },
 
-        addState : function(stateId, stateName){
+        addState : function(stateId, stateName, stateDate){
             return new Promise((resolve, reject) => {
-                let query = 'INSERT INTO STATE (DR_IDENTIFIKATOR, DR_NAZIV) VALUES (?, ?);';
-                dbcon.query(query, [stateId, stateName], (err, data) => {
+                let query = 'INSERT INTO STATE (DR_IDENTIFIKATOR, DR_NAZIV, DR_DATUM_OSNIVANJA) VALUES (?, ?, ?);';
+                dbcon.query(query, [stateId, stateName, stateDate], (err, data) => {
                     if ( !err ) {
                         resolve(data);
                     } else {
@@ -39,10 +39,10 @@ exports.StateModel = function(dbcon) {
             });
         },
 
-        editStateById : function(stateId, stateName, id) {
+        editStateById : function(stateId, stateName, date, id) {
             return new Promise((resolve, reject) => {
-                let query = 'UPDATE STATE SET DR_IDENTIFIKATOR = ?, DR_NAZIV = ? WHERE DR_IDENTIFIKATOR = ?;';
-                dbcon.query(query, [stateId, stateName, id], (err, data) => {
+                let query = 'UPDATE STATE SET DR_IDENTIFIKATOR = ?, DR_NAZIV = ?, DR_DATUM_OSNIVANJA = ? WHERE DR_IDENTIFIKATOR = ?;';
+                dbcon.query(query, [stateId, stateName, date, id], (err, data) => {
                     if ( !err ) {
                         resolve(data);
                     } else {

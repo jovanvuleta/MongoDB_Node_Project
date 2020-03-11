@@ -4,6 +4,8 @@ exports.StateController = function(app, dbcon, mongo) {
     const StateModel = require('../models/mysql/state.model.js').StateModel(dbcon);
     const StateCollectionModel = require('../models/mongodb/state.model.js').StateCollectionModel(mongo);
 
+    var moment = require('moment');
+
     app.get('/getAllStates', (req, res) => {
         StateModel.getAllStates()
         .then((data) => {
@@ -26,7 +28,7 @@ exports.StateController = function(app, dbcon, mongo) {
     });
     
     app.post('/addState', (req, res) => {
-        StateModel.addState(req.body.stateId, req.body.stateName)
+        StateModel.addState(req.body.stateId, req.body.stateName, req.body.date)
         .then((data) => {
             res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
                 successMessage : 'State ' + req.body.stateName + ' was added successfully.',   //success message
@@ -45,7 +47,8 @@ exports.StateController = function(app, dbcon, mongo) {
         StateModel.getStateById(req.params.id)  //Retrieves state's data in order to show the intinal data of the requested state to be dited
         .then((data) => {
             res.render('editState', {
-                state : data[0]
+                state : data[0],
+                moment : moment
             });
         })
         .catch((err) => {
@@ -54,7 +57,7 @@ exports.StateController = function(app, dbcon, mongo) {
     });
     
     app.post('/editStateById/:id', (req, res) => {
-        StateModel.editStateById(req.body.stateId, req.body.stateName, req.params.id)
+        StateModel.editStateById(req.body.stateId, req.body.stateName, req.body.date, req.params.id)
         .then((data) => {
             res.render('message', {
                 successMessage : 'State ' + req.body.stateName + ' was edited successfully!',  //success message
