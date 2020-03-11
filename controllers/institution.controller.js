@@ -70,7 +70,7 @@ exports.InstitutionController = function(app, dbcon) {
     });
     
     app.post('/editInstitutionById/:id', (req, res) => {
-        institutionModel.editInstitutionById(req.params.institutionId, req.body.institutionName, req.body.institutionType)
+        institutionModel.editInstitutionById(req.body.institutionId, req.body.institutionName, req.body.institutionType, req.params.institutionId)
         .then((data) => {
             res.render('message', {
                 successMessage : 'Institution ' + req.body.institutionName + ' was edited successfully!',  //success message
