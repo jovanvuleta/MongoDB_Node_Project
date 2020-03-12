@@ -14,6 +14,7 @@
                 <th scope="col">#</th>
                 <th scope="col">State ID</th>
                 <th scope="col">State Name</th>
+                <th scope="col">Foundation date</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>
@@ -24,6 +25,7 @@
                 <td><strong><%= index+1 %></strong></td>
                 <td><%= state.DR_IDENTIFIKATOR %></td>
                 <td><%= state.DR_NAZIV %></td>
+                <td><%= moment(state.DR_DATUM_OSNIVANJA).format('DD/MM/YYYY');%></td>
                 <td><a type="button" class="btn btn-warning" href="/editStateById/<%= state.DR_IDENTIFIKATOR %>">Edit</a></td>
                 <td><a type="button" class="btn btn-danger" href="/deleteStateById/<%= state.DR_IDENTIFIKATOR %>" onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a></td>
             </tr>

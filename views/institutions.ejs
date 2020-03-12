@@ -12,9 +12,9 @@
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Institution ID</th>
-                <th scope="col">Institution Name</th>
-                <th scope="col">Institution type</th>
+                <th scope="col">Country</th>
+                <th scope="col">Institution name</th>
+                <th scope="col">type</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>
@@ -23,7 +23,7 @@
             <% institutions.forEach(function(institution, index) { %>
             <tr>
                 <td><strong><%= index+1 %></strong></td>
-                <td><%= institution.VU_IDENTIFIKATOR %></td>
+                <td><%= institution.DR_IDENTIFIKATOR %></td>
                 <td><%= institution.VU_NAZIV %></td>
                 <td><%= institution.TIP_UST %></td>
                 <td><a type="button" class="btn btn-warning" href="/editInstitutionById/<%= institution.VU_IDENTIFIKATOR %>">Edit</a></td>

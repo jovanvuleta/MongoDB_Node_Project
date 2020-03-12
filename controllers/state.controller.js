@@ -1,21 +1,20 @@
-exports.StateController = function(app, dbcon, mongo) {
-    console.log('Pravljenje kontrolera. Mongo je: ', mongo);
+exports.StateController = function(app, dbcon) {
 
     const StateModel = require('../models/mysql/state.model.js').StateModel(dbcon);
-    const StateCollectionModel = require('../models/mongodb/state.model.js').StateCollectionModel(mongo);
+    // const StateCollectionModel = require('../models/mongodb/state.model.js').StateCollectionModel(mongo);
 
     var moment = require('moment');
 
     app.get('/getAllStates', (req, res) => {
         StateModel.getAllStates()
         .then((data) => {
-            console.log("data");
-            res.render('states', {  //render the states.ejs view
-                states : data,   //send the retrieved data to the view as an object called 'states'
-                successMessage : ''
+            res.render('states', { 
+                states : data,
+                successMessage : '',
+                moment : moment
             });
         })
-        .catch(err => {     //in case of error executing the query, render the 'states.ejs' view and display the obtained error message
+        .catch(err => {
             res.render('message', {
                 errorMessage : 'ERROR: ' + err,
                 link : '<a href="/addState"> Go Back</a>'
@@ -30,13 +29,10 @@ exports.StateController = function(app, dbcon, mongo) {
     app.post('/addState', (req, res) => {
         StateModel.addState(req.body.stateId, req.body.stateName, req.body.date)
         .then((data) => {
-            res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
-                successMessage : 'State ' + req.body.stateName + ' was added successfully.',   //success message
-                link : '<a href="/getAllStates"> Go Back</a>'   //provide a link that provides a links to another page
-            });
+            res.redirect('/getAllStates');
         })
         .catch((err) => {
-            res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
+            res.render('message', {
                 errorMessage : 'ERROR: ' + err,
                 link : '<a href="/addState"> Go Back</a>'
             });
@@ -44,7 +40,7 @@ exports.StateController = function(app, dbcon, mongo) {
     });
     
     app.get('/editStateById/:id', (req, res) => {
-        StateModel.getStateById(req.params.id)  //Retrieves state's data in order to show the intinal data of the requested state to be dited
+        StateModel.getStateById(req.params.id)
         .then((data) => {
             res.render('editState', {
                 state : data[0],
@@ -59,15 +55,12 @@ exports.StateController = function(app, dbcon, mongo) {
     app.post('/editStateById/:id', (req, res) => {
         StateModel.editStateById(req.body.stateId, req.body.stateName, req.body.date, req.params.id)
         .then((data) => {
-            res.render('message', {
-                successMessage : 'State ' + req.body.stateName + ' was edited successfully!',  //success message
-                link : '<a href="/getAllStates"> Go back!</a>'      //provide a link that provides a links to another page
-            });
+            res.redirect('/getAllStates');
         })
         .catch((err) => {
-            res.render('message', {      //In case the query fail. render 'message.ejs' and display the obtained error message
+            res.render('message', {
                 errorMessage : 'ERROR: ' + err,
-                link : '<a href="/editStateById/' + req.body.stateId + ' "> Go back!</a>'   //This link will redirect to the edit page of the state with the ID submitted in the form
+                link : '<a href="/editStateById/' + req.body.stateId + ' "> Go back!</a>'
             });
         });
     });
@@ -75,13 +68,10 @@ exports.StateController = function(app, dbcon, mongo) {
     app.get('/deleteStateById/:id', (req, res) => {
         StateModel.deleteStateById(req.params.id)
         .then((data) => {
-            res.render('message', {
-                successMessage : 'State ' + req.params.id + ' was deleted successfully!',  //success message
-                link : '<a href="/getAllStates"> Go back!</a>'      //provide a link that provides a links to another page
-            });
+            res.redirect('/getAllStates');
         })
         .catch((err) => {
-            res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
+            res.render('message', {
                 errorMessage : 'ERROR: ' + err,
                 link : '<a href="/getAllStates"> Go Back</a>'
             });
