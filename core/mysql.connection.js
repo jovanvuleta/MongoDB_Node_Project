@@ -5,7 +5,7 @@ exports.MysqlConnection = function () {
         host: 'localhost',
         user: 'root',
         password: 'root',
-        database: 'crud'
+        database: 'mobilnitelefoni'
     });
 
     dbcon.connect((err) => {
