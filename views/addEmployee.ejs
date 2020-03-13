@@ -1,0 +1,31 @@
+<%- include('header') %>
+
+<form method="post" action="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Employee ID</label>
+        <input type="text" class="form-control" id="employeeId" name="employeeId">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Employee surname </label>
+        <input type="text" class="form-control" id="employeeName" name="employeeSurname">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Employee middle letter</label>
+        <input type="text" class="form-control" id="employeeMidLetter" name="employeeMidLetter">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Employee name</label>
+        <input type="text" class="form-control" id="employeeName" name="employeeName">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Employee name</label>
+        <input type="text" class="form-control" id="info_VU_ID" name="info_id" value="<%= employee.VU_IDENTIFIKATOR %>">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Employee name</label>
+        <input type="text" class="form-control" id="info_TIP" name="info_type" value="<%= employee.TIP_UST %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('footer') %>
