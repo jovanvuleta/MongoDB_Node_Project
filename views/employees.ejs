@@ -32,10 +32,11 @@
             <td><%= employee.ZAP_PREZIME %></td>
             <td><%= employee.ZAP_SREDNJE_SLOVO %></td>
             <td><%= employee.ZAP_IME %></td>
-            <td><a type="button" class="btn btn-warning" href="/editEmployee/<%= employee.VU_IDENTIFIKATOR %>">Edit
+            <td><a type="button" class="btn btn-warning"
+                    href="/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">Edit
                 </a>
             </td>
-            <td><a type="button" class="btn btn-danger" href="/deleteEmployeeById/<%= employee.VU_IDENTIFIKATOR %>"
+            <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= employee.ZAP_REDNI_BROJ %>"
                     onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a>
             </td>
         </tr>

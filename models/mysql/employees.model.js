@@ -28,6 +28,19 @@ exports.Employees = (dbcon) => {
                 });
             })
         },
+        getAllEmployeesByInstitutionAndEmployeeId: (vu_id, emp_id) => {
+            return new Promise((resolve, reject) => {
+                let query = "SELECT * FROM EMPLOYEES WHERE VU_IDENTIFIKATOR LIKE ? AND ZAP_REDNI_BROJ LIKE ?;";
+                dbcon.query(query, [vu_id, emp_id], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                        console.log(err);
+                    }
+                });
+            })
+        },
 
         addEmployee: (TIP_UST, VU_IDENTIFIKATOR, ZAP_REDNI_BROJ, ZAP_PREZIME, ZAP_SREDNJE_SLOVO, ZAP_IME) => {
             return new Promise((resolve, reject) => {
@@ -55,6 +68,31 @@ exports.Employees = (dbcon) => {
                     }
                 });
             });
+        },
+        deleteEmployee: (id) => {
+            return new Promise((resolve, reject) => {
+                let query = 'DELETE FROM EMPLOYEES WHERE ZAP_REDNI_BROJ LIKE ?;';
+                dbcon.query(query, [id], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                        console.log(err);
+                    }
+                })
+            });
+        },
+        editEmployee: (type, surname, middleLetter, name, vu_id, emp_id) => {
+            return new Promise((resolve, reject) => {
+                let query = "UPDATE EMPLOYEES SET TIP_UST = ?, ZAP_PREZIME = ?, ZAP_SREDNJE_SLOVO = ?, ZAP_IME = ? WHERE (VU_IDENTIFIKATOR = ? AND ZAP_REDNI_BROJ = ?);";
+                dbcon.query(query, [type, surname, middleLetter, name, vu_id, emp_id], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                })
+            })
         }
     }
 }
