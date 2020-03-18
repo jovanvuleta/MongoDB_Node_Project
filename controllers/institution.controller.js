@@ -1,6 +1,6 @@
 exports.InstitutionController = function(app, dbcon, mongo) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
-    
+
     app.get('/getAllInstitutions', (req, res) => {
         institutionModel.getAllInstitutions()
         .then((data) => {
@@ -37,7 +37,7 @@ exports.InstitutionController = function(app, dbcon, mongo) {
                 });
             })
     });
-    
+
     app.post('/addInstitution', (req, res) => {
 
         let getAllInstitutions = institutionModel.getAllInstitutions().then();
@@ -54,7 +54,7 @@ exports.InstitutionController = function(app, dbcon, mongo) {
             });
         });
     });
-    
+
     app.get('/editInstitutionById/:id', (req, res) => {
         let getAllStates = institutionModel.getAllStates().then();
         let getAllTypes = institutionModel.getAllTypes().then();
@@ -69,11 +69,13 @@ exports.InstitutionController = function(app, dbcon, mongo) {
                 institution : data[3][0]
             });
         })
-        .catch((err) => {
-            res.send('editInstitution', err);
-        });
+            .catch((err) => {
+                res.send('editInstitution', err);
+            });
     });
-    
+
+    // [[{hs},{un}] , [ {}, {} ]];
+
     app.post('/editInstitutionById/:id', (req, res) => {
         institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.stateId, req.body.ownershipType, req.params.id)
         .then((data) => {
@@ -86,7 +88,7 @@ exports.InstitutionController = function(app, dbcon, mongo) {
             });
         });
     });
-    
+
     app.get('/deleteInstitutionById/:id', (req, res) => {
         institutionModel.deleteInstitutionById(req.params.id)
         .then((data) => {
