@@ -29,10 +29,10 @@
                 <td><%= institution.VU_NAZIV %></td>
                 <td><%= institution.TIP_UST %></td>
 
-                <td><a type="button" class="btn btn-warning" href="/getAllEmployeesByInstitution/<%= institution.VU_IDENTIFIKATOR %>">List all Employees</a></td>
-                <td><a type="button" class="btn btn-warning" href="/getAllCourses/<%= institution.VU_IDENTIFIKATOR %>">List all Employees</a></td>
+                <td><a type="button" class="btn btn-warning" href="/getAllEmployeesByInstitution/<%= institution.VU_IDENTIFIKATOR %>">List all employees</a></td>
+                <td><a type="button" class="btn btn-warning" href="/getAllCourses/<%= institution.VU_IDENTIFIKATOR %>">List all courses</a></td>
                 <td><a type="button" class="btn btn-warning" href="/editInstitutionById/<%= institution.VU_IDENTIFIKATOR %>">Edit</a></td>
-                <td><a type="button" class="btn btn-danger" href="/deleteInstitutionById/<%= institution.VU_IDENTIFIKATOR %>" onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a></td>
+                <td><a type="button" class="btn btn-danger" href="/deleteInstitutionById/<%= institution.VU_IDENTIFIKATOR %>" onClick="return confirm('This will delete all institutions of this state, are you sure you want proceed?');">Delete</a></td>
             </tr>
             <% }); %>
         </tbody>
