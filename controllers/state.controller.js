@@ -21,6 +21,21 @@ exports.StateController = function(app, dbcon, mongo) {
             });  
         });
     });
+
+    app.get('/getInstitutionsByStateId/:id', (req, res) => {
+        InstitutionModel.getInstitutionsByStateId(req.params.id)
+        .then((data) => {
+            res.render('institutions', {
+                institutions : data,
+                successMessage : ''
+            });
+        })
+        .catch(err => {
+            res.render('message', {
+                errorMessage : 'ERROR: ' + err,
+            });  
+        });
+    });
     
     app.get('/addState', (req, res) => {
         res.render('addState');
@@ -97,7 +112,6 @@ exports.StateController = function(app, dbcon, mongo) {
         const allStates = StateModel.getAllStates();
         const allInstitutions = InstitutionModel.getAllInstitutions();
 
-        // make these document availabe at the same time. 
         Promise.all([allStates, allInstitutions])
         .catch((err) => {
             res.render('message', {
@@ -107,7 +121,6 @@ exports.StateController = function(app, dbcon, mongo) {
         })
         .then(([states, institutions]) => {
             return new Promise((resolve, reject) => {
-                // use .map to rename your document if you wan to make it readable
             states = states.map(state => {
                 return {
                     id : state.DR_IDENTIFIKATOR,
@@ -143,10 +156,7 @@ exports.StateController = function(app, dbcon, mongo) {
     .then((statesDocuments) => {
         StateCollection.insertStateDocuments(statesDocuments)
         .then(() => {
-            res.render('message', {
-                successMessage: "State Document was generated successfully",
-                link : '<a href="/getAllStates"> Go Back</a>'
-            });
+            res.redirect('statesDocuments');
         });
     });
 });

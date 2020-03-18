@@ -11,6 +11,8 @@ exports.AppConfig = function () {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+    app.use('/assets', express.static('assets'));
+
     app.set('view engine', 'ejs');
 
     app.listen(3000, (err) => {

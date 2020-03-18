@@ -14,6 +14,19 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
+        getInstitutionsByStateId : function(id) {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE DR_IDENTIFIKATOR LIKE ?;';
+                dbcon.query(query, [id], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
+
         getAllTypes: function () {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM TYPES_OF_INSTITUTIONS;';

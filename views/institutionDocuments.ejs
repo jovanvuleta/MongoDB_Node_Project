@@ -4,7 +4,7 @@
         <tr>
             <th>Document ID</th>
             <th>Creation Date</th>
-            <th>Number of States</th>
+            <th>Number of Institutions</th>
             <th>Option</th>
         </tr>
     </thead>
@@ -13,7 +13,7 @@
         <tr>
             <td><%= document._id  %></td>
             <td><%= document.created_at %></td>
-            <td><%= document.numberOfStates %></td>
+            <td><%= document.numberOfInstitutions %></td>
             <td>
                 <label for="document-<%= document._id %>">Show/Hide</label>
             </td>
@@ -23,7 +23,7 @@
                 <input type="checkbox" id="document-<%= document._id %>" class="d-none">
 
                 <div class="toggleable-states">
-                    <%- JSON.stringify(document.states, undefined, 4); %>
+                    <%- JSON.stringify(document.institutions, undefined, 4); %>
                 </div>
             </td>
         </tr>
