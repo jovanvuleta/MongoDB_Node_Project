@@ -1,6 +1,6 @@
 exports.AppConfig = function() {
     const dbcon = require('./mysql.connection.js').MysqlConnection();
-    // const mongo = require('./mongodb.connection.js').MongodbConnection();
+    const mongo = require('./mongodb.connection.js').MongodbConnection();
     
     const express = require('express');
     let app = express();
@@ -8,6 +8,7 @@ exports.AppConfig = function() {
     const bodyParser = require('body-parser');
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended : true }));
+    app.use(express.static('../assets'));
 
     app.set('view engine', 'ejs');
 
@@ -20,6 +21,6 @@ exports.AppConfig = function() {
     });
 
     return {
-        app, dbcon
+        app, dbcon, mongo
     };
 }

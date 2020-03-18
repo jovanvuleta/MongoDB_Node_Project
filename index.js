@@ -1,5 +1,7 @@
 const { app, dbcon, mongo } = require('./core/app.config.js').AppConfig();
 
-require('./controllers/main.controller.js').MainController(app, dbcon);
-require('./controllers/state.controller.js').StateController(app, dbcon);
-require('./controllers/institution.controller.js').InstitutionController(app, dbcon);
+require('./controllers/main.controller.js').MainController(app, dbcon, mongo);
+require('./controllers/state.controller.js').StateController(app, dbcon, mongo);
+require('./controllers/institution.controller.js').InstitutionController(app, dbcon, mongo);
+require('./controllers/employees.controller.js').EmployeesController(app, dbcon, mongo);
+require('./controllers/course.controller.js').CourseController(app, dbcon, mongo);

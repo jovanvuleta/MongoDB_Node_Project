@@ -1,4 +1,4 @@
-exports.InstitutionController = function(app, dbcon) {
+exports.InstitutionController = function(app, dbcon, mongo) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     
     app.get('/getAllInstitutions', (req, res) => {

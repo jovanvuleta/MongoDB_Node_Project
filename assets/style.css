@@ -6,3 +6,12 @@
 span {
     color: red;
 }
+
+.toggleable-states {
+    background: purple;
+    display: none;
+}
+
+input[type=checkbox]:checked+.toggleable-states {
+    display: block;
+}
