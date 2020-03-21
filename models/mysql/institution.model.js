@@ -1,10 +1,10 @@
-exports.InstitutionModel = function(dbcon) {
+exports.InstitutionModel = function (dbcon) {
     return {
-        getAllInstitutions : function() {
+        getAllInstitutions: function () {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION;';
                 dbcon.query(query, (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);
@@ -14,11 +14,11 @@ exports.InstitutionModel = function(dbcon) {
             });
         },
 
-        getAllTypes : function() {
+        getAllTypes: function () {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM TYPES_OF_INSTITUTIONS;';
                 dbcon.query(query, (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);
@@ -58,7 +58,7 @@ exports.InstitutionModel = function(dbcon) {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);
@@ -94,11 +94,11 @@ exports.InstitutionModel = function(dbcon) {
             });
         },
 
-        deleteInstitutionById : function(id) {
+        deleteInstitutionById: function (id) {
             return new Promise((resolve, reject) => {
                 let query = 'DELETE FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);

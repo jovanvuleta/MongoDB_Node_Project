@@ -1,0 +1,22 @@
+<%- include('header') %>
+
+<form method="post"
+    action="/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Employee Surname</label>
+        <input type="text" class="form-control" id="employeeSurname" name="employeeSurname"
+            value="<%= employee.ZAP_PREZIME  %>">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Employee Middle Letter</label>
+        <input type="text" class="form-control" id="employeeMiddleLetter" name="employeeMiddleLetter"
+            value="<%= employee.ZAP_SREDNJE_SLOVO %>">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Employee name</label>
+        <input type="text" class="form-control" id="employeeName" name="employeeName" value="<%= employee.ZAP_IME %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('footer') %>

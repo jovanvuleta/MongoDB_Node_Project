@@ -9,7 +9,7 @@ exports.MysqlConnection = function () {
     });
 
     dbcon.connect((err) => {
-        if ( !err ) {
+        if (!err) {
             console.log('MySQL database is successfully connected!');
         } else {
             console.log(err);
