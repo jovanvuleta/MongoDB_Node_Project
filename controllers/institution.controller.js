@@ -173,6 +173,8 @@ exports.InstitutionController = function(app, dbcon, mongo) {
             });
         });
     })
+
+    // some change 
     .catch((err) => {
         res.render('message', {
             errorMessage : 'ERROR: '+err,
