@@ -1,0 +1,41 @@
+<%- include('header') %>
+
+<% if (courses.length === 0) { %>
+    <div class="alert alert-info" role="alert">
+        <p>There are no institutions to show, click <a href="/addCourse">here</a> to add an course.</p>    
+    </div>
+<% } else { %>
+    <br>
+    <a type="button" class="btn btn-primary" href="/addCourse/<%= course.VU_IDENTIFIKATOR %>">Add Course</a>
+    <br><br>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Institution type</th>
+                <th scope="col">Institution ID</th>
+                <th scope="col">Course Code</th>
+                <th scope="col">Course Version</th>
+                <th scope="col">Course Name</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% courses.forEach(function(course, index) { %>
+            <tr>
+                <td><strong><%= index+1 %></strong></td>
+                <td><%= course.TIP_UST %></td>
+                <td><%= course.VU_IDENTIFIKATOR %></td>
+                <td><%= course.NP_PREDMET %></td>
+                <td><%= course.NP_VERZIJA %></td>
+                <td><%= course.NP_NAZIV_PREDMETA %></td>
+                <td><a type="button" class="btn btn-warning" href="/editInstitutionById/<%= course.VU_IDENTIFIKATOR %>">Edit</a></td>
+                <td><a type="button" class="btn btn-danger" href="/deleteInstitutionById/<%= course.VU_IDENTIFIKATOR %>" onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a></td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+<% } %>
+
+<%- include('footer') %>

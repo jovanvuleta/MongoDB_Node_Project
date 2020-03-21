@@ -16,7 +16,6 @@ exports.AppConfig = function () {
     // Set EJS as a template engine (Enables passing from the back-end side to the front-end)
     app.set('view engine', 'ejs');
 
-    //Start express application at the port 3000
     app.listen(3000, (err) => {
         if (!err) {
             console.log('Aplication is running at port 3000.');
@@ -25,7 +24,7 @@ exports.AppConfig = function () {
         }
     });
 
-    return {    //return app, dbcon and mongodb
+    return {
         app, dbcon, mongo
     };
 }

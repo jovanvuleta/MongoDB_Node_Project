@@ -1,32 +1,34 @@
 <%- include('header') %>
 <table class="table table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Document ID</th>
-            <th>Creation Date</th>
-            <th>Number of States</th>
-            <th>Option</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% documents.forEach((document, index) => { %>
-        <tr>
-            <td><%= document._id  %></td>
-            <td><%= document.created_at %></td>
-            <td><%= document.numberOfStates %></td>
-            <td>
-                <label for="document-<%= document._id %>">Show/Hide</label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="checkbox" id="document-<%= document._id %>" class="d-none">
-                <div class="toggleable-states">
-                    <%= JSON.stringify(document.states, null, 0); %>
-                </div>
-            </td>
-        </tr>
-        <% }); %>
-    </tbody>
-</table>
-<%- include('footer')  %>
+    <table class="table table-hover" style="table-layout: fixed;">
+        <thead class="table-dark">
+            <tr>
+                <th>Document ID</th>
+                <th>Creation Date</th>
+                <th>Number of States</th>
+                <th>Option</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% documents.forEach((document, index) => { %>
+            <tr>
+                <td><%= document._id  %></td>
+                <td><%= document.created_at %></td>
+                <td><%= document.numberOfStates %></td>
+                <td>
+                    <label for="document-<%= document._id %>">Show/Hide</label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <input type="checkbox" id="document-<%= document._id %>" class="d-none">
+
+                    <div class="toggleable-states">
+                        <%- JSON.stringify(document.states, undefined, 4); %>
+                    </div>
+                </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <%- include('footer')  %>

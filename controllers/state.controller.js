@@ -1,23 +1,38 @@
 exports.StateController = function (app, dbcon, mongo) {
-    console.log('Pravljenje kontrolera. Mongo je: ', mongo);
 
     const StateModel = require('../models/mysql/state.model.js').StateModel(dbcon);
-    const StateCollectionModel = require('../models/mongodb/state.collection.js').StateCollectionModel(mongo);
+    const StateCollection = require('../models/mongodb/state.collection.js').StateCollectionModel(mongo);
     const InstitutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
+    var moment = require('moment');
 
     app.get('/getAllStates', (req, res) => {
         StateModel.getAllStates()
             .then((data) => {
-                console.log("data");
-                res.render('states', {  //render the states.ejs view
-                    states: data,   //send the retrieved data to the view as an object called 'states'
-                    successMessage: ''
+                res.render('states', {
+                    states: data,
+                    successMessage: '',
+                    moment: moment
                 });
             })
-            .catch(err => {     //in case of error executing the query, render the 'states.ejs' view and display the obtained error message
+            .catch(err => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/addState"> Go Back</a>'
+                });
+            });
+    });
+
+    app.get('/getInstitutionsByStateId/:id', (req, res) => {
+        InstitutionModel.getInstitutionsByStateId(req.params.id)
+            .then((data) => {
+                res.render('institutions', {
+                    institutions: data,
+                    successMessage: ''
+                });
+            })
+            .catch(err => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
                 });
             });
     });
@@ -27,15 +42,12 @@ exports.StateController = function (app, dbcon, mongo) {
     });
 
     app.post('/addState', (req, res) => {
-        StateModel.addState(req.body.stateId, req.body.stateName)
+        StateModel.addState(req.body.stateId, req.body.stateName, req.body.date)
             .then((data) => {
-                res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
-                    successMessage: 'State ' + req.body.stateName + ' was added successfully.',   //success message
-                    link: '<a href="/getAllStates"> Go Back</a>'   //provide a link that provides a links to another page
-                });
+                res.redirect('/getAllStates');
             })
             .catch((err) => {
-                res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
+                res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/addState"> Go Back</a>'
                 });
@@ -43,29 +55,24 @@ exports.StateController = function (app, dbcon, mongo) {
     });
 
     app.get('/editStateById/:id', (req, res) => {
-        StateModel.getStateById(req.params.id)  //Retrieves state's data in order to show the intinal data of the requested state to be dited
+        StateModel.getStateById(req.params.id)
             .then((data) => {
                 res.render('editState', {
-                    state: data[0]
+                    state: data[0],
+                    moment: moment
                 });
-            })
-            .catch((err) => {
-                res.send('editState', err);
             });
     });
 
     app.post('/editStateById/:id', (req, res) => {
-        StateModel.editStateById(req.body.stateId, req.body.stateName, req.params.id)
+        StateModel.editStateById(req.body.stateId, req.body.stateName, req.body.date, req.params.id)
             .then((data) => {
-                res.render('message', {
-                    successMessage: 'State ' + req.body.stateName + ' was edited successfully!',  //success message
-                    link: '<a href="/getAllStates"> Go back!</a>'      //provide a link that provides a links to another page
-                });
+                res.redirect('/getAllStates');
             })
             .catch((err) => {
-                res.render('message', {      //In case the query fail. render 'message.ejs' and display the obtained error message
+                res.render('message', {
                     errorMessage: 'ERROR: ' + err,
-                    link: '<a href="/editStateById/' + req.body.stateId + ' "> Go back!</a>'   //This link will redirect to the edit page of the state with the ID submitted in the form
+                    link: '<a href="/editStateById/' + req.body.stateId + ' "> Go back!</a>'
                 });
             });
     });
@@ -73,21 +80,20 @@ exports.StateController = function (app, dbcon, mongo) {
     app.get('/deleteStateById/:id', (req, res) => {
         StateModel.deleteStateById(req.params.id)
             .then((data) => {
-                res.render('message', {
-                    successMessage: 'State ' + req.params.id + ' was deleted successfully!',  //success message
-                    link: '<a href="/getAllStates"> Go back!</a>'      //provide a link that provides a links to another page
-                });
+                res.redirect('/getAllStates');
             })
             .catch((err) => {
-                res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
+                res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/getAllStates"> Go Back</a>'
                 });
             });
     });
 
+
+
     app.get('/statesDocuments', (req, res) => {
-        StateCollectionModel.getAllStatesDocuments()
+        StateCollection.getAllStatesDocuments()
             .then((data) => {
                 res.render('statesDocuments', {
                     documents: data
@@ -100,11 +106,11 @@ exports.StateController = function (app, dbcon, mongo) {
                 })
             });
     });
+
     app.get('/generateStatesDocument', (req, res) => {
         const allStates = StateModel.getAllStates();
         const allInstitutions = InstitutionModel.getAllInstitutions();
 
-        // make these document availabe at the same time. 
         Promise.all([allStates, allInstitutions])
             .catch((err) => {
                 res.render('message', {
@@ -114,7 +120,6 @@ exports.StateController = function (app, dbcon, mongo) {
             })
             .then(([states, institutions]) => {
                 return new Promise((resolve, reject) => {
-                    // use .map to rename your document if you wan to make it readable
                     states = states.map(state => {
                         return {
                             id: state.DR_IDENTIFIKATOR,
@@ -131,7 +136,6 @@ exports.StateController = function (app, dbcon, mongo) {
                     });
 
                     if (states.length == 0) {
-                        console.log('rejected!');
                         reject('No states!');
                     }
 
@@ -148,14 +152,10 @@ exports.StateController = function (app, dbcon, mongo) {
                     link: '<a href="/getAllStates"> Go Back</a>'
                 });
             })
-            // Assign this to the database, after the previous is conformed
             .then((statesDocuments) => {
-                StateCollectionModel.insertStatesDocuments(statesDocuments)
+                StateCollection.insertStateDocuments(statesDocuments)
                     .then(() => {
-                        res.render('message', {
-                            successMessage: "State Document was generated successfully",
-                            link: '<a href="/getAllStates"> Go Back</a>'
-                        });
+                        res.redirect('statesDocuments');
                     });
             });
     });

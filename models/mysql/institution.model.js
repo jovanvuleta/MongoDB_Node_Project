@@ -14,6 +14,19 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
+        getInstitutionsByStateId : function(id) {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE DR_IDENTIFIKATOR LIKE ?;';
+                dbcon.query(query, [id], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
+
         getAllTypes: function () {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM TYPES_OF_INSTITUTIONS;';
@@ -28,7 +41,33 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        getInstitutionById: function (id) {
+        getAllStates : function() {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM STATE;';
+                dbcon.query(query, (err, data) => {
+                    if ( !err ) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
+
+        getAllOwnerships : function() {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM OWNERSHIP_TYPE;';
+                dbcon.query(query, (err, data) => {
+                    if ( !err ) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
+    
+        getInstitutionById : function(id) {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {
@@ -41,11 +80,11 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        addInstitution: function (institutionId, institutionName, institutionType) {
+        addInstitution : function(institutionId, institutionName, institutionType, stateId, ownershipType){
             return new Promise((resolve, reject) => {
-                let query = 'INSERT INTO HIGH_EDUCATION_INSTITUTION (VU_IDENTIFIKATOR, VU_NAZIV, TIP_UST) VALUES (?, ?, ?);';
-                dbcon.query(query, [institutionId, institutionName, institutionType], (err, data) => {
-                    if (!err) {
+                let query = 'INSERT INTO HIGH_EDUCATION_INSTITUTION (VU_IDENTIFIKATOR, VU_NAZIV, TIP_UST, DR_IDENTIFIKATOR, VV_OZNAKA) VALUES (?, ?, ?, ?, ?);';
+                dbcon.query(query, [institutionId, institutionName, institutionType, stateId, ownershipType], (err, data) => {
+                    if ( !err ) {
                         resolve(data);
                     } else {
                         reject(err);
@@ -54,11 +93,12 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        editInstitutionById: function (institutionId, institutionName, institutionType) {
+        editInstitutionById : function(institutionType, institutionName, stateId, ownershipType, id) {
             return new Promise((resolve, reject) => {
-                let query = 'UPDATE HIGH_EDUCATION_INSTITUTION SET TIP_UST = ?, VU_NAZIV = ? WHERE VU_IDENTIFIKATOR = ?;';
-                dbcon.query(query, [institutionType, institutionName, institutionId], (err, data) => {
-                    if (!err) {
+                let query = 'UPDATE HIGH_EDUCATION_INSTITUTION SET TIP_UST = ?, VU_NAZIV = ?, DR_IDENTIFIKATOR = ?, VV_OZNAKA = ? WHERE VU_IDENTIFIKATOR LIKE ?;';
+                
+                dbcon.query(query, [institutionType, institutionName, stateId, ownershipType, id], (err, data) => {
+                    if ( !err ) {
                         resolve(data);
                     } else {
                         reject(err);

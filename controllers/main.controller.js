@@ -1,5 +1,4 @@
-exports.MainController = function(app, dbcon) {
-    //When the root url requested, home page will be rendered
+exports.MainController = function(app, dbcon, mongo) {
     app.get('/', (req, res) => {
         res.render('home');
     });
