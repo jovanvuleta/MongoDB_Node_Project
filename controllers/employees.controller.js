@@ -72,8 +72,6 @@ exports.EmployeesControler = (app, dbcon) => {
 
         //Retrieves state's data in order to show the intinal data of the requested state to be dited
         Promise.all([getAllTypes, getEmployees]).then((data) => {
-            console.log("logged data:");
-            console.log(data[1][0]);
             res.render('editEmployee', {
                 types: data[0],
                 employee: data[1][0]

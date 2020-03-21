@@ -11,6 +11,8 @@ exports.AppConfig = function () {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+    app.use('/assets', express.static('assets'));
+
     // Set EJS as a template engine (Enables passing from the back-end side to the front-end)
     app.set('view engine', 'ejs');
 

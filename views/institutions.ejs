@@ -7,6 +7,9 @@
 <% } else { %>
 <br>
 <a type="button" class="btn btn-primary" href="/addInstitution">Add institution</a>
+<a type="button" class="btn btn-primary" href="/addState">Edit employee</a>
+<a type="button" class="btn btn-primary" href="/addState">List employee</a>
+<a type="button" class="btn btn-primary" href="/addState">Delete employee</a>
 <br><br>
 <table class="table">
     <thead class="thead-dark">
@@ -15,8 +18,9 @@
             <th scope="col">Institution ID</th>
             <th scope="col">Institution Name</th>
             <th scope="col">Institution type</th>
-            <th scope="col">Edit</th>
+            <th scope="col">Edit Institution</th>
             <th scope="col">Add Employee</th>
+            <th scope="col">List Employees</th>
             <th scope="col">Delete</th>
         </tr>
     </thead>
@@ -30,10 +34,11 @@
             <td><a type="button" class="btn btn-warning"
                     href="/editInstitutionById/<%= institution.VU_IDENTIFIKATOR %>">Edit</a></td>
 
+            <td><a type="button" class="btn btn-warning" href="/addEmployee/<%= institution.VU_IDENTIFIKATOR %>">Add</a>
+            </td>
+
             <td><a type="button" class="btn btn-warning"
-                    href="/getAllEmployeesByInstitution/<%= institution.VU_IDENTIFIKATOR %>">List
-                    all
-                    Employees</a></td>
+                    href="/getAllEmployeesByInstitution/<%= institution.VU_IDENTIFIKATOR %>">List</a></td>
 
             <td><a type="button" class="btn btn-danger"
                     href="/deleteInstitutionById/<%= institution.VU_IDENTIFIKATOR %>"

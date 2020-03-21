@@ -4,7 +4,6 @@ exports.InstitutionController = function (app, dbcon) {
     app.get('/getAllInstitutions', (req, res) => {
         institutionModel.getAllInstitutions()
             .then((data) => {
-                console.log("data");
                 res.render('institutions', {  //render the states.ejs view
                     institutions: data,   //send the retrieved data to the view as an object called 'states'
                     successMessage: ''

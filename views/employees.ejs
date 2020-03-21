@@ -2,12 +2,13 @@
 
 <% if (employees.length === 0) { %>
 <div class="alert alert-info" role="alert">
-    <p>There are no institutions to show, click <a href="/addEmployee">here</a> to add an institution.</p>
+    <p>There are no employees to show, click <a href="/addEmployee/<%= 10 %>">here</a> to add an
+        employee.</p>
 </div>
 <% } else { %>
 <br>
-<br><br>
 <a type="button" class="btn btn-primary" href="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>">Add Employee</a>
+<br><br>
 <table class="table">
     <thead class="thead-dark">
         <tr>
