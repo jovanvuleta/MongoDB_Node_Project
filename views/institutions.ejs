@@ -7,8 +7,6 @@
 <% } else { %>
 <br>
 
-<a type="button" class="btn btn-primary" href="/addInstitution">Add institution</a>
-
 <script>
     function employeesByInstitution() {
         var id = prompt("Please enter institution ID:");
@@ -42,11 +40,16 @@
     }
 </script>
 
-<a type="button" class="btn btn-primary" onClick="employeesByInstitution()" href="#">Get employees</a>
+<a type="button" class="btn btn-primary" href="/addInstitution">Add institution</a>
 <a type="button" class="btn btn-primary" onClick="editInstitution()" href="#">Edit institution</a>
 <a type="button" class="btn btn-primary" onClick="deleteInstitution()" href="#">Delete institution</a>
-<a type="button" class="btn btn-primary" href="/generateInstitutionsDocument">Generate institution docs</a>
-<a type="button" class="btn btn-primary" href="/institutionsDocuments">View institution docs</a>
+<a type="button" class="btn btn-primary" onClick="employeesByInstitution()" style="background-color:lightseagreen"
+    href="#">Get
+    employees</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue"
+    href="/generateInstitutionsDocument">Generate institution docs</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/institutionsDocuments">View
+    institution docs</a>
 
 <br><br>
 <table class="table">
