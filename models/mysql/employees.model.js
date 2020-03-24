@@ -5,7 +5,6 @@ exports.Employees = (dbcon) => {
                 let query = "SELECT * FROM EMPLOYEES;";
                 dbcon.query(query, (err, data) => {
                     if (!err) {
-                        console.log('resolved');
                         resolve(data);
                     } else {
                         reject(err);

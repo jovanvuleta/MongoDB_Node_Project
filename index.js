@@ -5,3 +5,4 @@ require('./controllers/state.controller.js').StateController(app, dbcon, mongo);
 require('./controllers/institution.controller.js').InstitutionController(app, dbcon, mongo);
 require('./controllers/employees.controller.js').EmployeesController(app, dbcon, mongo);
 require('./controllers/course.controller.js').CourseController(app, dbcon, mongo);
+require('./controllers/contract_history.controller.js').ContractHistoryController(app, dbcon, mongo);

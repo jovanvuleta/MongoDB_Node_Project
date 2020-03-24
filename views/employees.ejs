@@ -6,10 +6,50 @@
         employee.</p>
 </div>
 <% } else { %>
+
+<script>
+    function employeesByInstitution() {
+        var id = prompt("Please enter employee ID:");
+        link = "/getContractHistoryByEmployeeId/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getAllInstitutions";
+        }
+    }
+    function editInstitution() {
+        var id = prompt("Please enter employee ID:");
+        link = "/editContractHistoryByEmployeeId/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getAllInstitutions";
+        }
+    }
+    function deleteInstitution() {
+        var id = prompt("Please enter employee ID:");
+        link = "/deleteEmployee/" + id;
+        if (id) {
+            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            window.location = "/getAllInstitutions";
+        }
+    }
+</script>
+
 <br>
 <a type="button" class="btn btn-primary" href="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>">Add Employee</a>
-<a type="button" class="btn btn-primary" href="/generateEmployeeDocuments">Insert Employee Document</a>
-<a type="button" class="btn btn-primary" href="/employeesDocuments">View Employee Documents</a>
+<a type="button" class="btn btn-primary" onclick="deleteInstitution()" href="#">Delete
+    Employee</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" onclick="editInstitution()" href="#">Insert
+    Employee
+    Document</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/employeesDocuments">View Employee
+    Documents</a>
+<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)" href="#">View
+    Employee
+    Contract History</a>
 <br><br>
 <table class="table">
     <thead class="thead-dark">
@@ -22,6 +62,7 @@
             <th scope="col">Employee Middle letter</th>
             <th scope="col">Employee Name</th>
             <th scope="col">Edit</th>
+            <th scope="col">View Employee Contract History</th>
             <th scope="col">Delete</th>
         </tr>
     </thead>
@@ -37,6 +78,11 @@
             <td><%= employee.ZAP_IME %></td>
             <td><a type="button" class="btn btn-warning"
                     href="/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">Edit
+                </a>
+            </td>
+            <td><a type="button" class="btn btn-warning"
+                    href="/getContractHistoryByEmployeeId/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">View
+                    Employee Contract History
                 </a>
             </td>
             <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= employee.ZAP_REDNI_BROJ %>"
