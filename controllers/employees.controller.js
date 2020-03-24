@@ -1,4 +1,4 @@
-exports.EmployeesController = (app, dbcon, mongo) => {
+exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
     const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const employeesCollection = require('../models/mongodb/employee.collection').EmployeeCollectionModel(mongo);

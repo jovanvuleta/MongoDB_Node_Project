@@ -38,6 +38,7 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
             });
     });
 
+
     app.get('/addState', (req, res) => {
         res.render('addState');
     });
@@ -62,9 +63,24 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
             });
     });
 
+    app.get('/editStateById/:id', (req, res) => {
+        StateModel.getStateById(req.params.id)
+            .then((data) => {
+                res.render('editState', {
+                    state: data[0],
+                    moment: moment
+                });
+            })
+            .catch(err => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                });
+            });
+    });
+
     app.post('/editStateById/:id', (req, res) => {
         //After submitting the form, the function editStateById from the model state will be called to added the new state
-        let mysqlEditPromise = StateModel.editStateById(req.body.stateId, req.body.stateName, req.params.id);
+        let mysqlEditPromise = StateModel.editStateById(req.body.stateId, req.body.stateName, req.body.date, req.params.id);
         let neo4jEditPromise = Neo4jStateModel.editStateById(req.body.stateId, req.body.stateName, req.params.id);
 
         Promise.all([mysqlEditPromise, neo4jEditPromise])

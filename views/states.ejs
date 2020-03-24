@@ -6,7 +6,6 @@
 </div>
 <% } else { %>
 <br>
-<a type="button" class="btn btn-primary" href="/addState">Add new state</a>
 
 <script>
     function institutionsByState() {
@@ -41,7 +40,8 @@
     }
 </script>
 
-<a type="button" class="btn btn-primary" style="background-color:lightseagreen" onClick="institutionsByState()"
+<a type="button" class="btn btn-primary" href="/addState">Add new state</a>
+<a type="button" class="btn btn-primary" onclick="institutionsByState()" style="background-color:lightseagreen"
     href="#">Get institutions by state</a>
 <a type="button" class="btn btn-primary" onClick="editState()" href="#">Edit state</a>
 <a type="button" class="btn btn-primary" onClick="deleteState()" href="#">Delete state</a>
