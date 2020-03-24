@@ -9,15 +9,15 @@
 <% } else { %>
 
 <script>
-    // function employeesByInstitution() {
-    //     var id = prompt("Please enter contract ID:");
-    //     link = "/getContractHistoryByEmployeeId/" + id;
-    //     if (id) {
-    //         window.location = link;
-    //     } else {
-    //         window.location = "/getAllInstitutions";
-    //     }
-    // }
+    function doccumentByEmployee() {
+        var id = prompt("Please enter contract ID:");
+        link = "/getDocumentOfEmployementByContractId/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+        }
+    }
     // function editContractHistory() {
     //     var id = prompt("Please enter employee ID:");
     //     link = "/editContractHistoryByEmployeeId/" + id;
@@ -28,7 +28,7 @@
     //     }
     // }
     function deleteInstitution() {
-        var id = prompt("Please enter Employee ID:");
+        var id = prompt("Please enter Contract ID:");
         link = "/deleteContractByEmployeeId/" + id;
         if (id) {
             confirm('This will delete the contract history of a given employee. Are you sure you want proceed?');
@@ -45,6 +45,9 @@
     Contract</a>
 <a type="button" class="btn btn-primary" onclick="deleteInstitution()" href="#">Delete
     Contract</a>
+<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)" onclick="doccumentByEmployee()"
+    href="#">Get
+    Doccument of Employment</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue" href="#">Insert
     Contract
     Document</a>

@@ -18,7 +18,6 @@ exports.Employees = (dbcon) => {
                 let query = "SELECT * FROM EMPLOYEES WHERE VU_IDENTIFIKATOR LIKE ?;";
                 dbcon.query(query, [id], (err, data) => {
                     if (!err) {
-                        console.log('resolved');
                         resolve(data);
                     } else {
                         reject(err);

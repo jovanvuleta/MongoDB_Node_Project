@@ -12,6 +12,18 @@ exports.DocumentOfEmployementModel = (dbcon) => {
                     }
                 });
             });
+        },
+        getDocumentOfEmployementByContractId: (id) => {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM DOCCUMENTS_OF_EMPLOYMENT WHERE UG_BROJ_UGOVORA LIKE ?;';
+                dbcon.query(query, id, (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
         }
     }
 };

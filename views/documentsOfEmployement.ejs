@@ -8,32 +8,32 @@
 <% } else { %>
 
 <script>
-    function contractByEmployee() {
-        var id = prompt("Please enter Employee Number:");
-        link = "/getContractHistoryByEmployeeId/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/" + id;
+    function documentOfEmploymentByEmployee() {
+        var id = prompt("Please enter Contract ID:");
+        link = "/getDocumentOfEmployementByContractId/" + id;
         if (id) {
             window.location = link;
         } else {
-            window.location = "/getEmployeeByInstitutionId/<%= document.VU_IDENTIFIKATOR %>";
+            window.location = "/getDocumentOfEmployement";
         }
     }
     function editEmployee() {
-        var id = prompt("Please enter Employee Number:");
-        link = "/editEmployee/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/" + id;
+        var id = prompt("Please enter Contract ID:");
+        link = "/editDocument/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/" + id;
         if (id) {
             window.location = link;
         } else {
-            window.location = "/getEmployeeByInstitutionId/<%= document.VU_IDENTIFIKATOR %>";
+            window.location = "/getDocumentOfEmployement";
         }
     }
     function deleteEmployee() {
-        var id = prompt("Please enter Employee Number:");
+        var id = prompt("Please enter Contract ID:");
         link = "/deleteEmployee/" + id;
         if (id) {
             confirm('This will delete the entire institution. Are you sure you want proceed?');
             window.location = link;
         } else {
-            window.location = "/getEmployeeByInstitutionId/<%= document.VU_IDENTIFIKATOR %>";
+            window.location = "/getDocumentOfEmployement/<%= document.UG_BROJ_UGOVORA %>";
         }
     }
 </script>
@@ -43,9 +43,9 @@
 <a type="button" class="btn btn-primary" onclick="editEmployee()" href="#">Edit Document</a>
 <a type="button" class="btn btn-primary" onclick="deleteEmployee()" href="#">Delete
     Document</a>
-<a type="button" class="btn btn-primary" onclick="contractByEmployee()" style="background-color:rgb(0, 205, 144)"
-    href="#">Get
-    Document of Employment</a>
+<a type="button" class="btn btn-primary" onclick="documentOfEmploymentByEmployee()"
+    style="background-color:rgb(0, 205, 144)" href="#">Get
+    contract by Document</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/generateDocumentsDocuments">Insert
     Document of Employment
     Document</a>
