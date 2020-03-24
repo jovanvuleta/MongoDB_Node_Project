@@ -6,7 +6,12 @@ exports.ContractHistoryController = (app, dbcon, mongo) => {
             .then((data) => {
                 res.render('contractHistory', {
                     contracts: data,
-                    contract: data[0]
+                    contract: data[0],
+                    first_object: {
+                        type: req.params.type,
+                        emp_vu_id: req.params.emp_vu_id,
+                        emp_id: req.params.emp_id
+                    }
                 });
             })
             .catch((err) => {
@@ -32,7 +37,12 @@ exports.ContractHistoryController = (app, dbcon, mongo) => {
                     contractTypes: data[0],
                     contractYears: data[1],
                     contractIds: data[2],
-                    contract: data[3][0]
+                    contract: data[3],
+                    first_object: {
+                        type: req.params.type,
+                        emp_vu_id: req.params.emp_vu_id,
+                        emp_id: req.params.emp_id
+                    }
                 });
             })
             .catch(err => {

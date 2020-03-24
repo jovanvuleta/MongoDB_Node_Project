@@ -2,7 +2,9 @@
 
 <% if (contracts.length === 0) { %>
 <div class="alert alert-info" role="alert">
-    <p>There are no employees to show, click <a href="/getAllInstitutions">here</a> to go back.</p>
+    <p>There are no contract history to show, click <a
+            href="/addContractHistory/<%= first_object.type %>/<%= first_object.emp_vu_id %>/<%= first_object.emp_id %>">here</a>
+        to add.</p>
 </div>
 <% } else { %>
 
@@ -16,23 +18,23 @@
     //         window.location = "/getAllInstitutions";
     //     }
     // }
-    // function editInstitution() {
+    // function editContractHistory() {
     //     var id = prompt("Please enter employee ID:");
     //     link = "/editContractHistoryByEmployeeId/" + id;
     //     if (id) {
     //         window.location = link;
     //     } else {
-    //         window.location = "/getAllInstitutions";
+    //         window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
     //     }
     // }
     function deleteInstitution() {
-        var id = prompt("Please enter institution ID:");
+        var id = prompt("Please enter Employee ID:");
         link = "/deleteContractByEmployeeId/" + id;
         if (id) {
-            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            confirm('This will delete the contract history of a given employee. Are you sure you want proceed?');
             window.location = link;
         } else {
-            window.location = "/getAllInstitutions";
+            window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
         }
     }
 </script>
@@ -48,10 +50,6 @@
     Document</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue" href="#">View Contract
     Documents</a>
-<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)"
-    href="/getContractHistoryByEmployeeId/<%=  %>">View
-    Employee
-    Contract</a>
 <br><br>
 <table class="table">
     <thead class="thead-dark">
@@ -63,7 +61,7 @@
             <th scope="col">Type of Contract</th>
             <th scope="col">Contract Year</th>
             <th scope="col">Contract ID</th>
-            <th scope="col">Delete</th>
+            <!-- <th scope="col">Delete</th> -->
         </tr>
     </thead>
     <tbody>
@@ -76,9 +74,9 @@
             <td><%= contract.VD_OZNAKA %></td>
             <td><%= contract.UG_GODINA %></td>
             <td><%= contract.UG_BROJ_UGOVORA %></td>
-            <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= contract.ZAP_REDNI_BROJ %>"
+            <!-- <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= contract.ZAP_REDNI_BROJ %>"
                     onClick="return confirm('This will delete the history contract of this employee, are you sure you want proceed!');">Delete</a>
-            </td>
+            </td> -->
         </tr>
         <% }); %>
     </tbody>

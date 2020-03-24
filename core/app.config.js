@@ -2,6 +2,7 @@
 exports.AppConfig = function () {
     const dbcon = require('./mysql.connection.js').MysqlConnection();   //import the MysqlConnection module in order to pass the connection parameters to index.js
     const mongo = require('./mongodb.connection.js').MongodbConnection();   //import the MongodbConnection module in order to pass the connection parameters to index.js  
+    const neo4j = require('./neo4j.connection.js').Neo4jConnection();
 
     //require Node.js exrepss server package
     const express = require('express');
@@ -25,6 +26,6 @@ exports.AppConfig = function () {
     });
 
     return {
-        app, dbcon, mongo
+        app, dbcon, mongo, neo4j
     };
 }
