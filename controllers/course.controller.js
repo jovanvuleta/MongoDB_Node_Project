@@ -1,4 +1,7 @@
-exports.CourseController = function(app, dbcon) {
+exports.CourseController = function(app, dbcon,mongo)  
+{
+
+    const CourseCollection = require('../models/mongodb/course.collection.js').CourseCollectionModel(mongo)
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     
@@ -123,5 +126,78 @@ exports.CourseController = function(app, dbcon) {
                 });
             });
     });
+    app.get('/coursesDocuments', (req, res) => {
+        CourseCollection.getAllCourseDocuments()
+            .then((data) => {
+                res.render('coursesDocuments', {
+                    documents: data
+                })
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllCourses"> Go Back</a>'
+                })
+            });
+    });
+
+    app.get('/generateCoursesDocument', (req, res) => {
+        
+        const allInstitutions = institutionModel.getAllInstitutions();
+        const allCourses = courseModel.allCourses();
+
+
+        Promise.all([allInstitutions,allCourses])
+        .catch((err) => {
+            res.render('message', {
+                errorMessage : 'ERROR: '+err,
+                link : '<a href="/getAllCourses"> Go Back</a>'
+            })
+        })
+        .then(([ institutions,courses]) => {
+            return new Promise((resolve, reject) => {
+            institutions = institutions.map(institution => {
+                return {
+                    id : institution.VU_IDENTIFIKATOR,
+                    name : institution.VU_NAZIV,
+                    number_of_courses: courses.filter(course => institution.VU_IDENTIFIKATOR == course.VU_IDENTIFIKATOR).length,
+                    Courses : courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                    .map(course => {
+                        return{
+                            
+                            name : course.NP_PREDMET,
+                            fullName : course.NP_NAZIV_PREDMETA
+                        
+                           
+
+                        }
+                    })
+                }
+            });
+
+            if(institutions.length == 0){
+                reject('No Institutions!');
+            }
+           
+            resolve({
+                created_at : JSON.stringify(new Date()),
+                numberOfInstitutions : institutions.length,
+                institutions : institutions
+            });
+        });
+    })
+    .catch((err) => {
+        res.render('message', {
+            errorMessage : 'ERROR: '+err,
+            link : '<a href="/getAllInstitutions"> Go Back</a>'
+        });
+    })
+    .then((coursesDocuments) => {
+        CourseCollection.insertCourseDocuments(coursesDocuments)
+        .then(() => {
+            res.redirect('coursesDocuments');
+        });
+    });
+});
 
 }

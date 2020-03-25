@@ -1,4 +1,4 @@
-exports.EmployeesControler = (app, dbcon) => {
+exports.EmployeesController = (app, dbcon) => {
     const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
 

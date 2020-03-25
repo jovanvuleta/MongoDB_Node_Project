@@ -4,5 +4,13 @@
 }
 
 span {
-    color: red;
+    color: grey;
+}
+
+.toggleable-states {
+    display: none;
+}
+
+input[type="checkbox"]:checked+.toggleable-states {
+    display: block;
 }

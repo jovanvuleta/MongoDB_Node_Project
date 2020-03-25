@@ -13,6 +13,19 @@ exports.CourseModel = function(dbcon) {
                 });
             });
         },
+        allCourses : function() {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM COURSE ;';
+
+                dbcon.query(query, (err, data) => {
+                    if ( !err ) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
 
         getAllTypes : function() {
             return new Promise((resolve, reject) => {

@@ -7,6 +7,46 @@
 <% } else { %>
     <br>
     <a type="button" class="btn btn-primary" href="/addState">Add new state</a>
+
+    <script>
+        function institutionsByState() {
+            var id = prompt("Please enter state ID:");
+            link = "/getInstitutionsByStateId/" + id;
+            if (id) {
+                window.location = link;
+            } else {
+                window.location = "/getAllStates";
+            }
+        }
+
+        function editState() {
+            var id = prompt("Please enter state ID:");
+            link = "/editStateById/" + id;
+            if (id) {
+                window.location = link;
+            } else {
+                window.location = "/getAllStates";
+            }
+        }
+
+        function deleteState() {
+            var id = prompt("Please enter state ID:");
+            link = "/deleteStateById/" + id;
+            if (id) {
+                confirm('This will delete all institutions of this state, are you sure you want proceed?');
+                window.location = link;
+            } else {
+                window.location = "/getAllStates";
+            }
+        }
+    </script>
+
+    <a type="button" class="btn btn-primary" onClick="institutionsByState()" href="#">Get institutions by state</a>
+    <a type="button" class="btn btn-primary" onClick="editState()" href="#">Edit state</a>
+    <a type="button" class="btn btn-primary" onClick="deleteState()" href="#">Delete state</a>
+    <a type="button" class="btn btn-primary" href="/generateStatesDocument">Generate state docs</a>
+    <a type="button" class="btn btn-primary" href="/statesDocuments">View state docs</a>
+
     <br><br>
     <table class="table">
         <thead class="thead-dark">
@@ -15,8 +55,6 @@
                 <th scope="col">State ID</th>
                 <th scope="col">State Name</th>
                 <th scope="col">Foundation date</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -26,8 +64,6 @@
                 <td><%= state.DR_IDENTIFIKATOR %></td>
                 <td><%= state.DR_NAZIV %></td>
                 <td><%= moment(state.DR_DATUM_OSNIVANJA).format('DD/MM/YYYY');%></td>
-                <td><a type="button" class="btn btn-warning" href="/editStateById/<%= state.DR_IDENTIFIKATOR %>">Edit</a></td>
-                <td><a type="button" class="btn btn-danger" href="/deleteStateById/<%= state.DR_IDENTIFIKATOR %>" onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a></td>
             </tr>
             <% }); %>
         </tbody>
