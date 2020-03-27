@@ -1,6 +1,6 @@
 exports.InstitutionController = function (app, dbcon, mongo) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
-    const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
+    const employeesModel = require('../models/mysql/employees.model.js').EmployeesModel(dbcon);
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
 
     app.get('/getAllInstitutions', (req, res) => {
@@ -8,6 +8,7 @@ exports.InstitutionController = function (app, dbcon, mongo) {
             .then((data) => {
                 res.render('institutions', {
                     institutions: data,
+                    institution: data[0],
                     successMessage: ''
                 });
             })

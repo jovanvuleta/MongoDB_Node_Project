@@ -8,11 +8,11 @@ exports.StateModel = (neo4j) => {
 
         },
 
-        addState: (stateId, stateName) => {
+        addState: (stateId, stateName, stateDate) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MERGE(s:State {name: $name, stateId: $id}) RETURN s';
-                session.run(query, { name: stateName, id: stateId })
+                let query = 'MERGE(s:State {name: $name, stateId: $id, stateDate: $stateDate}) RETURN s';
+                session.run(query, { name: stateName, id: stateId, stateDate: stateDate })
                     .then(result => {
                         resolve(result);
                     })
@@ -25,11 +25,11 @@ exports.StateModel = (neo4j) => {
             });
         },
 
-        editStateById: (newId, stateName, oldId) => {
+        editStateById: (newId, stateName, oldId, stateDate) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MERGE(s:State {stateId: $oldId}) ON CREATE SET s.stateId = $newId, s.name = $stateName ON MATCH SET s.stateId = $newId, s.name = $stateName';
-                session.run(query, { oldId: oldId, newId: newId, stateName: stateName })
+                let query = 'MERGE(s:State {stateId: $oldId}) ON CREATE SET s.stateId = $newId, s.name = $stateName, s.stateDate = $stateDate ON MATCH SET s.stateId = $newId, s.name = $stateName, s.stateDate = $stateDate';
+                session.run(query, { oldId: oldId, newId: newId, stateName: stateName, stateDate: stateDate })
                     .then(result => {
                         resolve(result);
                     })

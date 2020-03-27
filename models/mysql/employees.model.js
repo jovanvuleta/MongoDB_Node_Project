@@ -1,4 +1,4 @@
-exports.Employees = (dbcon) => {
+exports.EmployeesModel = (dbcon) => {
     return {
         getAllEmployees: () => {
             return new Promise((resolve, reject) => {

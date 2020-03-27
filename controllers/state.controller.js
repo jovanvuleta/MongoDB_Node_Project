@@ -28,6 +28,7 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
             .then((data) => {
                 res.render('institutions', {
                     institutions: data,
+                    institution: data[0],
                     successMessage: ''
                 });
             })
@@ -45,8 +46,8 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
 
     app.post('/addState', (req, res) => {
 
-        let mysqlAddPromise = StateModel.addState(req.body.stateId, req.body.stateName);
-        let neo4jAddPromise = Neo4jStateModel.addState(req.body.stateId, req.body.stateName);
+        let mysqlAddPromise = StateModel.addState(req.body.stateId, req.body.stateName, req.body.date);
+        let neo4jAddPromise = Neo4jStateModel.addState(req.body.stateId, req.body.stateName, req.body.date);
 
         Promise.all([mysqlAddPromise, neo4jAddPromise])
             .then((data) => {

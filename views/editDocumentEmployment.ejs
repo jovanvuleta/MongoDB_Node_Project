@@ -1,0 +1,18 @@
+<%- include('header') %>
+
+<form method="post"
+    action="/editDocumentById/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/<%= document.VD_OZNAKA %>/<%= document.UG_GODINA %>/<%= document.UG_BROJ_UGOVORA %>">
+    <div class="form-group">
+        <label for="contract_date">Datum ugovora od: </label>
+        <input type="text" class="form-control" id="contract_date" name="contract_date"
+            value="<%= moment(document.UG_DATIM).format('DD/MM/YYYY')  %>">
+    </div>
+    <div class="form-group">
+        <label for="contract_date_duration">Datum ugovora do: </label>
+        <input type="text" class="form-control" id="contract_date_duration" name="contract_date_duration"
+            value="<%= moment(document.UG_DATUM_VAZENJA).format('DD/MM/YYYY') %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('footer') %>

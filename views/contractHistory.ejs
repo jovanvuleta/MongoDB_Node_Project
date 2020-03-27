@@ -9,13 +9,14 @@
 <% } else { %>
 
 <script>
-    function doccumentByEmployee() {
+    function doccumentByContract() {
         var id = prompt("Please enter contract ID:");
         link = "/getDocumentOfEmployementByContractId/" + id;
         if (id) {
             window.location = link;
         } else {
-            window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+            return false;
+            // window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
         }
     }
     // function editContractHistory() {
@@ -27,14 +28,15 @@
     //         window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
     //     }
     // }
-    function deleteInstitution() {
+    function deleteContractHistory() {
         var id = prompt("Please enter Contract ID:");
-        link = "/deleteContractByEmployeeId/" + id;
+        link = "/deleteContractById/" + id;
         if (id) {
             confirm('This will delete the contract history of a given employee. Are you sure you want proceed?');
             window.location = link;
         } else {
-            window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+            // window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+            return false;
         }
     }
 </script>
@@ -43,9 +45,9 @@
 <a type="button" class="btn btn-primary"
     href="/addContractHistory/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>">Add
     Contract</a>
-<a type="button" class="btn btn-primary" onclick="deleteInstitution()" href="#">Delete
+<a type="button" class="btn btn-primary" onclick="deleteContractHistory()" href="#">Delete
     Contract</a>
-<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)" onclick="doccumentByEmployee()"
+<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)" onclick="doccumentByContract()"
     href="#">Get
     Doccument of Employment</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue" href="#">Insert

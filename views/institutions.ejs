@@ -10,7 +10,7 @@
 <script>
     function employeesByInstitution() {
         var id = prompt("Please enter institution ID:");
-        link = "/getEmployeeByInstitutionId/" + id;
+        link = "/getAllEmployeesByInstitution/<%= institution.TIP_UST %>/<%= institution.VU_IDENTIFIKATOR %>/" + id;
         if (id) {
             window.location = link;
         } else {

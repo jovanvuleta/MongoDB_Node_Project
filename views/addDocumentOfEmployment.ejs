@@ -1,0 +1,33 @@
+<%- include('header') %>
+
+<form method="post"
+    action="/addDocumentById/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/<%= document.VD_OZNAKA %>/<%= document.UG_GODINA %>/<%= document.UG_BROJ_UGOVORA %>">
+    <div class="form-group">
+        <label for="cnt_type">Contract Type</label>
+        <select class="custom-select" id="cnt_type" name="cnt_type" required>
+            <option selected disabled value="">Select state...</option>
+            <% contract_types.forEach(function(type, index) { %>
+            <option value="<%= type.VD_OZNAKA %>"><%= type.VD_NAZIV %></option>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="cnt_year">Contract Year </label>
+        <input type="text" class="form-control" id="cnt_year" name="cnt_year">
+    </div>
+    <div class="form-group">
+        <label for="cnt_id">Contract ID</label>
+        <input type="text" class="form-control" id="cnt_id" name="cnt_id">
+    </div>
+    <div class="form-group">
+        <label for="cnt_start_date">Contract starting from: </label>
+        <input type="text" class="form-control" id="cnt_start_date" name="cnt_start_date">
+    </div>
+    <div class="form-group">
+        <label for="cnt_end_date">Contract ending at: </label>
+        <input type="text" class="form-control" id="cnt_end_date" name="cnt_end_date">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('footer') %>
