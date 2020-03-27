@@ -1,4 +1,4 @@
-exports.InstitutionController = function(app, dbcon, mongo) {
+exports.InstitutionController = function (app, dbcon, mongo) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
@@ -15,11 +15,6 @@ exports.InstitutionController = function(app, dbcon, mongo) {
                 institutions : data[1],
                 successMessage : ''
             });
-        })
-        .catch(err => {
-            res.render('message', {
-                errorMessage : 'ERROR: ' + err,
-            });  
         });
     });
 
@@ -61,6 +56,7 @@ exports.InstitutionController = function(app, dbcon, mongo) {
                 });
             })
     });
+    
 
     app.post('/addInstitution', (req, res) => {
 
@@ -68,15 +64,15 @@ exports.InstitutionController = function(app, dbcon, mongo) {
         let getInstitution = institutionModel.addInstitution(req.body.institutionId, req.body.institutionName, req.body.institutionType, req.body.stateId, req.body.ownershipType).then();
 
         Promise.all([getAllInstitutions, getInstitution])
-        .then((data) => {
-            res.redirect('/getAllInstitutions');
-        })
-        .catch((err) => {
-            res.render('message', {
-                errorMessage : 'ERROR: ' + err,
-                link : '<a href="/addInstitution"> Go Back</a>'
+            .then((data) => {
+                res.redirect('/getAllInstitutions');
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/addInstitution"> Go Back</a>'
+                });
             });
-        });
     });
 
     app.get('/editInstitutionById/:id', (req, res) => {
@@ -84,13 +80,13 @@ exports.InstitutionController = function(app, dbcon, mongo) {
         let getAllTypes = institutionModel.getAllTypes().then();
         let getAllOwnerships = institutionModel.getAllOwnerships().then();
         let getInstitution = institutionModel.getInstitutionById(req.params.id).then();
-        
+
         Promise.all([getAllStates, getAllTypes, getAllOwnerships, getInstitution]).then((data) => {
             res.render('editInstitution', {
-                states : data[0],
-                types : data[1],
-                ownerships : data[2],
-                institution : data[3][0]
+                states: data[0],
+                types: data[1],
+                ownerships: data[2],
+                institution: data[3][0]
             });
         })
             .catch((err) => {
@@ -100,28 +96,28 @@ exports.InstitutionController = function(app, dbcon, mongo) {
 
     app.post('/editInstitutionById/:id', (req, res) => {
         institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.stateId, req.body.ownershipType, req.params.id)
-        .then((data) => {
-            res.redirect('/getAllInstitutions');
-        })
-        .catch((err) => {
-            res.render('message', {
-                errorMessage : 'ERROR: ' + err,
-                link : '<a href="/editInstitutionById/' + req.body.institutionId + ' "> Go back!</a>'
+            .then((data) => {
+                res.redirect('/getAllInstitutions');
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/editInstitutionById/' + req.body.institutionId + ' "> Go back!</a>'
+                });
             });
-        });
     });
 
     app.get('/deleteInstitutionById/:id', (req, res) => {
         institutionModel.deleteInstitutionById(req.params.id)
-        .then((data) => {
-            res.redirect('/getAllInstitutions');
-        })
-        .catch((err) => {
-            res.render('message', {
-                errorMessage : 'ERROR: ' + err,
-                link : '<a href="/getAllInstitutions"> Go Back</a>'
+            .then((data) => {
+                res.redirect('/getAllInstitutions');
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
             });
-        });
     });
 
     app.get('/institutionsDocuments', (req, res) => {
@@ -144,52 +140,52 @@ exports.InstitutionController = function(app, dbcon, mongo) {
         const allEmployees = employeesModel.getAllEmployees();
 
         Promise.all([allInstitutions, allEmployees])
-        .catch((err) => {
-            res.render('message', {
-                errorMessage : 'ERROR: '+err,
-                link : '<a href="/getAllInstitutions"> Go Back</a>'
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                })
             })
-        })
-        .then(([institutions, employees]) => {
-            return new Promise((resolve, reject) => {
-                institutions = institutions.map(institution => {
-                return {
-                    id : institution.VU_IDENTIFIKATOR,
-                    name : institution.VU_NAZIV,
-                    number_of_employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
-                    employees : employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
-                    .map(employee => {
-                        return{
-                            id : employee.ZAP_REDNI_BROJ,
-                            surname : employee.ZAP_PREZIME,
-                            name : employee.ZAP_IME
+            .then(([institutions, employees]) => {
+                return new Promise((resolve, reject) => {
+                    institutions = institutions.map(institution => {
+                        return {
+                            id: institution.VU_IDENTIFIKATOR,
+                            name: institution.VU_NAZIV,
+                            number_of_employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
+                            employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                                .map(employee => {
+                                    return {
+                                        id: employee.ZAP_REDNI_BROJ,
+                                        surname: employee.ZAP_PREZIME,
+                                        name: employee.ZAP_IME
+                                    }
+                                })
                         }
-                    })
-                }
-            });
+                    });
 
-            if(institutions.length == 0){
-                reject('No institutions!');
-            }
-           
-            resolve({
-                created_at : JSON.stringify(new Date()),
-                numberOfInstitutions : institutions.length,
-                institutions : institutions
+                    if (institutions.length == 0) {
+                        reject('No institutions!');
+                    }
+
+                    resolve({
+                        created_at: JSON.stringify(new Date()),
+                        numberOfInstitutions: institutions.length,
+                        institutions: institutions
+                    });
+                });
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
+            })
+            .then((institutionDocument) => {
+                institutionCollection.insertInstitutionDocuments(institutionDocument)
+                    .then(() => {
+                        res.redirect('institutionsDocuments');
+                    });
             });
-        });
-    })
-    .catch((err) => {
-        res.render('message', {
-            errorMessage : 'ERROR: '+err,
-            link : '<a href="/getAllInstitutions"> Go Back</a>'
-        });
-    })
-    .then((institutionDocument) => {
-        institutionCollection.insertInstitutionDocuments(institutionDocument)
-        .then(() => {
-            res.redirect('institutionsDocuments');
-        });
     });
-});
 }

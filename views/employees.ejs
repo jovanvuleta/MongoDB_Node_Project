@@ -2,12 +2,56 @@
 
 <% if (employees.length === 0) { %>
 <div class="alert alert-info" role="alert">
-    <p>There are no institutions to show, click <a href="/addEmployee">here</a> to add an institution.</p>
+    <p>There are no employees to show, click <a href="/addEmployee/<%= 10 %>">here</a> to add an
+        employee.</p>
 </div>
 <% } else { %>
+
+<script>
+    function contractByEmployee() {
+        var id = prompt("Please enter Employee Number:");
+        link = "/getContractHistoryByEmployeeId/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getEmployeeByInstitutionId/<%= employee.VU_IDENTIFIKATOR %>";
+        }
+    }
+    function editEmployee() {
+        var id = prompt("Please enter Employee Number:");
+        link = "/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getEmployeeByInstitutionId/<%= employee.VU_IDENTIFIKATOR %>";
+        }
+    }
+    function deleteEmployee() {
+        var id = prompt("Please enter Employee Number:");
+        link = "/deleteEmployee/" + id;
+        if (id) {
+            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            window.location = "/getEmployeeByInstitutionId/<%= employee.VU_IDENTIFIKATOR %>";
+        }
+    }
+</script>
+
 <br>
-<br><br>
 <a type="button" class="btn btn-primary" href="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>">Add Employee</a>
+<a type="button" class="btn btn-primary" onclick="editEmployee()" href="#">Edit Employee</a>
+<a type="button" class="btn btn-primary" onclick="deleteEmployee()" href="#">Delete
+    Employee</a>
+<a type="button" class="btn btn-primary" onclick="contractByEmployee()" style="background-color:rgb(0, 205, 144)"
+    href="#">Get
+    Contract History</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/generateEmployeeDocuments">Insert
+    Employee
+    Document</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/employeesDocuments">View Employee
+    Documents</a>
+<br><br>
 <table class="table">
     <thead class="thead-dark">
         <tr>
@@ -18,8 +62,9 @@
             <th scope="col">Employee Last Name</th>
             <th scope="col">Employee Middle letter</th>
             <th scope="col">Employee Name</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
+            <!-- <th scope="col">Edit</th> -->
+            <!-- <th scope="col">View Employee Contract History</th> -->
+            <!-- <th scope="col">Delete</th> -->
         </tr>
     </thead>
     <tbody>
@@ -32,13 +77,18 @@
             <td><%= employee.ZAP_PREZIME %></td>
             <td><%= employee.ZAP_SREDNJE_SLOVO %></td>
             <td><%= employee.ZAP_IME %></td>
-            <td><a type="button" class="btn btn-warning"
+            <!-- <td><a type="button" class="btn btn-warning"
                     href="/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">Edit
                 </a>
-            </td>
-            <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= employee.ZAP_REDNI_BROJ %>"
+            </td> -->
+            <!-- <td><a type="button" class="btn btn-warning"
+                    href="/getContractHistoryByEmployeeId/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">View
+                    Employee Contract History
+                </a>
+            </td> -->
+            <!-- <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= employee.ZAP_REDNI_BROJ %>"
                     onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a>
-            </td>
+            </td> -->
         </tr>
         <% }); %>
     </tbody>

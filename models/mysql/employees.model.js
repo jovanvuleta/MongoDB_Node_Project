@@ -5,7 +5,6 @@ exports.Employees = (dbcon) => {
                 let query = "SELECT * FROM EMPLOYEES;";
                 dbcon.query(query, (err, data) => {
                     if (!err) {
-                        console.log('resolved');
                         resolve(data);
                     } else {
                         reject(err);
@@ -19,7 +18,6 @@ exports.Employees = (dbcon) => {
                 let query = "SELECT * FROM EMPLOYEES WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;";
                 dbcon.query(query, [id, type], (err, data) => {
                     if (!err) {
-                        console.log('resolved');
                         resolve(data);
                     } else {
                         reject(err);

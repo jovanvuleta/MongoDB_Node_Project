@@ -1,0 +1,89 @@
+<%- include('header') %>
+
+<% if (contracts.length === 0) { %>
+<div class="alert alert-info" role="alert">
+    <p>There are no contract history to show, click <a
+            href="/addContractHistory/<%= first_object.type %>/<%= first_object.emp_vu_id %>/<%= first_object.emp_id %>">here</a>
+        to add.</p>
+</div>
+<% } else { %>
+
+<script>
+    function doccumentByEmployee() {
+        var id = prompt("Please enter contract ID:");
+        link = "/getDocumentOfEmployementByContractId/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+        }
+    }
+    // function editContractHistory() {
+    //     var id = prompt("Please enter employee ID:");
+    //     link = "/editContractHistoryByEmployeeId/" + id;
+    //     if (id) {
+    //         window.location = link;
+    //     } else {
+    //         window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+    //     }
+    // }
+    function deleteInstitution() {
+        var id = prompt("Please enter Contract ID:");
+        link = "/deleteContractByEmployeeId/" + id;
+        if (id) {
+            confirm('This will delete the contract history of a given employee. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+        }
+    }
+</script>
+
+<br>
+<a type="button" class="btn btn-primary"
+    href="/addContractHistory/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>">Add
+    Contract</a>
+<a type="button" class="btn btn-primary" onclick="deleteInstitution()" href="#">Delete
+    Contract</a>
+<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)" onclick="doccumentByEmployee()"
+    href="#">Get
+    Doccument of Employment</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="#">Insert
+    Contract
+    Document</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="#">View Contract
+    Documents</a>
+<br><br>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Institution Type</th>
+            <th scope="col">Institution ID</th>
+            <th scope="col">Employee ID</th>
+            <th scope="col">Type of Contract</th>
+            <th scope="col">Contract Year</th>
+            <th scope="col">Contract ID</th>
+            <!-- <th scope="col">Delete</th> -->
+        </tr>
+    </thead>
+    <tbody>
+        <% contracts.forEach(function(contract, index) { %>
+        <tr>
+            <td><strong><%= index+1 %></strong></td>
+            <td><%= contract.TIP_UST %></td>
+            <td><%= contract.EMP_VU_IDENTIFIKATOR %></td>
+            <td><%= contract.ZAP_REDNI_BROJ %></td>
+            <td><%= contract.VD_OZNAKA %></td>
+            <td><%= contract.UG_GODINA %></td>
+            <td><%= contract.UG_BROJ_UGOVORA %></td>
+            <!-- <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= contract.ZAP_REDNI_BROJ %>"
+                    onClick="return confirm('This will delete the history contract of this employee, are you sure you want proceed!');">Delete</a>
+            </td> -->
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+<% } %>
+
+<%- include('footer') %>

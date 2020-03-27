@@ -1,6 +1,7 @@
-exports.EmployeesController = (app, dbcon) => {
+exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
     const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
+    const employeesCollection = require('../models/mongodb/employee.collection').EmployeeCollectionModel(mongo);
 
     app.get('/getAllEmployeesByInstitution/:id', (req, res) => {
         employeesModel.getAllEmployeesByInstitution(req.params.id)   //Call amoel function that return all states from the database
@@ -72,8 +73,6 @@ exports.EmployeesController = (app, dbcon) => {
 
         //Retrieves state's data in order to show the intinal data of the requested state to be dited
         Promise.all([getAllTypes, getEmployees]).then((data) => {
-            console.log("logged data:");
-            console.log(data[1][0]);
             res.render('editEmployee', {
                 types: data[0],
                 employee: data[1][0]
@@ -101,4 +100,65 @@ exports.EmployeesController = (app, dbcon) => {
             });
     });
 
+
+    app.get('/employeesDocuments', (req, res) => {
+        employeesCollection.getAllEmployeeDocuments()
+            .then((data) => {
+                res.render('employeeDocuments', {
+                    documents: data
+                })
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + er,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                })
+            });
+    });
+
+    app.get('/generateEmployeeDocuments', (req, res) => {
+        // const allInstitutions = institutionModel.getAllInstitutions();
+        employeesModel.getAllEmployees()
+
+            .then((data) => {
+                return new Promise((resolve, reject) => {
+                    employees = data.map(employee => {
+                        return {
+                            id: employee.ZAP_REDNI_BROJ,
+                            surname: employee.ZAP_PREZIME,
+                            name: employee.ZAP_IME
+                        }
+                    });
+
+                    if (employees.length == 0) {
+                        reject('No institutions!');
+                    }
+
+                    resolve({
+                        created_at: JSON.stringify(new Date()),
+                        numberOfEmployees: employees.length,
+                        employees: employees
+                    });
+                });
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
+            })
+
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
+            })
+            .then((employeeDocument) => {
+                employeesCollection.insertEmployeeDocuments(employeeDocument)
+                    .then(() => {
+                        res.redirect('employeesDocuments');
+                    });
+            });
+    });
 }

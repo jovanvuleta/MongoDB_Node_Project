@@ -5,7 +5,7 @@
     <p>There are no institutions to show, click <a href="/addInstitution">here</a> to add an institution.</p>
 </div>
 <% } else { %>
-    <br>
+<br>
 
     <a type="button" class="btn btn-primary" href="/addInstitution">Add institution</a>
     
@@ -44,27 +44,27 @@
             });
         });
 
-        function editInstitution() {
-            var id = prompt("Please enter institution ID:");
-            link = "/editInstitutionById/" + id;
-            if (id) {
-                window.location = link;
-            } else {
-                window.location = "/getAllInstitutions";
-            }
+    function editInstitution() {
+        var id = prompt("Please enter institution ID:");
+        link = "/editInstitutionById/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getAllInstitutions";
         }
+    }
 
-        function deleteInstitution() {
-            var id = prompt("Please enter institution ID:");
-            link = "/deleteInstitutionById/" + id;
-            if (id) {
-                confirm('This will delete the entire institution. Are you sure you want proceed?');
-                window.location = link;
-            } else {
-                window.location = "/getAllInstitutions";
-            }
+    function deleteInstitution() {
+        var id = prompt("Please enter institution ID:");
+        link = "/deleteInstitutionById/" + id;
+        if (id) {
+            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            window.location = "/getAllInstitutions";
         }
-    </script>
+    }
+</script>
 
     <a type="button" class="btn btn-primary" id="employeesByInstitutionButton" href="#">Get employees</a>
     <a type="button" class="btn btn-primary" onClick="editInstitution()" href="#">Edit institution</a>
