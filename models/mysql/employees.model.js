@@ -14,10 +14,10 @@ exports.Employees = (dbcon) => {
                 });
             })
         },
-        getAllEmployeesByInstitution: (id) => {
+        getAllEmployeesByInstitution: (id, type) => {
             return new Promise((resolve, reject) => {
-                let query = "SELECT * FROM EMPLOYEES WHERE VU_IDENTIFIKATOR LIKE ?;";
-                dbcon.query(query, [id], (err, data) => {
+                let query = "SELECT * FROM EMPLOYEES WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;";
+                dbcon.query(query, [id, type], (err, data) => {
                     if (!err) {
                         console.log('resolved');
                         resolve(data);

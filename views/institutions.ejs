@@ -10,15 +10,39 @@
     <a type="button" class="btn btn-primary" href="/addInstitution">Add institution</a>
     
     <script>
-        function employeesByInstitution() {
-            var id = prompt("Please enter institution ID:");
-            link = "/getEmployeeByInstitutionId/" + id;
-            if (id) {
-                window.location = link;
-            } else {
-                window.location = "/getAllInstitutions";
-            }
-        }
+
+        $.noConflict();
+        jQuery(document).ready(function( $ ) {
+            $('#employeesByInstitution').dialog({
+                autoOpen: false,
+                modal: true,
+                overlay: {
+                    opacity: 0.7,
+                    background: "black"
+                },
+                buttons: {
+                    "VIEW": function() {
+                        // get variables and load employees
+                        var id = $('#dialogId').val();
+                        var type = $('#dialogType').val();
+                        
+                        var link = "/getEmployeeByInstitutionId/" + id + "/" + type;
+                        if (id && type) {
+                            window.location = link;
+                        } else {
+                            window.location = "/getAllInstitutions";
+                        }
+                    },
+                    "CANCEL": function() {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+
+            $('#employeesByInstitutionButton').click(function() {
+                $('#employeesByInstitution').dialog('open');
+            });
+        });
 
         function editInstitution() {
             var id = prompt("Please enter institution ID:");
@@ -42,13 +66,29 @@
         }
     </script>
 
-    <a type="button" class="btn btn-primary" onClick="employeesByInstitution()" href="#">Get employees</a>
+    <a type="button" class="btn btn-primary" id="employeesByInstitutionButton" href="#">Get employees</a>
     <a type="button" class="btn btn-primary" onClick="editInstitution()" href="#">Edit institution</a>
     <a type="button" class="btn btn-primary" onClick="deleteInstitution()" href="#">Delete institution</a>
     <a type="button" class="btn btn-primary" href="/generateInstitutionsDocument">Generate institution docs</a>
     <a type="button" class="btn btn-primary" href="/institutionsDocuments">View institution docs</a>
     
     <br><br>
+
+    <div title="Institution information" id="employeesByInstitution" style="display:none;">
+        <div class="modal-body">
+            <form>
+                <label>Institution ID</label>
+                <input type="text" id="dialogId"/>
+                <label>Institution Type</label>
+                <select class="custom-select" id="dialogType" required>
+                    <% types.forEach(function(type, index) { %>
+                        <option value="<%= type.TIP_UST %>"><%= type.TIP_NAZIV %></option>
+                    <% }); %>
+                </select>
+            </form>
+        </div>
+    </div>
+
     <table class="table">
         <thead class="thead-dark">
             <tr>

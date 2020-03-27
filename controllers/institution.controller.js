@@ -4,10 +4,15 @@ exports.InstitutionController = function(app, dbcon, mongo) {
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
 
     app.get('/getAllInstitutions', (req, res) => {
-        institutionModel.getAllInstitutions()
+
+        let getAllTypes = institutionModel.getAllTypes().then();
+        let institutions = institutionModel.getAllInstitutions().then();
+
+        Promise.all([getAllTypes, institutions])
         .then((data) => {
             res.render('institutions', {
-                institutions : data,
+                types : data[0],
+                institutions : data[1],
                 successMessage : ''
             });
         })
@@ -18,8 +23,9 @@ exports.InstitutionController = function(app, dbcon, mongo) {
         });
     });
 
-    app.get('/getEmployeeByInstitutionId/:id', (req, res) => {
-        employeesModel.getAllEmployeesByInstitution(req.params.id)
+    app.get('/getEmployeeByInstitutionId/:id/:type', (req, res) => {
+        
+        employeesModel.getAllEmployeesByInstitution(req.params.id, req.params.type)
         .then((data) => {
             res.render('employees', {
                 employees: data,
@@ -34,16 +40,16 @@ exports.InstitutionController = function(app, dbcon, mongo) {
         });
     });
 
-    app.get('/addInstitution', (req, res) => {
+    app.get('/addInstitution/:state', (req, res) => {
 
-        let getAllStates = institutionModel.getAllStates().then();
+        // let getAllStates = institutionModel.getAllStates().then();
         let getAllTypes = institutionModel.getAllTypes().then();
         let getAllOwnerships = institutionModel.getAllOwnerships().then();
         
-        Promise.all([getAllStates, getAllTypes, getAllOwnerships])
+        Promise.all([req.params.state, getAllTypes, getAllOwnerships])
         .then((data) => {
                 res.render('addInstitution', {
-                    states : data[0],
+                    state : data[0],
                     types : data[1],
                     ownerships : data[2]
                 });
@@ -173,8 +179,6 @@ exports.InstitutionController = function(app, dbcon, mongo) {
             });
         });
     })
-
-    // some change 
     .catch((err) => {
         res.render('message', {
             errorMessage : 'ERROR: '+err,

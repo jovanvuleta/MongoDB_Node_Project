@@ -23,10 +23,15 @@ exports.StateController = function(app, dbcon, mongo) {
     });
 
     app.get('/getInstitutionsByStateId/:id', (req, res) => {
-        InstitutionModel.getInstitutionsByStateId(req.params.id)
+
+        let getAllTypes = InstitutionModel.getAllTypes().then();
+        let institutions = InstitutionModel.getInstitutionsByStateId(req.params.id).then();
+        
+        Promise.all([getAllTypes, institutions])
         .then((data) => {
             res.render('institutions', {
-                institutions : data,
+                types : data[0],
+                institutions : data[1],
                 successMessage : ''
             });
         })

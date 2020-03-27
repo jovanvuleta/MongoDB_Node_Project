@@ -4,10 +4,7 @@
         <div class="form-group">
             <label for="stateId">State</label>
             <select class="custom-select" id="stateId" name="stateId" required>
-                <option selected disabled value="">Select state...</option>
-                <% states.forEach(function(state, index) { %>
-                <option value="<%= state.DR_IDENTIFIKATOR %>"><%= state.DR_NAZIV %></option>
-                <% }); %>
+                <option selected disabled value="<%= state.DR_IDENTIFIKATOR %>"></option>
             </select>
         </div>
         <div class="form-group">
