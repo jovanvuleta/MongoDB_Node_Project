@@ -67,10 +67,10 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
     
-        getInstitutionById : function(id) {
+        getInstitutionById : function(id, type) {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ?;';
-                dbcon.query(query, [id], (err, data) => {
+                let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
+                dbcon.query(query, [id, type], (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {
@@ -93,11 +93,11 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        editInstitutionById : function(institutionType, institutionName, stateId, ownershipType, id) {
+        editInstitutionById : function(institutionType, institutionName, ownershipType, id, type) {
             return new Promise((resolve, reject) => {
-                let query = 'UPDATE HIGH_EDUCATION_INSTITUTION SET TIP_UST = ?, VU_NAZIV = ?, DR_IDENTIFIKATOR = ?, VV_OZNAKA = ? WHERE VU_IDENTIFIKATOR LIKE ?;';
+                let query = 'UPDATE HIGH_EDUCATION_INSTITUTION SET TIP_UST = ?, VU_NAZIV = ?, VV_OZNAKA = ? WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
                 
-                dbcon.query(query, [institutionType, institutionName, stateId, ownershipType, id], (err, data) => {
+                dbcon.query(query, [institutionType, institutionName, ownershipType, id, type], (err, data) => {
                     if ( !err ) {
                         resolve(data);
                     } else {
@@ -107,10 +107,10 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        deleteInstitutionById: function (id) {
+        deleteInstitutionById: function (id, type) {
             return new Promise((resolve, reject) => {
-                let query = 'DELETE FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ?;';
-                dbcon.query(query, [id], (err, data) => {
+                let query = 'DELETE FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
+                dbcon.query(query, [id, type], (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {

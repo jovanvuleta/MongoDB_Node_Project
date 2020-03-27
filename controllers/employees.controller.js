@@ -19,8 +19,8 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
             })
     });
 
-    app.get('/addEmployee/:id', (req, res) => {
-        employeesModel.getAllEmployeesByInstitution(req.params.id)   //Call amoel function that return all states from the database
+    app.get('/addEmployee/:id/:type', (req, res) => {
+        employeesModel.getAllEmployeesByInstitution(req.params.id, req.params.type)   //Call amoel function that return all states from the database
             .then((data) => {
                 res.render('addEmployee', {
                     employees: data,

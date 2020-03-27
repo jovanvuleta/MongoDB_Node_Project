@@ -2,73 +2,95 @@
 
 <% if (institutions.length === 0) { %>
 <div class="alert alert-info" role="alert">
-    <p>There are no institutions to show, click <a href="/addInstitution">here</a> to add an institution.</p>
+    <p>There are no institutions to show, click <a href="/addInstitution/<%= state.DR_IDENTIFIKATOR %>">here</a> to add an institution.</p>
 </div>
 <% } else { %>
 <br>
 
-    <a type="button" class="btn btn-primary" href="/addInstitution">Add institution</a>
+    <a type="button" class="btn btn-primary" href="/addInstitution/<%= state.DR_IDENTIFIKATOR %>">Add institution</a>
     
     <script>
 
         $.noConflict();
         jQuery(document).ready(function( $ ) {
-            $('#employeesByInstitution').dialog({
-                autoOpen: false,
-                modal: true,
-                overlay: {
-                    opacity: 0.7,
-                    background: "black"
-                },
-                buttons: {
-                    "VIEW": function() {
-                        // get variables and load employees
-                        var id = $('#dialogId').val();
-                        var type = $('#dialogType').val();
-                        
-                        var link = "/getEmployeeByInstitutionId/" + id + "/" + type;
-                        if (id && type) {
-                            window.location = link;
-                        } else {
-                            window.location = "/getAllInstitutions";
-                        }
+            function dialog() {
+                var def = $.Deferred();
+
+                $('#employeesByInstitution').dialog({
+                    autoOpen: true,
+                    modal: true,
+                    overlay: {
+                        opacity: 0.7,
+                        background: "black"
                     },
-                    "CANCEL": function() {
-                        $(this).dialog('close');
+                    buttons: {
+                        "OK": function() {
+                            def.resolve();
+                        },
+                        "CANCEL": function() {
+                            def.reject();
+                            $(this).dialog('close');
+                        }
                     }
-                }
-            });
+                });
+                return def.promise();
+            }
 
             $('#employeesByInstitutionButton').click(function() {
-                $('#employeesByInstitution').dialog('open');
+                dialog().done(function() {
+                    var id = $('#dialogId').val();
+                    var type = $('#dialogType').val();
+
+                    var link = "/getEmployeeByInstitutionId/" + id + "/" + type;
+                    if (id && type) {
+                        window.location = link;
+                    } else {
+                        window.location = "/getAllInstitutions";
+                    }})
+                    .fail(function() {
+                        // cry a little
+                    });
             });
-        });
 
-    function editInstitution() {
-        var id = prompt("Please enter institution ID:");
-        link = "/editInstitutionById/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            window.location = "/getAllInstitutions";
-        }
-    }
+            $('#editInstitution').click(function() {
+                dialog().done(function() {
+                    var id = $('#dialogId').val();
+                    var type = $('#dialogType').val();
 
-    function deleteInstitution() {
-        var id = prompt("Please enter institution ID:");
-        link = "/deleteInstitutionById/" + id;
-        if (id) {
-            confirm('This will delete the entire institution. Are you sure you want proceed?');
-            window.location = link;
-        } else {
-            window.location = "/getAllInstitutions";
-        }
-    }
-</script>
+                    link = "/editInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
+                    if (id) {
+                        window.location = link;
+                    } else {
+                        window.location = "/getAllInstitutions";
+                    }})
+                    .fail(function() {
+                        // cry a little
+                    });
+            });
+
+            $('#deleteInstitution').click(function() {
+                dialog().done(function() {
+                    var id = $('#dialogId').val();
+                    var type = $('#dialogType').val();
+
+                    link = "/deleteInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
+                    if (id) {
+                        confirm('This will delete the entire institution. Are you sure you want proceed?');
+                        window.location = link;
+                    } else {
+                        window.location = "/getAllInstitutions";
+                    }})
+                    .fail(function() {
+                        // cry a little
+                    });
+            });
+        })
+        
+    </script>
 
     <a type="button" class="btn btn-primary" id="employeesByInstitutionButton" href="#">Get employees</a>
-    <a type="button" class="btn btn-primary" onClick="editInstitution()" href="#">Edit institution</a>
-    <a type="button" class="btn btn-primary" onClick="deleteInstitution()" href="#">Delete institution</a>
+    <a type="button" class="btn btn-primary" id="editInstitution" href="#">Edit institution</a>
+    <a type="button" class="btn btn-primary" id="deleteInstitution" href="#">Delete institution</a>
     <a type="button" class="btn btn-primary" href="/generateInstitutionsDocument">Generate institution docs</a>
     <a type="button" class="btn btn-primary" href="/institutionsDocuments">View institution docs</a>
     

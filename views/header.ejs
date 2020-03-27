@@ -17,18 +17,6 @@
     <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
 
-    <script>
-        function institutionsByState() {
-            var id = prompt("Please enter state ID:");
-            link = "/getInstitutionsByStateId/" + id;
-            if (id) {
-                window.location = link;
-            } else {
-                window.location = "/getAllStates";
-            }
-        }
-    </script>
-
     <body>
         <div class="container">
             <nav>
@@ -38,6 +26,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/getAllStates">States</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/getAllInstitutions">Institutions</a>
                     </li>
                 </ul>
             </nav>     

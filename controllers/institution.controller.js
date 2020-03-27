@@ -5,14 +5,27 @@ exports.InstitutionController = function (app, dbcon, mongo) {
 
     app.get('/getAllInstitutions', (req, res) => {
 
-        let getAllTypes = institutionModel.getAllTypes().then();
-        let institutions = institutionModel.getAllInstitutions().then();
+        institutionModel.getAllInstitutions()
+        .then((data) => {
+            res.render('allInstitutions', {
+                institutions : data,
+                successMessage : ''
+            });
+        });
+    });
 
-        Promise.all([getAllTypes, institutions])
+    app.get('/getInstitutionsByStateId/:id', (req, res) => {
+
+        let getAllTypes = InstitutionModel.getAllTypes().then();
+        let institutions = InstitutionModel.getInstitutionsByStateId(req.params.id).then();
+        let state = StateModel.getStateById(req.params.id).then();
+        
+        Promise.all([getAllTypes, institutions, state])
         .then((data) => {
             res.render('institutions', {
                 types : data[0],
                 institutions : data[1],
+                state : data[2][0],
                 successMessage : ''
             });
         });
@@ -56,16 +69,15 @@ exports.InstitutionController = function (app, dbcon, mongo) {
                 });
             })
     });
-    
 
-    app.post('/addInstitution', (req, res) => {
+    app.post('/addInstitution/:state', (req, res) => {
 
         let getAllInstitutions = institutionModel.getAllInstitutions().then();
-        let getInstitution = institutionModel.addInstitution(req.body.institutionId, req.body.institutionName, req.body.institutionType, req.body.stateId, req.body.ownershipType).then();
+        let getInstitution = institutionModel.addInstitution(req.body.institutionId, req.body.institutionName, req.body.institutionType, req.params.state, req.body.ownershipType).then();
 
         Promise.all([getAllInstitutions, getInstitution])
             .then((data) => {
-                res.redirect('/getAllInstitutions');
+                res.redirect('/getInstitutionsByStateId/' + req.params.state);
             })
             .catch((err) => {
                 res.render('message', {
@@ -75,11 +87,11 @@ exports.InstitutionController = function (app, dbcon, mongo) {
             });
     });
 
-    app.get('/editInstitutionById/:id', (req, res) => {
+    app.get('/editInstitutionById/:state/:id/:type', (req, res) => {
         let getAllStates = institutionModel.getAllStates().then();
         let getAllTypes = institutionModel.getAllTypes().then();
         let getAllOwnerships = institutionModel.getAllOwnerships().then();
-        let getInstitution = institutionModel.getInstitutionById(req.params.id).then();
+        let getInstitution = institutionModel.getInstitutionById(req.params.id, req.params.type).then();
 
         Promise.all([getAllStates, getAllTypes, getAllOwnerships, getInstitution]).then((data) => {
             res.render('editInstitution', {
@@ -94,10 +106,10 @@ exports.InstitutionController = function (app, dbcon, mongo) {
             });
     });
 
-    app.post('/editInstitutionById/:id', (req, res) => {
-        institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.stateId, req.body.ownershipType, req.params.id)
+    app.post('/editInstitutionById/:state/:id/:type', (req, res) => {
+        institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.ownershipType, req.params.id, req.params.type)
             .then((data) => {
-                res.redirect('/getAllInstitutions');
+                res.redirect('/getInstitutionsByStateId/' + req.params.state);
             })
             .catch((err) => {
                 res.render('message', {
@@ -107,10 +119,10 @@ exports.InstitutionController = function (app, dbcon, mongo) {
             });
     });
 
-    app.get('/deleteInstitutionById/:id', (req, res) => {
-        institutionModel.deleteInstitutionById(req.params.id)
+    app.get('/deleteInstitutionById/:state/:id/:type', (req, res) => {
+        institutionModel.deleteInstitutionById(req.params.id, req.params.type)
             .then((data) => {
-                res.redirect('/getAllInstitutions');
+                res.redirect('/getInstitutionsByStateId/' + req.params.state);
             })
             .catch((err) => {
                 res.render('message', {
