@@ -13,6 +13,19 @@ exports.CourseModel = function(dbcon) {
                 });
             });
         },
+        allCourses : function() {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM COURSE ;';
+
+                dbcon.query(query, (err, data) => {
+                    if ( !err ) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
 
         getAllTypes : function() {
             return new Promise((resolve, reject) => {
@@ -62,7 +75,7 @@ exports.CourseModel = function(dbcon) {
         editCourseById : function( courseVersion,courseName,courseSubject) {
             return new Promise((resolve, reject) => {
                 let query = 'UPDATE COURSE SET NP_VERZIJA = ?, NP_NAZIV_PREDMETA = ? WHERE NP_PREDMET LIKE ?;';
-                
+                 
                 dbcon.query(query, [courseVersion,courseName,courseSubject], (err, data) => {
                     if ( !err ) {
                         resolve(data);
@@ -73,17 +86,50 @@ exports.CourseModel = function(dbcon) {
             });
         },
 
-        deleteInstitutionById : function(courseSubject) {
+        
+        deleteCourse: (id) => {
             return new Promise((resolve, reject) => {
                 let query = 'DELETE FROM COURSE WHERE NP_PREDMET LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                        console.log(err);
+                    }
+                })
+            });
+        },
+        editCourse: (type,  name, vu_id, predmet, version) => {
+            return new Promise((resolve, reject) => {
+                let query = "UPDATE COURSE SET TIP_UST = ?, NP_NAZIV_PREDMETA = ? WHERE (VU_IDENTIFIKATOR = ? AND NP_PREDMET = ? AND NP_VERZIJA = ?);";
+                dbcon.query(query, [type, name, vu_id, predmet, version], (err, data) => {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);
                     }
+                })
+            })
+        },
+        getAllCoursesByInstitutionAndCourseId: (vu_id, np_predmet, np_verzija) => {
+            return new Promise((resolve, reject) => {
+                let query = "SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ? AND NP_PREDMET LIKE ? AND NP_VERZIJA LIKE ?;";
+                dbcon.query(query, [vu_id, np_predmet,np_verzija], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                        console.log(err);
+                    }
                 });
-            });
-        }
+            })
+        },
+
+        
+
+
     }
+    
+    
 }
