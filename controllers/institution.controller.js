@@ -1,8 +1,9 @@
 exports.InstitutionController = function (app, dbcon, mongo) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
+    const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
-
+    
     app.get('/getAllInstitutions', (req, res) => {
 
         institutionModel.getAllInstitutions()
@@ -32,7 +33,6 @@ exports.InstitutionController = function (app, dbcon, mongo) {
     });
 
     app.get('/getEmployeeByInstitutionId/:id/:type', (req, res) => {
-        
         employeesModel.getAllEmployeesByInstitution(req.params.id, req.params.type)
         .then((data) => {
             res.render('employees', {
@@ -45,6 +45,22 @@ exports.InstitutionController = function (app, dbcon, mongo) {
                 errorMessage : 'ERROR: ' + err,
                 link : '<a href="/getAllInstitutions"> Go Back</a>'
             });
+        });
+    });
+
+    app.get('/getCoursesByInstitutionId/:id/:type', (req, res) => {
+        institutionModel.getCourses(req.params.id, req.params.type)
+        .then((data) => {
+            res.render('courses', {
+                courses : data,
+                course: data[0],
+                successMessage : ''
+            });
+        })
+        .catch(err => {
+            res.render('message', {
+                errorMessage : 'ERROR: ' + err,
+            });  
         });
     });
 
@@ -150,15 +166,16 @@ exports.InstitutionController = function (app, dbcon, mongo) {
     app.get('/generateInstitutionsDocument', (req, res) => {
         const allInstitutions = institutionModel.getAllInstitutions();
         const allEmployees = employeesModel.getAllEmployees();
+        const allCourses = courseModel.allCourses();
 
-        Promise.all([allInstitutions, allEmployees])
+        Promise.all([allInstitutions, allEmployees, allCourses])
             .catch((err) => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/getAllInstitutions"> Go Back</a>'
                 })
             })
-            .then(([institutions, employees]) => {
+            .then(([institutions, employees, courses]) => {
                 return new Promise((resolve, reject) => {
                     institutions = institutions.map(institution => {
                         return {
@@ -171,6 +188,15 @@ exports.InstitutionController = function (app, dbcon, mongo) {
                                         id: employee.ZAP_REDNI_BROJ,
                                         surname: employee.ZAP_PREZIME,
                                         name: employee.ZAP_IME
+                                    }
+                                }),
+                            number_of_courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
+                            courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                                .map(course => {
+                                    return {
+                                        code: course.NP_PREDMET,
+                                        version: course.NP_VERZIJA,
+                                        name: course.NP_NAZIV_PREDMETA
                                     }
                                 })
                         }

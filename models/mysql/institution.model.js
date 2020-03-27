@@ -80,6 +80,19 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
+        getCourses : function(id, type) {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
+                dbcon.query(query, [id, type], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
+
         addInstitution : function(institutionId, institutionName, institutionType, stateId, ownershipType){
             return new Promise((resolve, reject) => {
                 let query = 'INSERT INTO HIGH_EDUCATION_INSTITUTION (VU_IDENTIFIKATOR, VU_NAZIV, TIP_UST, DR_IDENTIFIKATOR, VV_OZNAKA) VALUES (?, ?, ?, ?, ?);';
