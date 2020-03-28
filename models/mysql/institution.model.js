@@ -69,7 +69,7 @@ exports.InstitutionModel = function (dbcon) {
     
         getInstitutionById : function(id, type) {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
+                let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE (VU_IDENTIFIKATOR = ? AND TIP_UST = ?);';
                 dbcon.query(query, [id, type], (err, data) => {
                     if (!err) {
                         resolve(data);

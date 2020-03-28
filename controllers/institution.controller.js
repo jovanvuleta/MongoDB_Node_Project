@@ -1,9 +1,10 @@
-exports.InstitutionController = function (app, dbcon, mongo) {
+exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
-    
+    const Neo4jInstitutionModel = require('../models/neo4j/institution.model.js').InstitutionModel(neo4j);
+
     app.get('/getAllInstitutions', (req, res) => {
 
         institutionModel.getAllInstitutions()
@@ -90,8 +91,9 @@ exports.InstitutionController = function (app, dbcon, mongo) {
 
         let getAllInstitutions = institutionModel.getAllInstitutions().then();
         let getInstitution = institutionModel.addInstitution(req.body.institutionId, req.body.institutionName, req.body.institutionType, req.params.state, req.body.ownershipType).then();
+        let neoInstitution = Neo4jInstitutionModel.addInstitution(req.params.state, req.body.institutionId, req.body.institutionName, req.body.institutionType, req.body.ownershipType).then();
 
-        Promise.all([getAllInstitutions, getInstitution])
+        Promise.all([getAllInstitutions, getInstitution, neoInstitution])
             .then((data) => {
                 res.redirect('/getInstitutionsByStateId/' + req.params.state);
             })
@@ -109,34 +111,41 @@ exports.InstitutionController = function (app, dbcon, mongo) {
         let getAllOwnerships = institutionModel.getAllOwnerships().then();
         let getInstitution = institutionModel.getInstitutionById(req.params.id, req.params.type).then();
 
-        Promise.all([getAllStates, getAllTypes, getAllOwnerships, getInstitution]).then((data) => {
+        Promise.all([getInstitution, getAllStates, getAllTypes, getAllOwnerships])
+        .then(data => {
+            console.log(data);
             res.render('editInstitution', {
-                states: data[0],
-                types: data[1],
-                ownerships: data[2],
-                institution: data[3][0]
+                states: data[1],
+                types: data[2],
+                ownerships: data[3],
+                institution: data[0][0]
             });
         })
-            .catch((err) => {
-                res.send('editInstitution', err);
-            });
     });
-
+    
     app.post('/editInstitutionById/:state/:id/:type', (req, res) => {
-        institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.ownershipType, req.params.id, req.params.type)
-            .then((data) => {
-                res.redirect('/getInstitutionsByStateId/' + req.params.state);
-            })
-            .catch((err) => {
-                res.render('message', {
-                    errorMessage: 'ERROR: ' + err,
-                    link: '<a href="/editInstitutionById/' + req.body.institutionId + ' "> Go back!</a>'
-                });
+
+        let editInstitutionSQL = institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.ownershipType, req.params.id, req.params.type).then();
+        let editInstitutionNeo = Neo4jInstitutionModel.editInstitutionById(req.params.state, req.params.id, req.params.type, req.body.institutionName, req.body.institutionType, req.body.ownershipType).then();
+        
+        Promise.all([editInstitutionSQL, editInstitutionNeo])
+        .then((data) => {
+            res.redirect('/getInstitutionsByStateId/' + req.params.state);
+        })
+        .catch((err) => {
+            res.render('message', {
+                errorMessage: 'ERROR: ' + err,
+                link: '<a href="/editInstitutionById/' + req.body.institutionId + ' "> Go back!</a>'
             });
+        });
     });
 
     app.get('/deleteInstitutionById/:state/:id/:type', (req, res) => {
-        institutionModel.deleteInstitutionById(req.params.id, req.params.type)
+
+        let mysqlDeletePromise = institutionModel.deleteInstitutionById(req.params.id, req.params.type);
+        let neo4jDeletePromise = Neo4jInstitutionModel.deleteInstitutionById(req.params.id, req.params.type);
+
+        Promise.all([mysqlDeletePromise, neo4jDeletePromise])
             .then((data) => {
                 res.redirect('/getInstitutionsByStateId/' + req.params.state);
             })

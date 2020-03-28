@@ -26,6 +26,7 @@
                     buttons: {
                         "OK": function() {
                             def.resolve();
+                            $(this).dialog('close');
                         },
                         "CANCEL": function() {
                             def.reject();
@@ -58,7 +59,7 @@
                     var type = $('#dialogType').val();
 
                     link = "/editInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
-                    if (id) {
+                    if (id && type) {
                         window.location = link;
                     } else {
                         window.location = "/getAllInstitutions";
@@ -74,7 +75,7 @@
                     var type = $('#dialogType').val();
 
                     link = "/deleteInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
-                    if (id) {
+                    if (id && type) {
                         confirm('This will delete the entire institution. Are you sure you want proceed?');
                         window.location = link;
                     } else {
