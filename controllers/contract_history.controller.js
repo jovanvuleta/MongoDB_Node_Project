@@ -1,5 +1,6 @@
-exports.ContractHistoryController = (app, dbcon, mongo) => {
+exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
     const contractHistoryModel = require('../models/mysql/contract_history.model').ContractHistoryModel(dbcon);
+    const Neo4jDocumentOfEmploymentModel = require('../models/neo4j/contractHistory.model').ContractHistoryModel(neo4j);
 
     app.get('/getAllContractHistory', (req, res) => {
         contractHistoryModel.getAllContractHistoryForHeader()
@@ -67,7 +68,10 @@ exports.ContractHistoryController = (app, dbcon, mongo) => {
     });
 
     app.post('/addContract/:type/:emp_vu_id/:emp_id', (req, res) => {
-        contractHistoryModel.addContractHistory(req.params.type, req.params.emp_vu_id, req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID)
+        let mysqlAddContractPromise = contractHistoryModel.addContractHistory(req.params.type, req.params.emp_vu_id, req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
+        let neo4jAddContractPromise = Neo4jDocumentOfEmploymentModel.addContract(req.params.type, req.params.emp_vu_id, req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
+
+        Promise.all([mysqlAddContractPromise, neo4jAddContractPromise])
             .then((data) => {
                 res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
                     successMessage: 'Contract under id: ' + req.body.contractID + ', was added successfully.',   //success message
