@@ -32,7 +32,7 @@ exports.ContractHistoryController = (app, dbcon, mongo) => {
             .catch((err) => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err + '!',
-                    link: 'ERROR: ' + err + ' <a href="/getAllStates">Goback!</a>'
+                    link: 'ERROR: ' + err + ' <a href="/getAllStates">Go back to states page!</a>'
                 });
             });
     });
@@ -61,7 +61,7 @@ exports.ContractHistoryController = (app, dbcon, mongo) => {
             .catch(err => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err + '!',
-                    link: 'ERROR: ' + err + ' <a href="/getAllStates">Goback!</a>'
+                    link: 'ERROR: ' + err + ' <a href="/getAllStates">Go back to states page!</a>'
                 });
             });
     });
@@ -87,13 +87,13 @@ exports.ContractHistoryController = (app, dbcon, mongo) => {
             .then(data => {
                 res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
                     successMessage: 'Contract History with the id of: ' + req.params.id + ' was deleted successfully.',   //success message
-                    link: '<a href="/getAllPopulatedPlaces"> Go Back</a>'   //provide a link that provides a links to another page
+                    link: '<a href="/getAllStates"> Go to states page</a>'   //provide a link that provides a links to another page
                 });
             })
             .catch(err => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err + '!',
-                    link: 'ERROR: ' + err + ' <a href="/getAllStates">Goback!</a>'
+                    link: 'ERROR: ' + err + ' <a href="/getAllStates">Go back to states page!</a>'
                 });
             });
     })

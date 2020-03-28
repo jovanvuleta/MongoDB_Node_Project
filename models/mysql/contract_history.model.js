@@ -2,8 +2,8 @@ exports.ContractHistoryModel = (dbcon) => {
     return {
         getAllContractHistoryForHeader: () => {
             return new Promise((resolve, reject) => {
-                let query = "SELECT * FROM CONTRACT_HISTORY);";
-                dbcon.query(query, [type, emp_vu_id, emp_id], (err, data) => {
+                let query = "SELECT * FROM CONTRACT_HISTORY;";
+                dbcon.query(query, (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {

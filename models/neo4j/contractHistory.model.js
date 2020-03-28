@@ -1,11 +1,10 @@
 exports.contractHistoryModel = (neo4j) => {
     return {
-        addContract: (inst_type, vu_id, emp_id, emp_last_name, emp_middle_letter, emp_name) => {
+        addContract: (inst_type, vu_id, emp_id, cnt_type, cnt_year, cnt_id) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                // let query = 'MERGE(e:Employee {TIP_UST: $inst_type, VU_IDENTIFIKATOR: $vu_id, ZAP_REDNI_BROJ: $emp_id, ZAP_PREZIME: $emp_last_name, ZAP_SREDNJE_SLOVO: $emp_middle_letter, ZAP_IME: $emp_name})';
-                let query = 'MATCH (hei:HIGH_EDUCATION_INSTITUTION {TIP_UST: $inst_type, VU_IDENTIFIKATOR: $vu_id}) MERGE(ch:CONTRACT_HISTORY {TIP_UST: $inst_type, VU_IDENTIFIKATOR: $vu_id, ZAP_REDNI_BROJ: $emp_id, ZAP_PREZIME: $emp_last_name, ZAP_SREDNJE_SLOVO: $emp_middle_letter, ZAP_IME: $emp_name}) MERGE ((e) - [wi:WORKS_IN] -> (hei)) MERGE ((hei) - [ed:EMPLOYEED] -> (e)) ';
-                session.run(query, { inst_type: inst_type, vu_id: vu_id, emp_id: emp_id, emp_last_name: emp_last_name, emp_middle_letter: emp_middle_letter, emp_name: emp_name })
+                let query = 'MATCH(e:Employee {ZAP_REDNI_BROJ: $emp_id}) MATCH(dop:DOCCUMENTS_OF_EMPLOYMENT {UG_BROJ_UGOVORA: $cnt_id}) MERGE(ch:CONTRACT_HISTORY {TIP_UST: $inst_type, EMP_VU_IDENTIFIKATOR: $vu_id, ZAP_REDNI_BROJ: $emp_id, VD_OZNAKA: $cnt_type, UG_GODINA: $cnt_year, UG_BROJ_UGOVORA: $cnt_id}) MERGE ((e) - [wi:WORKS_IN] -> (hei)) MERGE ((hei) - [ed:EMPLOYEED] -> (e)) ';
+                session.run(query, { inst_type: inst_type, vu_id: vu_id, emp_id: emp_id, cnt_type: cnt_type, cnt_year: cnt_year, cnt_id: cnt_id })
                     .then(result => {
                         resolve(result);
                     })
