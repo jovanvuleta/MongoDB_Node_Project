@@ -87,7 +87,10 @@ exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
     });
 
     app.get('/deleteContractById/:id', (req, res) => {
-        contractHistoryModel.deleteContract(req.params.id)
+        let mysqlContractDelete = contractHistoryModel.deleteContract(req.params.id);
+        let neo4jContractDelete = Neo4jDocumentOfEmploymentModel.deleteContractById(req.params.id);
+
+        Promise.all([mysqlContractDelete, neo4jContractDelete])
             .then(data => {
                 res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
                     successMessage: 'Contract History with the id of: ' + req.params.id + ' was deleted successfully.',   //success message
