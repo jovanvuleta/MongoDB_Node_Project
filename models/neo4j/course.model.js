@@ -1,11 +1,11 @@
-exports.InstitutionModel = (neo4j) => {
+exports.CourseModel = (neo4j) => {
     return {
 
-        addInstitution: (stateId, id, name, type, ownership) => {
+        addCourse: (vu_type, vu_id, id, version, name) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MATCH(s:State {DR_IDENTIFIKATOR: $stateId}) MERGE (i:Institution {VU_IDENTIFIKATOR: $id, VU_NAZIV: $name, TIP_UST: $type, VV_OZNAKA: $ownership}) MERGE ((i) - [bt:BELONGS_TO] -> (s))';
-                session.run(query, { stateId: stateId, id: id, name: name, type: type, ownership: ownership})
+                let query = 'MATCH(i:Institution {VU_IDENTIFIKATOR: $vu_id, TIP_UST: $vu_type}) MERGE (c:Course {NP_PREDMET: $id, NP_NAZIV_PREDMETA: $name, NP_VERZJA: $version}) MERGE ((i) - [bt:TEACHES] -> (c))';
+                session.run(query, { vu_type: vu_type, vu_id: vu_id, id: id, name: name, version: version})
                     .then(result => {
                         resolve(result);
                     })
@@ -18,11 +18,11 @@ exports.InstitutionModel = (neo4j) => {
             });
         },
 
-        editInstitutionById: (state, id, type, name, newType, ownership) => {
+        editCourseById: (vu_type, vu_id, id, version, name) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MATCH(s:State {DR_IDENTIFIKATOR : $state}) MERGE(i:Institution {VU_IDENTIFIKATOR : $id, TIP_UST : $type}) ON CREATE SET i.VU_NAZIV = $name, i.TIP_UST = $newType, i.VV_OZNAKA = $ownership ON MATCH SET i.VU_NAZIV = $name, i.TIP_UST = $newType, i.VV_OZNAKA = $ownership MERGE((i)-[bt:BELONGS_TO]->(s))';
-                session.run(query, { state: state, type: type, id: id, name: name, newType: newType, ownership: ownership })
+                let query = 'MATCH(i:Institution {VU_IDENTIFIKATOR : $vu_id, TIP_UST: $vu_type}) MERGE(c:Course {NP_PREDMET : $id}) ON CREATE SET c.NP_NAZIV_PREDMETA = $name ON MATCH SET c.NP_NAZIV_PREDMETA = $name MERGE((i)-[r:TEACHES]->(c))';
+                session.run(query, { vu_type: vu_type, vu_id: vu_id, id: id, name: name, version: version })
                     .then(result => {
                         resolve(result);
                     })
@@ -35,11 +35,11 @@ exports.InstitutionModel = (neo4j) => {
             });
         },
 
-        deleteInstitutionById: (id, type) => {
+        deleteCourseById: (id) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MATCH(i:Institution {VU_IDENTIFIKATOR: $id, TIP_UST: $type}) DETACH DELETE i';
-                session.run(query, { id: id, type: type })
+                let query = 'MATCH(c:Course {NP_PREDMET: $id}) DETACH DELETE c';
+                session.run(query, { id: id })
                     .then(result => {
                         resolve(result);
                     })

@@ -1,10 +1,10 @@
 exports.CourseModel = function(dbcon) {
     return {
-        getAllCourses : function(id) {
+        getAllCourses : function(id, type) {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ?;';
+                let query = 'SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
 
-                dbcon.query(query,[id], (err, data) => {
+                dbcon.query(query,[id, type], (err, data) => {
                     if ( !err ) {
                         resolve(data);
                     } else {
@@ -13,6 +13,7 @@ exports.CourseModel = function(dbcon) {
                 });
             });
         },
+        
         allCourses : function() {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM COURSE ;';
@@ -112,10 +113,10 @@ exports.CourseModel = function(dbcon) {
                 })
             })
         },
-        getAllCoursesByInstitutionAndCourseId: (vu_id, np_predmet, np_verzija) => {
+        getAllCoursesByInstitutionAndCourseId: (vu_id, np_predmet, type) => {
             return new Promise((resolve, reject) => {
-                let query = "SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ? AND NP_PREDMET LIKE ? AND NP_VERZIJA LIKE ?;";
-                dbcon.query(query, [vu_id, np_predmet,np_verzija], (err, data) => {
+                let query = "SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ? AND NP_PREDMET LIKE ? AND TIP_UST LIKE ?;";
+                dbcon.query(query, [vu_id, np_predmet,type], (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {
@@ -125,11 +126,5 @@ exports.CourseModel = function(dbcon) {
                 });
             })
         },
-
-        
-
-
     }
-    
-    
 }

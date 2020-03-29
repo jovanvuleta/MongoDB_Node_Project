@@ -54,7 +54,8 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
         .then((data) => {
             res.render('courses', {
                 courses : data,
-                course: data[0],
+                vu_id: req.params.id,
+                tip_ust: req.params.type,
                 successMessage : ''
             });
         })

@@ -8,3 +8,4 @@ require('./controllers/employees.controller.js').EmployeesController(app, dbcon,
 require('./controllers/course.controller.js').CourseController(app, dbcon, mongo, neo4j);
 require('./controllers/contract_history.controller.js').ContractHistoryController(app, dbcon, mongo, neo4j);
 require('./controllers/documentOfEmployement.controller').DocumentOfEmployementController(app, dbcon, mongo, neo4j);
+require('./controllers/graph.controller.js').GraphController(app);

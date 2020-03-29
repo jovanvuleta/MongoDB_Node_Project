@@ -1,12 +1,13 @@
-exports.CourseController = function(app, dbcon,mongo)  
+exports.CourseController = function(app, dbcon,mongo, neo4j)  
 {
 
     const CourseCollection = require('../models/mongodb/course.collection.js').CourseCollectionModel(mongo)
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
-    
-    app.get('/getAllCourses/:id', (req, res) => {
-        courseModel.getAllCourses(req.params.id)
+    const NeoCourseModel = require('../models/neo4j/course.model.js').CourseModel(neo4j);
+
+    app.get('/getAllCourses/:id/:type', (req, res) => {
+        courseModel.getAllCourses(req.params.id, req.params.type)
         .then((data) => {
             res.render('courses', {
                 courses : data,
@@ -42,12 +43,14 @@ exports.CourseController = function(app, dbcon,mongo)
     //             });
     //         })
     // });
-    app.get('/addCourse/:id', (req, res) => {
-        courseModel.getAllCourses(req.params.id)   //Call amoel function that return all states from the database
+    app.get('/addCourse/:id/:type', (req, res) => {
+
+        courseModel.getAllCourses(req.params.id, req.params.type)   //Call amoel function that return all states from the database
             .then((data) => {
                 res.render('addCourse', {
                     courses: data,
-                    course: data[0]
+                    vu_id: req.params.id,
+                    tip_ust: req.params.type
                 });
             })
             .catch((err) => {
@@ -59,9 +62,12 @@ exports.CourseController = function(app, dbcon,mongo)
     });
 
     
-    app.post('/addCourse/:id', (req, res) => {
-        courseModel.addCourse(req.body.info_type, req.body.info_id, req.body.courseCode, req.body.coursVersion, req.body.coursName)
-            .then((data) => {
+    app.post('/addCourse/:id/:type', (req, res) => {
+
+        const NeoAddCourse = NeoCourseModel.addCourse(req.params.type, req.params.id, req.body.courseCode, req.body.coursVersion, req.body.coursName).then();
+        const SQLAddCourse = courseModel.addCourse(req.params.type, req.params.id, req.body.courseCode, req.body.coursVersion, req.body.coursName).then();
+        Promise.all([NeoAddCourse, SQLAddCourse])
+        .then((data) => {
                 res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
                     successMessage: 'Course ' + req.body.courseCode + ' was added successfully.',   //success message
                     link: '<a href="/getAllInstitutions"> Go Back</a>',  //provide a link that provides a links to another page
@@ -94,7 +100,7 @@ exports.CourseController = function(app, dbcon,mongo)
 
     app.get('/editCourse/:type_ins/:vu_id/:np_predmet/:np_verzija', (req, res) => {
         let getAllTypes = institutionModel.getAllTypes().then();
-        let getAllCourses = courseModel.getAllCoursesByInstitutionAndCourseId(req.params.vu_id, req.params.np_predmet,req.params.np_verzija).then();
+        let getAllCourses = courseModel.getAllCoursesByInstitutionAndCourseId(req.params.vu_id, req.params.np_predmet,req.params.type_ins).then();
 
         //Retrieves state's data in order to show the intinal data of the requested state to be dited
         Promise.all([getAllTypes, getAllCourses]).then((data) => {
@@ -111,8 +117,11 @@ exports.CourseController = function(app, dbcon,mongo)
     });
 
     app.post('/editCourse/:type_ins/:vu_id/:np_predmet/:np_verzija', (req, res) => {
-        courseModel.editCourse(req.params.type_ins, req.body.courseName, req.params.vu_id, req.params.np_predmet, req.params.np_verzija)
-            .then((data) => {
+
+        const NeoEditCourse = NeoCourseModel.editCourseById(req.params.type_ins, req.params.vu_id, req.params.np_predmet, req.params.np_verzija, req.body.courseName).then();
+        const SQLEditCourse = courseModel.editCourse(req.params.type_ins, req.body.courseName, req.params.vu_id, req.params.np_predmet, req.params.np_verzija).then();
+        Promise.all([NeoEditCourse, SQLEditCourse])
+        .then((data) => {
                 console.log(data);
                 res.render('message', {
                     successMessage: 'Course ' + req.body.courseName+ ' was edited successfully!',  //success message

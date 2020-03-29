@@ -2,11 +2,11 @@
 
 <% if (courses.length === 0) { %>
     <div class="alert alert-info" role="alert">
-        <p>There are no courses to show, click <a href="/addCourseIfEmpty/<%= course.VU_IDENTIFIKATOR %>">here</a> to add an course.</p>    
+        <p>There are no courses to show, click <a href="/addCourse/<%= vu_id %>/<%= tip_ust %>">here</a> to add an course.</p>    
     </div>
 <% } else { %>
     <br>
-    <a type="button" class="btn btn-primary" href="/addCourse/<%= course.VU_IDENTIFIKATOR %>">Add Course</a>
+    <a type="button" class="btn btn-primary" href="/addCourse/<%= vu_id %>/<%= tip_ust %>">Add Course</a>
     <a type="button" class="btn btn-primary" href="/coursesDocuments">Viev Course Documents</a>
     <br><br>
     <table class="table">

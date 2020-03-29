@@ -1,17 +1,10 @@
 exports.StateModel = (neo4j) => {
     return {
-        getAllStates: () => {
-
-        },
-
-        getStateById: (id) => {
-
-        },
 
         addState: (stateId, stateName) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MERGE(s:State {name: $name, stateId: $id}) RETURN s';
+                let query = 'MERGE(s:State {DR_NAZIV: $name, DR_IDENTIFIKATOR: $id})';
                 session.run(query, { name: stateName, id: stateId })
                     .then(result => {
                         resolve(result);
@@ -28,7 +21,7 @@ exports.StateModel = (neo4j) => {
         editStateById: (newId, stateName, oldId) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MERGE(s:State {stateId: $oldId}) ON CREATE SET s.stateId = $newId, s.name = $stateName ON MATCH SET s.stateId = $newId, s.name = $stateName';
+                let query = 'MERGE(s:State {DR_IDENTIFIKATOR: $oldId}) ON CREATE SET s.DR_IDENTIFIKATOR = $newId, s.DR_NAZIV = $stateName ON MATCH SET s.DR_IDENTIFIKATOR = $newId, s.DR_NAZIV = $stateName';
                 session.run(query, { oldId: oldId, newId: newId, stateName: stateName })
                     .then(result => {
                         resolve(result);
@@ -45,7 +38,7 @@ exports.StateModel = (neo4j) => {
         deleteStateById: (id) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MATCH(s:State {stateId: $id}) DETACH DELETE s';
+                let query = 'MATCH(s:State {DR_IDENTIFIKATOR: $id}) DETACH DELETE s';
                 session.run(query, { id: id })
                     .then(result => {
                         resolve(result);

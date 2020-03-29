@@ -1,0 +1,46 @@
+<%- include('header')%>
+
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+
+<script type="text/javascript">
+
+    var viz;
+
+    function draw() {
+        var config = {
+            container_id: "viz",
+            server_url: "neo4j://localhost:7687",
+            server_user: "neo4j",
+            server_password: "root",
+            labels: {
+                "State": {
+                    "caption": "name"
+                },
+
+                "Institution": {
+                    "caption": "name"
+                }
+            },
+            // relationships: {
+            //     "BELONGS_TO": {
+            //         "thickness": "weight",
+            //         "caption": true
+            //     },
+            //     "IS_IN": {
+            //         "thickness": "weight",
+            //         "caption": true
+            //     }
+            // },
+            initial_cypher: "MATCH (n)-[r]->(m) RETURN n,r,m"
+        };
+
+        viz = new NeoVis.default(config);
+        viz.render();
+    }
+</script>
+
+<body onload="draw()">
+    <div id="viz"></div>
+</body>
+
+<%- include('footer')%>

@@ -1,5 +1,5 @@
 <%- include('header') %>
-<form method="post" action="/addCourse/<%= course.VU_IDENTIFIKATOR %>">
+<form method="post" action="/addCourse/<%= vu_id %>/<%= tip_ust %>">
     
    
     <div class="form-group">
@@ -13,14 +13,6 @@
     <div class="form-group">
         <label for="coursName">Course Name</label>
         <input type="text" class="form-control" id="coursName" name="coursName">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Employee name</label>
-        <input type="text" class="form-control" id="info_VU_ID" name="info_id" value="<%= course.VU_IDENTIFIKATOR %>">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Employee name</label>
-        <input type="text" class="form-control" id="info_TIP" name="info_type" value="<%= course.TIP_UST %>">
     </div>
     
     <button type="submit" class="btn btn-primary">Submit</button>
