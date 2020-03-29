@@ -62,7 +62,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
 
     app.post('/addEmployee/:type_inst/:vu_id', (req, res) => {
         let mysqlAddEmployee = employeesModel.addEmployee(req.params.type_inst, req.params.vu_id, req.body.employeeId, req.body.employeeSurname, req.body.employeeMidLetter, req.body.employeeName);
-        let neo4jAddEmployee = Neo4jEmployeeModel.addEmployee(req.params.type_inst, req.params.vu_id, req.body.employeeId, req.body.employeeSurname, req.body.employeeMidLetter, req.body.employeeName);
+        let neo4jAddEmployee = Neo4jEmployeeModel.addEmployee(req.params.type_inst, parseInt(req.params.vu_id), req.body.employeeId, req.body.employeeSurname, req.body.employeeMidLetter, req.body.employeeName);
 
         Promise.all([mysqlAddEmployee, neo4jAddEmployee])
             .then((data) => {

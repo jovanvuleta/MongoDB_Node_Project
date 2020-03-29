@@ -92,7 +92,7 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
 
         let getAllInstitutions = institutionModel.getAllInstitutions().then();
         let getInstitution = institutionModel.addInstitution(req.body.institutionId, req.body.institutionName, req.body.institutionType, req.params.state, req.body.ownershipType).then();
-        let neoInstitution = Neo4jInstitutionModel.addInstitution(req.params.state, req.body.institutionId, req.body.institutionName, req.body.institutionType, req.body.ownershipType).then();
+        let neoInstitution = Neo4jInstitutionModel.addInstitution(req.params.state, parseInt(req.body.institutionId), req.body.institutionName, req.body.institutionType, req.body.ownershipType).then();
 
         Promise.all([getAllInstitutions, getInstitution, neoInstitution])
             .then((data) => {

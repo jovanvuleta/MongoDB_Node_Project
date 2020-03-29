@@ -49,7 +49,7 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
 
     app.post('/addCourse/:id/:type', (req, res) => {
 
-        const NeoAddCourse = NeoCourseModel.addCourse(req.params.type, req.params.id, req.body.courseCode, req.body.coursVersion, req.body.coursName).then();
+        const NeoAddCourse = NeoCourseModel.addCourse(req.params.type, parseInt(req.params.id), req.body.courseCode, req.body.coursVersion, req.body.coursName).then();
         const SQLAddCourse = courseModel.addCourse(req.params.type, req.params.id, req.body.courseCode, req.body.coursVersion, req.body.coursName).then();
         Promise.all([NeoAddCourse, SQLAddCourse])
             .then((data) => {
