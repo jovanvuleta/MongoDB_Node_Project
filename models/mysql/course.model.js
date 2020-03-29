@@ -28,6 +28,20 @@ exports.CourseModel = function (dbcon) {
             });
         },
 
+        getCourseById: function (np_predmet, vu_id, type_inst) {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM COURSE WHERE NP_PREDMET LIKE ? AND VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
+
+                dbcon.query(query, [np_predmet, vu_id, type_inst], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                });
+            });
+        },
+
         getAllTypes: function () {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM TYPES_OF_INSTITUTIONS;';
@@ -87,7 +101,7 @@ exports.CourseModel = function (dbcon) {
             });
         },
 
-        deleteInstitutionById: function (courseSubject) {
+        deleteCourseById: function (id) {
             return new Promise((resolve, reject) => {
                 let query = 'DELETE FROM COURSE WHERE NP_PREDMET LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {

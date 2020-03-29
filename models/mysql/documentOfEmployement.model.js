@@ -54,7 +54,7 @@ exports.DocumentOfEmployementModel = (dbcon) => {
 
         getAllContractTypes: () => {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM DOCUMENT_TYPE;';
+                let query = 'SELECT DISTINCT FROM DOCUMENT_TYPE;';
                 dbcon.query(query, (err, data) => {
                     if (!err) {
                         resolve(data);

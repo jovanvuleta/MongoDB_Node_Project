@@ -105,6 +105,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
 
         //Retrieves state's data in order to show the intinal data of the requested state to be dited
         Promise.all([getAllTypes, getEmployees]).then((data) => {
+            console.log(data[1]);
             res.render('editEmployee', {
                 types: data[0],
                 employee: data[1][0]

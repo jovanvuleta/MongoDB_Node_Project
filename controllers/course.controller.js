@@ -1,5 +1,6 @@
 exports.CourseController = function (app, dbcon, mongo) {
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
+    const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
 
     app.get('/getAllCourses', (req, res) => {
         courseModel.getAllCoursesForHeader()
@@ -34,11 +35,14 @@ exports.CourseController = function (app, dbcon, mongo) {
     });
 
     app.get('/addCourse/:id', (req, res) => {
-        courseModel.getAllCourses(req.params.id)   //Call amoel function that return all states from the database
+        let getAllTypes = institutionModel.getAllDistinctTypes();
+        let getAllCourses = courseModel.getAllCourses(req.params.id);
+        Promise.all([getAllCourses, getAllTypes])
             .then((data) => {
                 res.render('addCourse', {
                     courses: data,
-                    course: data[0]
+                    course: data[0],
+                    types: data[1]
                 });
             })
             .catch((err) => {
@@ -67,18 +71,17 @@ exports.CourseController = function (app, dbcon, mongo) {
     });
 
 
-    app.get('/editInstitutionById/:id', (req, res) => {
-        let getAllStates = institutionModel.getAllStates().then();
-        let getAllTypes = institutionModel.getAllTypes().then();
-        let getAllOwnerships = institutionModel.getAllOwnerships().then();
-        let getInstitution = institutionModel.getInstitutionById(req.params.id).then();
+    app.get('/editCourseById/:type_inst/:vu_id/:np_version/:np_predmet', (req, res) => {
+        let getCourse = courseModel.getCourseById(req.params.np_predmet, req.params.vu_id, req.params.type_inst);
+        let getAllTypes = institutionModel.getAllDistinctTypes();
 
-        Promise.all([getAllStates, getAllTypes, getAllOwnerships, getInstitution]).then((data) => {
-            res.render('editInstitution', {
-                states: data[0],
-                types: data[1],
-                ownerships: data[2],
-                institution: data[3][0]
+        Promise.all([getCourse, getAllTypes]).then((data) => {
+            console.log(data);
+            console.log(data[0]);
+            console.log(data[1]);
+            res.render('editCourse', {
+                course: data[0][0],
+                types: data[1]
             });
         })
             .catch((err) => {
@@ -86,10 +89,13 @@ exports.CourseController = function (app, dbcon, mongo) {
             });
     });
 
-    app.post('/editInstitutionById/:id', (req, res) => {
+    app.post('/editCourseById/:id', (req, res) => {
         institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.stateId, req.body.ownershipType, req.params.id)
             .then((data) => {
-                res.redirect('/getAllInstitutions');
+                res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
+                    successMessage: 'Course with the name: ' + req.params.id + ' was deleted successfully.',   //success message
+                    link: '<a href="/getAllPopulatedPlaces"> Go Back</a>'   //provide a link that provides a links to another page
+                });
             })
             .catch((err) => {
                 res.render('message', {
@@ -99,10 +105,13 @@ exports.CourseController = function (app, dbcon, mongo) {
             });
     });
 
-    app.get('/deleteInstitutionById/:id', (req, res) => {
-        institutionModel.deleteInstitutionById(req.params.id)
+    app.get('/deleteCourseById/:id', (req, res) => {
+        courseModel.deleteCourseById(req.params.id)
             .then((data) => {
-                res.redirect('/getAllInstitutions');
+                res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
+                    successMessage: 'Course with the name: ' + req.params.id + ' was deleted successfully.',   //success message
+                    link: '<a href="/getAllPopulatedPlaces"> Go Back</a>'   //provide a link that provides a links to another page
+                });
             })
             .catch((err) => {
                 res.render('message', {

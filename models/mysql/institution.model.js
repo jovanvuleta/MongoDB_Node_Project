@@ -14,9 +14,9 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        getInstitutionsByStateId : function(id) {
+        getInstitutionsByStateId: function (id) {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE DR_IDENTIFIKATOR LIKE ?;';
+                let query = 'SELECT  FROM HIGH_EDUCATION_INSTITUTION WHERE DR_IDENTIFIKATOR LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {
                     if (!err) {
                         resolve(data);
@@ -41,11 +41,25 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        getAllStates : function() {
+        getAllDistinctTypes: function () {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT DISTINCT * FROM TYPES_OF_INSTITUTIONS ;';
+                dbcon.query(query, (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                        console.log(err);
+                    }
+                });
+            });
+        },
+
+        getAllStates: function () {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM STATE;';
                 dbcon.query(query, (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);
@@ -54,11 +68,11 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        getAllOwnerships : function() {
+        getAllOwnerships: function () {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM OWNERSHIP_TYPE;';
                 dbcon.query(query, (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);
@@ -66,8 +80,8 @@ exports.InstitutionModel = function (dbcon) {
                 });
             });
         },
-    
-        getInstitutionById : function(id) {
+
+        getInstitutionById: function (id) {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM HIGH_EDUCATION_INSTITUTION WHERE VU_IDENTIFIKATOR LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {
@@ -80,11 +94,11 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        addInstitution : function(institutionId, institutionName, institutionType, stateId, ownershipType){
+        addInstitution: function (institutionId, institutionName, institutionType, stateId, ownershipType) {
             return new Promise((resolve, reject) => {
                 let query = 'INSERT INTO HIGH_EDUCATION_INSTITUTION (VU_IDENTIFIKATOR, VU_NAZIV, TIP_UST, DR_IDENTIFIKATOR, VV_OZNAKA) VALUES (?, ?, ?, ?, ?);';
                 dbcon.query(query, [institutionId, institutionName, institutionType, stateId, ownershipType], (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);
@@ -93,12 +107,12 @@ exports.InstitutionModel = function (dbcon) {
             });
         },
 
-        editInstitutionById : function(institutionType, institutionName, stateId, ownershipType, id) {
+        editInstitutionById: function (institutionType, institutionName, stateId, ownershipType, id) {
             return new Promise((resolve, reject) => {
                 let query = 'UPDATE HIGH_EDUCATION_INSTITUTION SET TIP_UST = ?, VU_NAZIV = ?, DR_IDENTIFIKATOR = ?, VV_OZNAKA = ? WHERE VU_IDENTIFIKATOR LIKE ?;';
-                
+
                 dbcon.query(query, [institutionType, institutionName, stateId, ownershipType, id], (err, data) => {
-                    if ( !err ) {
+                    if (!err) {
                         resolve(data);
                     } else {
                         reject(err);

@@ -3,6 +3,8 @@ exports.DocumentOfEmployementController = (app, dbcon, mongo, neo4j) => {
     const DocumentOfEmployementModel = require('../models/mysql/documentOfEmployement.model.js').DocumentOfEmployementModel(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const Neo4jDocumentOfEmploymentModel = require('../models/neo4j/documentOfEmployment.model').DocumentOfEmployementModel(neo4j);
+    const documentOfEmploymentCollection = require('../models/mongodb/documentsOfEmploymens.collection').DocumentOfEmploymentCollection(mongo);
+    const contractHistoryModel = require('../models/mysql/contract_history.model').ContractHistoryModel(dbcon);
     var moment = require('moment');
 
     app.get('/getDocumentOfEmployement', (req, res) => {
@@ -151,5 +153,86 @@ exports.DocumentOfEmployementController = (app, dbcon, mongo, neo4j) => {
             })
     })
 
+    app.get('/documentOfEmploymentDocuments', (req, res) => {
+        documentOfEmploymentCollection.getAllDocumentsOfEmployment()
+            .then((data) => {
+                res.render('documentsOfEmploymentDocument', {
+                    documents: data
+                })
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                })
+            });
+    });
 
-};
+    app.get('/generateDocumentsOfEmploymentDocument', (req, res) => {
+        const allDocumentOfEmployment = DocumentOfEmployementModel.getAllDocumentOfEmployement();
+        const allContracts = contractHistoryModel.getAllContractHistoryForHeader();
+        const allInstitutions = institutionModel.getAllInstitutions();
+
+        Promise.all([allDocumentOfEmployment, allContracts, allInstitutions])
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                })
+            })
+            .then(([documents, contracts, institutions]) => {
+                console.log(documents);
+                console.log(contracts);
+                console.log(institutions);
+                return new Promise((resolve, reject) => {
+                    documents = documents.map(document => {
+                        return {
+                            id: document.UG_BROJ_UGOVORA,
+                            document_type: document.VD_OZNAKA,
+                            number_of_contracts: contracts.filter(contract => contract.UG_BROJ_UGOVORA == document.UG_BROJ_UGOVORA).length,
+                            contracts: contracts.filter(contract => contract.UG_BROJ_UGOVORA == document.UG_BROJ_UGOVORA)
+                                .map(contract => {
+                                    return {
+                                        id: contract.UG_BROJ_UGOVORA,
+                                        contract_year: contract.UG_GODINA,
+                                        employee_institution_id: contract.EMP_VU_IDENTIFIKATOR,
+                                        number_of_institutions: institutions.filter(institution => institution.VU_IDENTIFIKATOR == document.VU_IDENTIFIKATOR).length,
+                                        institutions: institutions.filter(institution => institution.VU_IDENTIFIKATOR == document.VU_IDENTIFIKATOR)
+                                            .map(institution => {
+                                                return {
+                                                    id: institution.VU_IDENTIFIKATOR,
+                                                    name: institution.VU_NAZIV
+                                                }
+                                            })
+                                    }
+                                })
+
+                        }
+                    });
+
+                    if (documents.length == 0) {
+                        reject('No institutions!');
+                    }
+
+                    resolve({
+                        created_at: JSON.stringify(new Date()),
+                        numberOfDocuments: documents.length,
+                        documents: documents
+                    });
+                });
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
+            })
+            .then((documentOfEmploymentDocument) => {
+                documentOfEmploymentCollection.insertDocumentOfEmployment(documentOfEmploymentDocument)
+                    .then(() => {
+                        res.redirect('documentOfEmploymentDocuments');
+                    });
+            });
+    });
+
+}

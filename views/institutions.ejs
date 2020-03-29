@@ -17,6 +17,15 @@
             window.location = "/getAllInstitutions";
         }
     }
+    function coursesByInstitution() {
+        var id = prompt("Please enter institution ID:");
+        link = "/getAllCourses/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getAllInstitutions";
+        }
+    }
 
     function editInstitution() {
         var id = prompt("Please enter institution ID:");
@@ -46,6 +55,9 @@
 <a type="button" class="btn btn-primary" onClick="employeesByInstitution()" style="background-color:lightseagreen"
     href="#">Get
     employees</a>
+<a type="button" class="btn btn-primary" onClick="coursesByInstitution()" style="background-color:lightseagreen"
+    href="#">Get
+    courses</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue"
     href="/generateInstitutionsDocument">Generate institution docs</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/institutionsDocuments">View

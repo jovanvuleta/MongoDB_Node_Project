@@ -1,6 +1,8 @@
 exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
     const contractHistoryModel = require('../models/mysql/contract_history.model').ContractHistoryModel(dbcon);
     const Neo4jDocumentOfEmploymentModel = require('../models/neo4j/contractHistory.model').ContractHistoryModel(neo4j);
+    const contractHistoryCollection = require('../models/mongodb/contractHistory.collection').ContractHistoryCollection(mongo);
+    const documentOfEmployementModel = require('../models/mysql/documentOfEmployement.model.js').DocumentOfEmployementModel(dbcon);
 
     app.get('/getAllContractHistory', (req, res) => {
         contractHistoryModel.getAllContractHistoryForHeader()
@@ -102,6 +104,76 @@ exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
                     errorMessage: 'ERROR: ' + err + '!',
                     link: 'ERROR: ' + err + ' <a href="/getAllStates">Go back to states page!</a>'
                 });
+            });
+    });
+
+    app.get('/contractHistoryDocuments', (req, res) => {
+        contractHistoryCollection.getAllContractHistory()
+            .then((data) => {
+                res.render('contractHistoryDocuments', {
+                    contracts: data
+                })
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllStates"> Go Back to states page!</a>'
+                })
+            });
+    });
+
+    app.get('/generateContractHistoryDocument', (req, res) => {
+        const allContractHistory = contractHistoryModel.getAllContractHistoryForHeader();
+        const allDocumentsOfEmployment = documentOfEmployementModel.getAllDocumentOfEmployement();
+
+        Promise.all([allContractHistory, allDocumentsOfEmployment])
+            .catch(err => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllStates"> Go Back to states page!</a>'
+                })
+            })
+            .then(([contracts, documents]) => {
+                return new Promise((resolve, reject) => {
+                    contracts = contracts.map(contract => {
+                        return {
+                            id: contract.UG_BROJ_UGOVORA,
+                            institution_type: contract.TIP_UST,
+                            employee_id: contract.EMP_VU_IDENTIFIKATOR,
+                            number_of_document_employments: documents.filter(document => document.UG_BROJ_UGOVORA == contract.UG_BROJ_UGOVORA).length,
+                            documents: documents.filter(document => document.UG_BROJ_UGOVORA == contract.UG_BROJ_UGOVORA)
+                                .map(document => {
+                                    return {
+                                        id: document.UG_BROJ_UGOVORA,
+                                        contract_year: document.UG_GODINA,
+                                        contract_start_date: document.UG_DATIM,
+                                        contract_end_date: document.UG_DATUM_VAZENJA
+                                    }
+                                })
+                        }
+                    });
+                    if (contracts.length == 0) {
+                        reject('No contracts!');
+                    }
+
+                    resolve({
+                        created_at: JSON.stringify(new Date()),
+                        numberOfContracts: contracts.length,
+                        contracts: contracts
+                    });
+                });
+            })
+            .catch(err => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
+            })
+            .then((contractDocument) => {
+                contractHistoryCollection.insertContractHistory(contractDocument)
+                    .then(() => {
+                        res.redirect('contractHistoryDocuments');
+                    });
             });
     })
 
