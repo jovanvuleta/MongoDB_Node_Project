@@ -3,6 +3,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const employeesCollection = require('../models/mongodb/employee.collection').EmployeeCollectionModel(mongo);
     const Neo4jEmployeeModel = require('../models/neo4j/employee.model').EmployeesModel(neo4j);
+    const contractHistoryModel = require('../models/mysql/contract_history.model').ContractHistoryModel(dbcon);
 
     app.get('/getAllEmployees', (req, res) => {
         employeesModel.getAllEmployees()
@@ -20,15 +21,14 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
     });
 
     app.get('/getAllEmployeesByInstitution/:type_inst/:vu_id', (req, res) => {
-        employeesModel.getAllEmployeesByInstitution(req.params.vu_id, req.params.type_inst)   //Call amoel function that return all states from the database
+        employeesModel.getAllEmployeesByInstitution(req.params.vu_id, req.params.type_inst)
             .then((data) => {
                 res.render('employees', {
                     employees: data,
                     employee: data[0],
                     paramObject: {
                         type_inst: req.params.type_inst,
-                        vu_id: req.params.vu_id,
-                        emp_id: req.params.emp_id
+                        vu_id: req.params.vu_id
                     }
                 });
             })
@@ -40,15 +40,15 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
             })
     });
 
-    app.get('/addEmployee/:type/:id', (req, res) => {
-        employeesModel.getAllEmployeesByInstitution(req.params.id, req.params.type)   //Call amoel function that return all states from the database
+    app.get('/addEmployee/:type/:vu_id', (req, res) => {
+        employeesModel.getAllEmployeesByInstitution(req.params.vu_id, req.params.type)   //Call amoel function that return all states from the database
             .then((data) => {
                 res.render('addEmployee', {
                     employees: data,
                     employee: data[0],
                     paramObject: {
-                        type_inst: req.params.type,
-                        vu_id: req.params.id
+                        type_inst: req.params.type_inst,
+                        vu_id: req.params.vu_id
                     }
                 });
             })
@@ -151,15 +151,34 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
     });
 
     app.get('/generateEmployeeDocuments', (req, res) => {
-        employeesModel.getAllEmployees()
+        let allEmployees = employeesModel.getAllEmployees();
+        let allContracts = contractHistoryModel.getAllContractHistoryForHeader();
 
-            .then((data) => {
+        Promise.all([allEmployees, allContracts])
+            .catch(err => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllStates"> Go Back to states page!</a>'
+                })
+            })
+
+            .then(([employees, contracts]) => {
                 return new Promise((resolve, reject) => {
-                    employees = data.map(employee => {
+                    employees = employees.map(employee => {
                         return {
                             id: employee.ZAP_REDNI_BROJ,
                             surname: employee.ZAP_PREZIME,
-                            name: employee.ZAP_IME
+                            name: employee.ZAP_IME,
+                            number_of_contracts: contracts.filter(contract => contract.ZAP_REDNI_BROJ == employee.ZAP_REDNI_BROJ).length,
+                            contracts: contracts.filter(contract => contract.ZAP_REDNI_BROJ == employee.ZAP_REDNI_BROJ)
+                                .map(contract => {
+                                    return {
+                                        id: contract.UG_BROJ_UGOVORA,
+                                        contract_year: contract.UG_GODINA,
+                                        contract_institution: contract.TIP_UST,
+                                        contract_emp_id: contract.ZAP_REDNI_BROJ
+                                    }
+                                })
                         }
                     });
 
@@ -174,13 +193,6 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
                     });
                 });
             })
-            .catch((err) => {
-                res.render('message', {
-                    errorMessage: 'ERROR: ' + err,
-                    link: '<a href="/getAllInstitutions"> Go Back</a>'
-                });
-            })
-
             .catch((err) => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err,

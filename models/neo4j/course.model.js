@@ -5,7 +5,7 @@ exports.CourseModel = (neo4j) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
                 let query = 'MATCH(i:HIGH_EDUCATION_INSTITUTION {VU_IDENTIFIKATOR: $vu_id, TIP_UST: $vu_type}) MERGE (c:COURSE {NP_PREDMET: $id, NP_NAZIV_PREDMETA: $name, NP_VERZJA: $version}) MERGE ((i) - [bt:TEACHES] -> (c))';
-                session.run(query, { vu_type: vu_type, vu_id: vu_id, id: id, name: name, version: version})
+                session.run(query, { vu_type: vu_type, vu_id: vu_id, id: id, name: name, version: version })
                     .then(result => {
                         resolve(result);
                     })

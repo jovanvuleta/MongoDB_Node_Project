@@ -15,7 +15,6 @@ exports.EmployeesModel = (neo4j) => {
                     .then(() => {
                         session.close();
                     })
-
             })
         },
 
