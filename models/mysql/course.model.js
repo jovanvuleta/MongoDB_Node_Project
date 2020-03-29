@@ -1,10 +1,10 @@
 exports.CourseModel = function (dbcon) {
     return {
-        getAllCoursesForHeader: function (id) {
+        getAllCourses: function (id, type) {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM COURSE';
+                let query = 'SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
 
-                dbcon.query(query, [id], (err, data) => {
+                dbcon.query(query, [id, type], (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {
@@ -14,25 +14,11 @@ exports.CourseModel = function (dbcon) {
             });
         },
 
-        getAllCourses: function (id) {
+        allCourses: function () {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ?;';
+                let query = 'SELECT * FROM COURSE ;';
 
-                dbcon.query(query, [id], (err, data) => {
-                    if (!err) {
-                        resolve(data);
-                    } else {
-                        reject(err);
-                    }
-                });
-            });
-        },
-
-        getCourseById: function (np_predmet, vu_id, type_inst) {
-            return new Promise((resolve, reject) => {
-                let query = 'SELECT * FROM COURSE WHERE NP_PREDMET LIKE ? AND VU_IDENTIFIKATOR LIKE ? AND TIP_UST LIKE ?;';
-
-                dbcon.query(query, [np_predmet, vu_id, type_inst], (err, data) => {
+                dbcon.query(query, (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {
@@ -89,9 +75,9 @@ exports.CourseModel = function (dbcon) {
 
         editCourseById: function (courseName, courseSubject) {
             return new Promise((resolve, reject) => {
-                let query = 'UPDATE COURSE SET NP_NAZIV_PREDMET = ? WHERE NP_PREDMET LIKE ?;';
+                let query = 'UPDATE COURSE SET NP_VERZIJA = ?, NP_NAZIV_PREDMETA = ? WHERE NP_PREDMET LIKE ?;';
 
-                dbcon.query(query, [courseName, courseSubject], (err, data) => {
+                dbcon.query(query, [courseVersion, courseName, courseSubject], (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {
@@ -101,7 +87,8 @@ exports.CourseModel = function (dbcon) {
             });
         },
 
-        deleteCourseById: function (id) {
+
+        deleteCourse: (id) => {
             return new Promise((resolve, reject) => {
                 let query = 'DELETE FROM COURSE WHERE NP_PREDMET LIKE ?;';
                 dbcon.query(query, [id], (err, data) => {
@@ -109,9 +96,35 @@ exports.CourseModel = function (dbcon) {
                         resolve(data);
                     } else {
                         reject(err);
+                        console.log(err);
+                    }
+                })
+            });
+        },
+        editCourse: (type, name, vu_id, predmet, version) => {
+            return new Promise((resolve, reject) => {
+                let query = "UPDATE COURSE SET TIP_UST = ?, NP_NAZIV_PREDMETA = ? WHERE (VU_IDENTIFIKATOR = ? AND NP_PREDMET = ? AND NP_VERZIJA = ?);";
+                dbcon.query(query, [type, name, vu_id, predmet, version], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                })
+            })
+        },
+        getAllCoursesByInstitutionAndCourseId: (vu_id, np_predmet, type) => {
+            return new Promise((resolve, reject) => {
+                let query = "SELECT * FROM COURSE WHERE VU_IDENTIFIKATOR LIKE ? AND NP_PREDMET LIKE ? AND TIP_UST LIKE ?;";
+                dbcon.query(query, [vu_id, np_predmet, type], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                        console.log(err);
                     }
                 });
-            });
-        }
+            })
+        },
     }
 }

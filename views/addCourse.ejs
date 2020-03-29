@@ -1,7 +1,13 @@
 <%- include('header') %>
+<<<<<<< HEAD
 <form method="post" action="/addCourse/<%= course.VU_IDENTIFIKATOR %>">
 
 
+=======
+<form method="post" action="/addCourse/<%= vu_id %>/<%= tip_ust %>">
+    
+   
+>>>>>>> 895b579e2fed3942da930eb730996ff0ceb08ebe
     <div class="form-group">
         <label for="courseCode">Course Code</label>
         <input type="text" class="form-control" id="courseCode" name="courseCode">
@@ -14,6 +20,7 @@
         <label for="coursName">Course Name</label>
         <input type="text" class="form-control" id="coursName" name="coursName">
     </div>
+<<<<<<< HEAD
     <div class="form-group">
         <label for="exampleInputPassword1">Employee id</label>
         <input type="text" class="form-control" id="info_VU_ID" name="info_id" value="<%= course.VU_IDENTIFIKATOR %>">
@@ -28,6 +35,9 @@
         </select>
     </div>
 
+=======
+    
+>>>>>>> 895b579e2fed3942da930eb730996ff0ceb08ebe
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

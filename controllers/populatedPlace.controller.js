@@ -64,12 +64,10 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
             });
     });
 
-
     app.get('/editPopulatedPlaceById/:id', (req, res) => {
 
         let getAllStates = StateModel.getAllStates().then();   //get all states by calling the function getAllStates() from the StateModel{}
         let getPopulatedPlace = PopulatedPlaceModel.getPopulatedPlaceById(req.params.id).then();   ////get all states by calling the function getPopulatedPlaceById() from the PopulatedPlaceModel{}
-        let n
 
         Promise.all([getAllStates, getPopulatedPlace]).then(data => {
             res.render('editPopulatedPlace', {
