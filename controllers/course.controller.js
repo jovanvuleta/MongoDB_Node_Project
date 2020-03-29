@@ -68,7 +68,10 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
 
 
     app.get('/deleteCourse/:id', (req, res) => {
-        courseModel.deleteCourse(req.params.id)
+        let mysqlDeleteCoursePromise = courseModel.deleteCourse(req.params.id);
+        let neo4jDeleteCoursePromise = NeoCourseModel.deleteCourseById(req.params.id);
+
+        Promise.all([mysqlDeleteCoursePromise, neo4jDeleteCoursePromise])
             .then((data) => {
                 res.render('message', {
                     successMessage: 'Course ' + req.params.id + ' was deleted successfully.',   //success message

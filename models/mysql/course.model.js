@@ -87,7 +87,6 @@ exports.CourseModel = function (dbcon) {
             });
         },
 
-
         deleteCourse: (id) => {
             return new Promise((resolve, reject) => {
                 let query = 'DELETE FROM COURSE WHERE NP_PREDMET LIKE ?;';

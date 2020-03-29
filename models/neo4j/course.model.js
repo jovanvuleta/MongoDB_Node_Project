@@ -38,7 +38,7 @@ exports.CourseModel = (neo4j) => {
         deleteCourseById: (id) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MATCH(c:Course {NP_PREDMET: $id}) DETACH DELETE c';
+                let query = 'MATCH(c:COURSE {NP_PREDMET: $id}) DETACH DELETE c';
                 session.run(query, { id: id })
                     .then(result => {
                         resolve(result);
