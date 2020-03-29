@@ -1,48 +1,33 @@
-exports.CourseController = function(app, dbcon,mongo, neo4j)  
-{
+exports.CourseController = function (app, dbcon, mongo, neo4j) {
 
     const CourseCollection = require('../models/mongodb/course.collection.js').CourseCollectionModel(mongo)
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const NeoCourseModel = require('../models/neo4j/course.model.js').CourseModel(neo4j);
 
-    app.get('/getAllCourses/:id/:type', (req, res) => {
-        courseModel.getAllCourses(req.params.id, req.params.type)
-        .then((data) => {
-            res.render('courses', {
-                courses : data,
-                course: data[0],
-                successMessage : ''
+    app.get('/getAllCourses', (req, res) => {
+        courseModel.allCourses()
+            .then((data) => {
+                res.render('allCourses', {
+                    courses: data,
+                    course: data[0],
+                    successMessage: ''
+                });
             });
-        })
-        .catch(err => {
-            res.render('message', {
-                errorMessage : 'ERROR: ' + err,
-            });  
-        });
     });
 
-    // app.get('/addCourse/:id', (req, res) => {
 
-        
-        
-    //     let getInstitutionById = institutionModel.getInstitutionById(req.params.id).then();
-        
-    //     Promise (getInstitutionById)
-    //     .then((data) => {
-    //             res.render('addCourse', {
-                    
-    //                 institution : data
-                    
-    //             });
-    //         })
-    //         .catch((err) => {
-    //             res.render('message', {
-    //                 errorMessage: 'ERROR: ' + err + '!',
-    //                 link: 'ERROR: ' + err + ' <a href="/addCourse">Goback!</a>'
-    //             });
-    //         })
-    // });
+    app.get('/getAllCourses/:id/:type', (req, res) => {
+        courseModel.getAllCourses(req.params.id, req.params.type)
+            .then((data) => {
+                res.render('courses', {
+                    courses: data,
+                    course: data[0],
+                    successMessage: ''
+                });
+            });
+    });
+
     app.get('/addCourse/:id/:type', (req, res) => {
 
         courseModel.getAllCourses(req.params.id, req.params.type)   //Call amoel function that return all states from the database
@@ -61,13 +46,13 @@ exports.CourseController = function(app, dbcon,mongo, neo4j)
             })
     });
 
-    
+
     app.post('/addCourse/:id/:type', (req, res) => {
 
         const NeoAddCourse = NeoCourseModel.addCourse(req.params.type, req.params.id, req.body.courseCode, req.body.coursVersion, req.body.coursName).then();
         const SQLAddCourse = courseModel.addCourse(req.params.type, req.params.id, req.body.courseCode, req.body.coursVersion, req.body.coursName).then();
         Promise.all([NeoAddCourse, SQLAddCourse])
-        .then((data) => {
+            .then((data) => {
                 res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
                     successMessage: 'Course ' + req.body.courseCode + ' was added successfully.',   //success message
                     link: '<a href="/getAllInstitutions"> Go Back</a>',  //provide a link that provides a links to another page
@@ -81,7 +66,7 @@ exports.CourseController = function(app, dbcon,mongo, neo4j)
             })
     });
 
-    
+
     app.get('/deleteCourse/:id', (req, res) => {
         courseModel.deleteCourse(req.params.id)
             .then((data) => {
@@ -100,7 +85,7 @@ exports.CourseController = function(app, dbcon,mongo, neo4j)
 
     app.get('/editCourse/:type_ins/:vu_id/:np_predmet/:np_verzija', (req, res) => {
         let getAllTypes = institutionModel.getAllTypes().then();
-        let getAllCourses = courseModel.getAllCoursesByInstitutionAndCourseId(req.params.vu_id, req.params.np_predmet,req.params.type_ins).then();
+        let getAllCourses = courseModel.getAllCoursesByInstitutionAndCourseId(req.params.vu_id, req.params.np_predmet, req.params.type_ins).then();
 
         //Retrieves state's data in order to show the intinal data of the requested state to be dited
         Promise.all([getAllTypes, getAllCourses]).then((data) => {
@@ -121,10 +106,10 @@ exports.CourseController = function(app, dbcon,mongo, neo4j)
         const NeoEditCourse = NeoCourseModel.editCourseById(req.params.type_ins, req.params.vu_id, req.params.np_predmet, req.params.np_verzija, req.body.courseName).then();
         const SQLEditCourse = courseModel.editCourse(req.params.type_ins, req.body.courseName, req.params.vu_id, req.params.np_predmet, req.params.np_verzija).then();
         Promise.all([NeoEditCourse, SQLEditCourse])
-        .then((data) => {
+            .then((data) => {
                 console.log(data);
                 res.render('message', {
-                    successMessage: 'Course ' + req.body.courseName+ ' was edited successfully!',  //success message
+                    successMessage: 'Course ' + req.body.courseName + ' was edited successfully!',  //success message
                     link: '<a href="/getAllInstitutions"> Go back!</a>'      //provide a link that provides a links to another page
                 });
             })
@@ -151,62 +136,62 @@ exports.CourseController = function(app, dbcon,mongo, neo4j)
     });
 
     app.get('/generateCoursesDocument', (req, res) => {
-        
+
         const allInstitutions = institutionModel.getAllInstitutions();
         const allCourses = courseModel.allCourses();
 
 
-        Promise.all([allInstitutions,allCourses])
-        .catch((err) => {
-            res.render('message', {
-                errorMessage : 'ERROR: '+err,
-                link : '<a href="/getAllCourses"> Go Back</a>'
+        Promise.all([allInstitutions, allCourses])
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllCourses"> Go Back</a>'
+                })
             })
-        })
-        .then(([ institutions,courses]) => {
-            return new Promise((resolve, reject) => {
-            institutions = institutions.map(institution => {
-                return {
-                    id : institution.VU_IDENTIFIKATOR,
-                    name : institution.VU_NAZIV,
-                    number_of_courses: courses.filter(course => institution.VU_IDENTIFIKATOR == course.VU_IDENTIFIKATOR).length,
-                    Courses : courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
-                    .map(course => {
-                        return{
-                            
-                            name : course.NP_PREDMET,
-                            fullName : course.NP_NAZIV_PREDMETA
-                        
-                           
+            .then(([institutions, courses]) => {
+                return new Promise((resolve, reject) => {
+                    institutions = institutions.map(institution => {
+                        return {
+                            id: institution.VU_IDENTIFIKATOR,
+                            name: institution.VU_NAZIV,
+                            number_of_courses: courses.filter(course => institution.VU_IDENTIFIKATOR == course.VU_IDENTIFIKATOR).length,
+                            Courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                                .map(course => {
+                                    return {
 
+                                        name: course.NP_PREDMET,
+                                        fullName: course.NP_NAZIV_PREDMETA
+
+
+
+                                    }
+                                })
                         }
-                    })
-                }
-            });
+                    });
 
-            if(institutions.length == 0){
-                reject('No Institutions!');
-            }
-           
-            resolve({
-                created_at : JSON.stringify(new Date()),
-                numberOfInstitutions : institutions.length,
-                institutions : institutions
+                    if (institutions.length == 0) {
+                        reject('No Institutions!');
+                    }
+
+                    resolve({
+                        created_at: JSON.stringify(new Date()),
+                        numberOfInstitutions: institutions.length,
+                        institutions: institutions
+                    });
+                });
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
+            })
+            .then((coursesDocuments) => {
+                CourseCollection.insertCourseDocuments(coursesDocuments)
+                    .then(() => {
+                        res.redirect('coursesDocuments');
+                    });
             });
-        });
-    })
-    .catch((err) => {
-        res.render('message', {
-            errorMessage : 'ERROR: '+err,
-            link : '<a href="/getAllInstitutions"> Go Back</a>'
-        });
-    })
-    .then((coursesDocuments) => {
-        CourseCollection.insertCourseDocuments(coursesDocuments)
-        .then(() => {
-            res.redirect('coursesDocuments');
-        });
     });
-});
 
 }

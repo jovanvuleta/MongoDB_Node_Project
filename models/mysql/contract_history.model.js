@@ -1,5 +1,18 @@
 exports.ContractHistoryModel = (dbcon) => {
     return {
+        getAllContractHistoryForHeader: () => {
+            return new Promise((resolve, reject) => {
+                let query = "SELECT * FROM CONTRACT_HISTORY;";
+                dbcon.query(query, (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                        console.log(err);
+                    }
+                });
+            });
+        },
         getAllContractHistory: (type, emp_vu_id, emp_id) => {
             return new Promise((resolve, reject) => {
                 let query = "SELECT * FROM CONTRACT_HISTORY WHERE (TIP_UST LIKE ? AND EMP_VU_IDENTIFIKATOR LIKE ? AND ZAP_REDNI_BROJ LIKE ?);";
@@ -62,6 +75,18 @@ exports.ContractHistoryModel = (dbcon) => {
                         console.log(err);
                     }
                 });
+            });
+        },
+        deleteContract: (id) => {
+            return new Promise((resolve, reject) => {
+                let query = 'DELETE FROM CONTRACT_HISTORY WHERE UG_BROJ_UGOVORA LIKE ?;';
+                dbcon.query(query, id, (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(err);
+                    }
+                })
             });
         }
 

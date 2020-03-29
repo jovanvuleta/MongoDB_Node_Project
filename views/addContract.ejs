@@ -1,6 +1,6 @@
 <%- include('header') %>
 
-<% if (contract.length === 0) { %>
+<% if (contracts.length === 0) { %>
 <form method="post"
     action="/addContract/<%= first_object.type %>/<%= first_object.emp_vu_id %>/<%= first_object.emp_id %>">
     <% } else { %>

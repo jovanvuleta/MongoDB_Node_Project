@@ -8,27 +8,28 @@
 <% } else { %>
 
 <script>
-    function documentOfEmploymentByEmployee() {
+    function contractByDocument() {
         var id = prompt("Please enter Contract ID:");
-        link = "/getDocumentOfEmployementByContractId/" + id;
+        link = "/getContractsByDocuments/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            return false;
+            // window.location = "/getDocumentOfEmployement";
+        }
+    }
+    function editDocument() {
+        var id = prompt("Please enter Contract ID:");
+        link = "/editDocumentById/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/<%= document.VD_OZNAKA %>/<%= document.UG_GODINA %>/" + id;
         if (id) {
             window.location = link;
         } else {
             window.location = "/getDocumentOfEmployement";
         }
     }
-    function editEmployee() {
+    function deleteDocument() {
         var id = prompt("Please enter Contract ID:");
-        link = "/editDocument/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            window.location = "/getDocumentOfEmployement";
-        }
-    }
-    function deleteEmployee() {
-        var id = prompt("Please enter Contract ID:");
-        link = "/deleteEmployee/" + id;
+        link = "/deleteDocumentById/" + id;
         if (id) {
             confirm('This will delete the entire institution. Are you sure you want proceed?');
             window.location = link;
@@ -39,17 +40,22 @@
 </script>
 
 <br>
-<a type="button" class="btn btn-primary" href="/addDocument/<%= document.VU_IDENTIFIKATOR %>">Add Document</a>
-<a type="button" class="btn btn-primary" onclick="editEmployee()" href="#">Edit Document</a>
-<a type="button" class="btn btn-primary" onclick="deleteEmployee()" href="#">Delete
+<a type="button" class="btn btn-primary"
+    href="/addDocumentById/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/<%= document.VD_OZNAKA %>/<%= document.UG_GODINA %>/<%= document.UG_BROJ_UGOVORA %>">Add
     Document</a>
-<a type="button" class="btn btn-primary" onclick="documentOfEmploymentByEmployee()"
-    style="background-color:rgb(0, 205, 144)" href="#">Get
+<a type="button" class="btn btn-primary" onclick="editDocument()" href="#">Edit Document</a>
+<a type="button" class="btn btn-primary" onclick="deleteDocument()" href="#">Delete
+    Document</a>
+<a type="button" class="btn btn-primary" onclick="contractByDocument()" style="background-color:rgb(0, 205, 144)"
+    href="#">Get
     contract by Document</a>
-<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/generateDocumentsDocuments">Insert
+<a type="button" class="btn btn-primary" style="background-color:mediumblue"
+    href="/generateDocumentsOfEmploymentDocument">Insert
     Document of Employment
     Document</a>
-<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/documentsDocuments">View Documents
+<a type="button" class="btn btn-primary" style="background-color:mediumblue; margin-top: 10px;
+position: relative;
+left: 30%;" href="/documentOfEmploymentDocuments">View Documents
     of Document of Employment
     Documents</a>
 <br><br>

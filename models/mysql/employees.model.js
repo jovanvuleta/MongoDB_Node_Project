@@ -1,4 +1,4 @@
-exports.Employees = (dbcon) => {
+exports.EmployeesModel = (dbcon) => {
     return {
         getAllEmployees: () => {
             return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ exports.Employees = (dbcon) => {
         },
         getAllEmployeesByInstitutionAndEmployeeId: (vu_id, emp_id) => {
             return new Promise((resolve, reject) => {
-                let query = "SELECT * FROM EMPLOYEES WHERE VU_IDENTIFIKATOR LIKE ? AND ZAP_REDNI_BROJ LIKE ?;";
+                let query = "SELECT * FROM EMPLOYEES WHERE ZAP_REDNI_BROJ LIKE ? AND VU_IDENTIFIKATOR LIKE ?;";
                 dbcon.query(query, [vu_id, emp_id], (err, data) => {
                     if (!err) {
                         resolve(data);

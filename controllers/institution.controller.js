@@ -1,6 +1,6 @@
 exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
-    const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
+    const employeesModel = require('../models/mysql/employees.model.js').EmployeesModel(dbcon);
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
     const Neo4jInstitutionModel = require('../models/neo4j/institution.model.js').InstitutionModel(neo4j);
@@ -8,12 +8,12 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
     app.get('/getAllInstitutions', (req, res) => {
 
         institutionModel.getAllInstitutions()
-        .then((data) => {
-            res.render('allInstitutions', {
-                institutions : data,
-                successMessage : ''
+            .then((data) => {
+                res.render('allInstitutions', {
+                    institutions: data,
+                    successMessage: ''
+                });
             });
-        });
     });
 
     app.get('/getInstitutionsByStateId/:id', (req, res) => {
@@ -21,49 +21,49 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
         let getAllTypes = InstitutionModel.getAllTypes().then();
         let institutions = InstitutionModel.getInstitutionsByStateId(req.params.id).then();
         let state = StateModel.getStateById(req.params.id).then();
-        
+
         Promise.all([getAllTypes, institutions, state])
-        .then((data) => {
-            res.render('institutions', {
-                types : data[0],
-                institutions : data[1],
-                state : data[2][0],
-                successMessage : ''
+            .then((data) => {
+                res.render('institutions', {
+                    types: data[0],
+                    institutions: data[1],
+                    state: data[2][0],
+                    successMessage: ''
+                });
             });
-        });
     });
 
     app.get('/getEmployeeByInstitutionId/:id/:type', (req, res) => {
         employeesModel.getAllEmployeesByInstitution(req.params.id, req.params.type)
-        .then((data) => {
-            res.render('employees', {
-                employees: data,
-                employee: data[0]
+            .then((data) => {
+                res.render('employees', {
+                    employees: data,
+                    employee: data[0]
+                });
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                });
             });
-        })
-        .catch((err) => {
-            res.render('message', {
-                errorMessage : 'ERROR: ' + err,
-                link : '<a href="/getAllInstitutions"> Go Back</a>'
-            });
-        });
     });
 
     app.get('/getCoursesByInstitutionId/:id/:type', (req, res) => {
         institutionModel.getCourses(req.params.id, req.params.type)
-        .then((data) => {
-            res.render('courses', {
-                courses : data,
-                vu_id: req.params.id,
-                tip_ust: req.params.type,
-                successMessage : ''
+            .then((data) => {
+                res.render('courses', {
+                    courses: data,
+                    vu_id: req.params.id,
+                    tip_ust: req.params.type,
+                    successMessage: ''
+                });
+            })
+            .catch(err => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                });
             });
-        })
-        .catch(err => {
-            res.render('message', {
-                errorMessage : 'ERROR: ' + err,
-            });  
-        });
     });
 
     app.get('/addInstitution/:state', (req, res) => {
@@ -71,13 +71,13 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
         // let getAllStates = institutionModel.getAllStates().then();
         let getAllTypes = institutionModel.getAllTypes().then();
         let getAllOwnerships = institutionModel.getAllOwnerships().then();
-        
+
         Promise.all([req.params.state, getAllTypes, getAllOwnerships])
-        .then((data) => {
+            .then((data) => {
                 res.render('addInstitution', {
-                    state : data[0],
-                    types : data[1],
-                    ownerships : data[2]
+                    state: data[0],
+                    types: data[1],
+                    ownerships: data[2]
                 });
             })
             .catch((err) => {
@@ -113,32 +113,32 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
         let getInstitution = institutionModel.getInstitutionById(req.params.id, req.params.type).then();
 
         Promise.all([getInstitution, getAllStates, getAllTypes, getAllOwnerships])
-        .then(data => {
-            console.log(data);
-            res.render('editInstitution', {
-                states: data[1],
-                types: data[2],
-                ownerships: data[3],
-                institution: data[0][0]
-            });
-        })
+            .then(data => {
+                console.log(data);
+                res.render('editInstitution', {
+                    states: data[1],
+                    types: data[2],
+                    ownerships: data[3],
+                    institution: data[0][0]
+                });
+            })
     });
-    
+
     app.post('/editInstitutionById/:state/:id/:type', (req, res) => {
 
         let editInstitutionSQL = institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.ownershipType, req.params.id, req.params.type).then();
         let editInstitutionNeo = Neo4jInstitutionModel.editInstitutionById(req.params.state, req.params.id, req.params.type, req.body.institutionName, req.body.institutionType, req.body.ownershipType).then();
-        
+
         Promise.all([editInstitutionSQL, editInstitutionNeo])
-        .then((data) => {
-            res.redirect('/getInstitutionsByStateId/' + req.params.state);
-        })
-        .catch((err) => {
-            res.render('message', {
-                errorMessage: 'ERROR: ' + err,
-                link: '<a href="/editInstitutionById/' + req.body.institutionId + ' "> Go back!</a>'
+            .then((data) => {
+                res.redirect('/getInstitutionsByStateId/' + req.params.state);
+            })
+            .catch((err) => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err,
+                    link: '<a href="/editInstitutionById/' + req.body.institutionId + ' "> Go back!</a>'
+                });
             });
-        });
     });
 
     app.get('/deleteInstitutionById/:state/:id/:type', (req, res) => {

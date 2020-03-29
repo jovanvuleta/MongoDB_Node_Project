@@ -1,0 +1,39 @@
+<%- include('header') %>
+
+<% if (documents.length === 0) { %>
+<div class="alert alert-info" role="alert">
+    <p>There are no documents to show, click <a href="/allStates/<%=  %>">here</a> to go back to states page.</p>
+</div>
+<% } else { %>
+<br><br>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Institution Type</th>
+            <th scope="col">Institution ID</th>
+            <th scope="col">Contract Type</th>
+            <th scope="col">Contract Year</th>
+            <th scope="col">Contract ID</th>
+            <th scope="col">Datum vazenja od: </th>
+            <th scope="col">Datum vazenja do: </th>
+        </tr>
+    </thead>
+    <tbody>
+        <% documents.forEach(function(document, index) { %>
+        <tr>
+            <td><strong><%= index+1 %></strong></td>
+            <td><%= document.TIP_UST %></td>
+            <td><%= document.VU_IDENTIFIKATOR %></td>
+            <td><%= document.VD_OZNAKA %></td>
+            <td><%= document.UG_GODINA %></td>
+            <td><%= document.UG_BROJ_UGOVORA %></td>
+            <td><%= moment(document.UG_DATUM).format('DD/MM/YYYY') %></td>
+            <td><%= moment(document.UG_DATUM_VAZENJA).format('DD/MM/YYYY') %></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+<% } %>
+
+<%- include('footer') %>

@@ -2,13 +2,10 @@
 
 <% if (courses.length === 0) { %>
 <div class="alert alert-info" role="alert">
-    <p>There are no courses to show, click <a href="/addCourse/<%= vu_id %>/<%= tip_ust %>">here</a> to add an course.
+    <p>There are no courses to show, go back <a href="/getAllStates%>">here</a> to the states page.
     </p>
 </div>
 <% } else { %>
-<br>
-<a type="button" class="btn btn-primary" href="/addCourse/<%= vu_id %>/<%= tip_ust %>">Add Course</a>
-<a type="button" class="btn btn-primary" href="/coursesDocuments">Viev Course Documents</a>
 <br><br>
 <table class="table">
     <thead class="thead-dark">
@@ -30,12 +27,6 @@
             <td><%= course.NP_PREDMET %></td>
             <td><%= course.NP_VERZIJA %></td>
             <td><%= course.NP_NAZIV_PREDMETA %></td>
-            <td><a type="button" class="btn btn-warning"
-                    href="/editCourse/<%= course.TIP_UST %>/<%= course.VU_IDENTIFIKATOR %>/<%= course.NP_PREDMET %>/<%= course.NP_VERZIJA %>">Edit</a>
-            </td>
-            <td><a type="button" class="btn btn-danger" href="/deleteCourse/<%= course.VU_IDENTIFIKATOR %>"
-                    onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a>
-            </td>
         </tr>
         <% }); %>
     </tbody>

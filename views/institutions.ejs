@@ -2,165 +2,170 @@
 
 <% if (institutions.length === 0) { %>
 <div class="alert alert-info" role="alert">
-    <p>There are no institutions to show, click <a href="/addInstitution/<%= state.DR_IDENTIFIKATOR %>">here</a> to add an institution.</p>
+    <p>There are no institutions to show, click <a href="/addInstitution/<%= state.DR_IDENTIFIKATOR %>">here</a> to add
+        an institution.</p>
 </div>
 <% } else { %>
 <br>
 
-    <a type="button" class="btn btn-primary" href="/addInstitution/<%= state.DR_IDENTIFIKATOR %>">Add institution</a>
-    
-    <script>
+<a type="button" class="btn btn-primary" href="/addInstitution/<%= state.DR_IDENTIFIKATOR %>">Add institution</a>
 
-        $.noConflict();
-        jQuery(document).ready(function( $ ) {
-            function dialog() {
-                var def = $.Deferred();
+<script>
 
-                $('#employeesByInstitution').dialog({
-                    autoOpen: true,
-                    modal: true,
-                    overlay: {
-                        opacity: 0.7,
-                        background: "black"
+    $.noConflict();
+    jQuery(document).ready(function ($) {
+        function dialog() {
+            var def = $.Deferred();
+
+            $('#employeesByInstitution').dialog({
+                autoOpen: true,
+                modal: true,
+                overlay: {
+                    opacity: 0.7,
+                    background: "black"
+                },
+                buttons: {
+                    "OK": function () {
+                        def.resolve();
+                        $(this).dialog('close');
                     },
-                    buttons: {
-                        "OK": function() {
-                            def.resolve();
-                            $(this).dialog('close');
-                        },
-                        "CANCEL": function() {
-                            def.reject();
-                            $(this).dialog('close');
-                        }
+                    "CANCEL": function () {
+                        def.reject();
+                        $(this).dialog('close');
                     }
-                });
-                return def.promise();
-            }
-
-            $('#employeesByInstitutionButton').click(function() {
-                dialog().done(function() {
-                    var id = $('#dialogId').val();
-                    var type = $('#dialogType').val();
-
-                    var link = "/getEmployeeByInstitutionId/" + id + "/" + type;
-                    if (id && type) {
-                        window.location = link;
-                    } else {
-                        window.location = "/getAllInstitutions";
-                    }})
-                    .fail(function() {
-                        // cry a little
-                    });
+                }
             });
-
-            $('#editInstitution').click(function() {
-                dialog().done(function() {
-                    var id = $('#dialogId').val();
-                    var type = $('#dialogType').val();
-
-                    link = "/editInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
-                    if (id && type) {
-                        window.location = link;
-                    } else {
-                        window.location = "/getAllInstitutions";
-                    }})
-                    .fail(function() {
-                        // cry a little
-                    });
-            });
-
-            $('#deleteInstitution').click(function() {
-                dialog().done(function() {
-                    var id = $('#dialogId').val();
-                    var type = $('#dialogType').val();
-
-                    link = "/deleteInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
-                    if (id && type) {
-                        confirm('This will delete the entire institution. Are you sure you want proceed?');
-                        window.location = link;
-                    } else {
-                        window.location = "/getAllInstitutions";
-                    }})
-                    .fail(function() {
-                        // cry a little
-                    });
-            });
-
-            $('#coursesByInstitution').click(function() {
-                dialog().done(function() {
-                    var id = $('#dialogId').val();
-                    var type = $('#dialogType').val();
-
-                    link = "/getCoursesByInstitutionId/" + id + "/" + type;
-                    if (id) {
-                        window.location = link;
-                    } else {
-                        window.location = "/getAllInstitutions";
-                    }})
-                    .fail(function() {
-                        // cry a little
-                    });
-            });
-        })
-
-        function coursesByInstitution() {
-            var id = prompt("Please enter institution ID:");
-            link = "/getAllCourses/" + id;
-            if (id) {
-                window.location = link;
-            } else {
-                window.location = "/getAllInstitutions";
-            }
+            return def.promise();
         }
-        
-    </script>
 
-    <a type="button" class="btn btn-primary" id="employeesByInstitutionButton" href="#">Get employees</a>
-    <a type="button" class="btn btn-primary" id="coursesByInstitution" href="#">Get Courses</a>
-    <a type="button" class="btn btn-primary" id="editInstitution" href="#">Edit institution</a>
-    <a type="button" class="btn btn-primary" id="deleteInstitution" href="#">Delete institution</a>
-    <a type="button" class="btn btn-primary" href="/generateInstitutionsDocument">Generate institution docs</a>
-    <a type="button" class="btn btn-primary" href="/institutionsDocuments">View institution docs</a>
-    
-    <br><br>
+        $('#employeesByInstitutionButton').click(function () {
+            dialog().done(function () {
+                var id = $('#dialogId').val();
+                var type = $('#dialogType').val();
 
-    <div title="Institution information" id="employeesByInstitution" style="display:none;">
-        <div class="modal-body">
-            <form>
-                <label>Institution ID</label>
-                <input type="text" id="dialogId"/>
-                <label>Institution Type</label>
-                <select class="custom-select" id="dialogType" required>
-                    <% types.forEach(function(type, index) { %>
-                        <option value="<%= type.TIP_UST %>"><%= type.TIP_NAZIV %></option>
-                    <% }); %>
-                </select>
-            </form>
-        </div>
+                var link = "/getAllEmployeesByInstitution/" + type + "/" + id;
+                if (id && type) {
+                    window.location = link;
+                } else {
+                    window.location = "/getAllInstitutions";
+                }
+            })
+                .fail(function () {
+                    // cry a little
+                });
+        });
+
+        $('#editInstitution').click(function () {
+            dialog().done(function () {
+                var id = $('#dialogId').val();
+                var type = $('#dialogType').val();
+
+                link = "/editInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
+                if (id && type) {
+                    window.location = link;
+                } else {
+                    window.location = "/getAllInstitutions";
+                }
+            })
+                .fail(function () {
+                    // cry a little
+                });
+        });
+
+        $('#deleteInstitution').click(function () {
+            dialog().done(function () {
+                var id = $('#dialogId').val();
+                var type = $('#dialogType').val();
+
+                link = "/deleteInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
+                if (id && type) {
+                    confirm('This will delete the entire institution. Are you sure you want proceed?');
+                    window.location = link;
+                } else {
+                    window.location = "/getAllInstitutions";
+                }
+            })
+                .fail(function () {
+                    // cry a little
+                });
+        });
+
+        $('#coursesByInstitution').click(function () {
+            dialog().done(function () {
+                var id = $('#dialogId').val();
+                var type = $('#dialogType').val();
+
+                link = "/getCoursesByInstitutionId/" + id + "/" + type;
+                if (id) {
+                    window.location = link;
+                } else {
+                    window.location = "/getAllInstitutions";
+                }
+            })
+                .fail(function () {
+                    // cry a little
+                });
+        });
+    })
+
+    function coursesByInstitution() {
+        var id = prompt("Please enter institution ID:");
+        link = "/getAllCourses/" + id;
+        if (id) {
+            window.location = link;
+        } else {
+            window.location = "/getAllInstitutions";
+        }
+    }
+
+</script>
+
+<a type="button" class="btn btn-primary" id="employeesByInstitutionButton" href="#">Get employees</a>
+<a type="button" class="btn btn-primary" id="coursesByInstitution" href="#">Get Courses</a>
+<a type="button" class="btn btn-primary" id="editInstitution" href="#">Edit institution</a>
+<a type="button" class="btn btn-primary" id="deleteInstitution" href="#">Delete institution</a>
+<a type="button" class="btn btn-primary" href="/generateInstitutionsDocument">Generate institution docs</a>
+<a type="button" class="btn btn-primary" href="/institutionsDocuments">View institution docs</a>
+
+<br><br>
+
+<div title="Institution information" id="employeesByInstitution" style="display:none;">
+    <div class="modal-body">
+        <form>
+            <label>Institution ID</label>
+            <input type="text" id="dialogId" />
+            <label>Institution Type</label>
+            <select class="custom-select" id="dialogType" required>
+                <% types.forEach(function(type, index) { %>
+                <option value="<%= type.TIP_UST %>"><%= type.TIP_NAZIV %></option>
+                <% }); %>
+            </select>
+        </form>
     </div>
+</div>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">ID</th>
-                <th scope="col">Country</th>
-                <th scope="col">Institution Name</th>
-                <th scope="col">Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% institutions.forEach(function(institution, index) { %>
-            <tr>
-                <td><strong><%= index+1 %></strong></td>
-                <td><%= institution.VU_IDENTIFIKATOR %></td>
-                <td><%= institution.DR_IDENTIFIKATOR %></td>
-                <td><%= institution.VU_NAZIV %></td>
-                <td><%= institution.TIP_UST %></td>
-            </tr>
-            <% }); %>
-        </tbody>
-    </table>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID</th>
+            <th scope="col">Country</th>
+            <th scope="col">Institution Name</th>
+            <th scope="col">Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% institutions.forEach(function(institution, index) { %>
+        <tr>
+            <td><strong><%= index+1 %></strong></td>
+            <td><%= institution.VU_IDENTIFIKATOR %></td>
+            <td><%= institution.DR_IDENTIFIKATOR %></td>
+            <td><%= institution.VU_NAZIV %></td>
+            <td><%= institution.TIP_UST %></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
 <% } %>
 
 <%- include('footer') %>
