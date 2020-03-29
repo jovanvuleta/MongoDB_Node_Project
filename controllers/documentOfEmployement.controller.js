@@ -181,9 +181,6 @@ exports.DocumentOfEmployementController = (app, dbcon, mongo, neo4j) => {
                 })
             })
             .then(([documents, contracts, institutions]) => {
-                console.log(documents);
-                console.log(contracts);
-                console.log(institutions);
                 return new Promise((resolve, reject) => {
                     documents = documents.map(document => {
                         return {
