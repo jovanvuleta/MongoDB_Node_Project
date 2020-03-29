@@ -3,7 +3,7 @@
 <% if (employees.length === 0) { %>
 <div class="alert alert-info" role="alert">
     <p>There are no employees to show, click <a
-            href="/addEmployee/<%= paramObject.type_inst %>/<%= paramObject.vu_id %>/<%= paramObject.emp_id %>">here</a>
+            href="/addEmployee/<%= paramObject.type_inst %>/<%= paramObject.vu_id %>">here</a>
         to add an
         employee.</p>
 </div>
@@ -41,7 +41,8 @@
 </script>
 
 <br>
-<a type="button" class="btn btn-primary" href="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.TIP_UST %>">Add Employee</a>
+<a type="button" class="btn btn-primary"
+    href="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.TIP_UST %>">Add Employee</a>
 <a type="button" class="btn btn-primary" onclick="editEmployee()" href="#">Edit Employee</a>
 <a type="button" class="btn btn-primary" onclick="deleteEmployee()" href="#">Delete
     Employee</a>

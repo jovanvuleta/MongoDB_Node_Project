@@ -24,35 +24,20 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
     });
 
     app.get('/getInstitutionsByStateId/:id', (req, res) => {
-<<<<<<< HEAD
-        InstitutionModel.getInstitutionsByStateId(req.params.id)
-            .then((data) => {
-                res.render('institutions', {
-                    institutions: data,
-                    institution: data[0],
-                    successMessage: ''
-                });
-            })
-            .catch(err => {
-                res.render('message', {
-                    errorMessage: 'ERROR: ' + err,
-                });
-=======
 
         let getAllTypes = InstitutionModel.getAllTypes().then();
         let institutions = InstitutionModel.getInstitutionsByStateId(req.params.id).then();
         let state = StateModel.getStateById(req.params.id).then();
-        
+
         Promise.all([getAllTypes, institutions, state])
-        .then((data) => {
-            res.render('institutions', {
-                types : data[0],
-                institutions : data[1],
-                state : data[2][0],
-                successMessage : ''
->>>>>>> 895b579e2fed3942da930eb730996ff0ceb08ebe
+            .then((data) => {
+                res.render('institutions', {
+                    types: data[0],
+                    institutions: data[1],
+                    state: data[2][0],
+                    successMessage: ''
+                });
             });
-        });
     });
 
 
@@ -63,11 +48,7 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
     app.post('/addState', (req, res) => {
 
         let mysqlAddPromise = StateModel.addState(req.body.stateId, req.body.stateName, req.body.date);
-<<<<<<< HEAD
         let neo4jAddPromise = Neo4jStateModel.addState(req.body.stateId, req.body.stateName, req.body.date);
-=======
-        let neo4jAddPromise = Neo4jStateModel.addState(req.body.stateId, req.body.stateName);
->>>>>>> 895b579e2fed3942da930eb730996ff0ceb08ebe
 
         Promise.all([mysqlAddPromise, neo4jAddPromise])
             .then((data) => {

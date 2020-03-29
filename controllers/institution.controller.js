@@ -1,6 +1,6 @@
 exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
-    const employeesModel = require('../models/mysql/employees.model.js').Employees(dbcon);
+    const employeesModel = require('../models/mysql/employees.model.js').EmployeesModel(dbcon);
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
     const Neo4jInstitutionModel = require('../models/neo4j/institution.model.js').InstitutionModel(neo4j);

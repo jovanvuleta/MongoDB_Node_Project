@@ -7,7 +7,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
     app.get('/getAllEmployees', (req, res) => {
         employeesModel.getAllEmployees()
             .then((data) => {
-                res.render('employees', {
+                res.render('allEmployees', {
                     employees: data,
                     employee: data[0]
                 })
@@ -19,8 +19,8 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
             });
     });
 
-    app.get('/getAllEmployeesByInstitution/:type_inst/:vu_id/:emp_id', (req, res) => {
-        employeesModel.getAllEmployeesByInstitution(req.params.emp_id)   //Call amoel function that return all states from the database
+    app.get('/getAllEmployeesByInstitution/:type_inst/:vu_id', (req, res) => {
+        employeesModel.getAllEmployeesByInstitution(req.params.vu_id, req.params.type_inst)   //Call amoel function that return all states from the database
             .then((data) => {
                 res.render('employees', {
                     employees: data,

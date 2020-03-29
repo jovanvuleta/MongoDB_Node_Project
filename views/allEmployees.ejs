@@ -1,0 +1,38 @@
+<%- include('header') %>
+
+<% if (employees.length === 0) { %>
+<div class="alert alert-info" role="alert">
+    <p>There are no employees to show, go back to <a href="/allStates/">states</a>
+        page.</p>
+</div>
+<% } else { %>
+<br>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Institution Type</th>
+            <th scope="col">Institution ID</th>
+            <th scope="col">Employee Number</th>
+            <th scope="col">Employee Last Name</th>
+            <th scope="col">Employee Middle letter</th>
+            <th scope="col">Employee Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% employees.forEach(function(employee, index) { %>
+        <tr>
+            <td><strong><%= index+1 %></strong></td>
+            <td><%= employee.TIP_UST %></td>
+            <td><%= employee.VU_IDENTIFIKATOR %></td>
+            <td><%= employee.ZAP_REDNI_BROJ %></td>
+            <td><%= employee.ZAP_PREZIME %></td>
+            <td><%= employee.ZAP_SREDNJE_SLOVO %></td>
+            <td><%= employee.ZAP_IME %></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+<% } %>
+
+<%- include('footer') %>

@@ -43,7 +43,7 @@
                 var id = $('#dialogId').val();
                 var type = $('#dialogType').val();
 
-                var link = "/getEmployeeByInstitutionId/" + id + "/" + type;
+                var link = "/getAllEmployeesByInstitution/" + type + "/" + id;
                 if (id && type) {
                     window.location = link;
                 } else {

@@ -5,6 +5,18 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const NeoCourseModel = require('../models/neo4j/course.model.js').CourseModel(neo4j);
 
+    app.get('/getAllCourses', (req, res) => {
+        courseModel.allCourses()
+            .then((data) => {
+                res.render('allCourses', {
+                    courses: data,
+                    course: data[0],
+                    successMessage: ''
+                });
+            });
+    });
+
+
     app.get('/getAllCourses/:id/:type', (req, res) => {
         courseModel.getAllCourses(req.params.id, req.params.type)
             .then((data) => {
@@ -16,27 +28,6 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
             });
     });
 
-    // app.get('/addCourse/:id', (req, res) => {
-
-
-
-    //     let getInstitutionById = institutionModel.getInstitutionById(req.params.id).then();
-
-    //     Promise (getInstitutionById)
-    //     .then((data) => {
-    //             res.render('addCourse', {
-
-    //                 institution : data
-
-    //             });
-    //         })
-    //         .catch((err) => {
-    //             res.render('message', {
-    //                 errorMessage: 'ERROR: ' + err + '!',
-    //                 link: 'ERROR: ' + err + ' <a href="/addCourse">Goback!</a>'
-    //             });
-    //         })
-    // });
     app.get('/addCourse/:id/:type', (req, res) => {
 
         courseModel.getAllCourses(req.params.id, req.params.type)   //Call amoel function that return all states from the database

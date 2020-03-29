@@ -7,7 +7,7 @@ exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
     app.get('/getAllContractHistory', (req, res) => {
         contractHistoryModel.getAllContractHistoryForHeader()
             .then((data) => {
-                res.render('contractHistory', {
+                res.render('allContractHistory', {
                     contracts: data,
                     contract: data[0]
                 })

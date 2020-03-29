@@ -1,0 +1,37 @@
+<%- include('header') %>
+
+<% if (contracts.length === 0) { %>
+<div class="alert alert-info" role="alert">
+    <p>There are no contract history to show, go back to states page <a href="/allStates/">here</a>.</p>
+</div>
+<% } else { %>
+<br><br>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Institution Type</th>
+            <th scope="col">Institution ID</th>
+            <th scope="col">Employee ID</th>
+            <th scope="col">Type of Contract</th>
+            <th scope="col">Contract Year</th>
+            <th scope="col">Contract ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% contracts.forEach(function(contract, index) { %>
+        <tr>
+            <td><strong><%= index+1 %></strong></td>
+            <td><%= contract.TIP_UST %></td>
+            <td><%= contract.EMP_VU_IDENTIFIKATOR %></td>
+            <td><%= contract.ZAP_REDNI_BROJ %></td>
+            <td><%= contract.VD_OZNAKA %></td>
+            <td><%= contract.UG_GODINA %></td>
+            <td><%= contract.UG_BROJ_UGOVORA %></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+<% } %>
+
+<%- include('footer') %>

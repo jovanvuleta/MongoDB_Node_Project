@@ -10,7 +10,7 @@ exports.DocumentOfEmployementController = (app, dbcon, mongo, neo4j) => {
     app.get('/getDocumentOfEmployement', (req, res) => {
         DocumentOfEmployementModel.getAllDocumentOfEmployement()
             .then(data => {
-                res.render('documentsOfEmployement', {
+                res.render('allDocumentOfEmployment', {
                     documents: data,
                     document: data[0],
                     moment: moment
