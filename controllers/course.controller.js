@@ -89,8 +89,8 @@ exports.CourseController = function (app, dbcon, mongo) {
             });
     });
 
-    app.post('/editCourseById/:id', (req, res) => {
-        institutionModel.editInstitutionById(req.body.institutionType, req.body.institutionName, req.body.stateId, req.body.ownershipType, req.params.id)
+    app.post('/editCourseById/:type_inst/:vu_id/:np_version/:np_predmet', (req, res) => {
+        courseModel.editCourseById(req.params.np_predmet, req.body.stateId, req.body.ownershipType, req.params.id)
             .then((data) => {
                 res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
                     successMessage: 'Course with the name: ' + req.params.id + ' was deleted successfully.',   //success message

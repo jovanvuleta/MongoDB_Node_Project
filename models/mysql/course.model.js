@@ -87,11 +87,11 @@ exports.CourseModel = function (dbcon) {
 
 
 
-        editCourseById: function (courseVersion, courseName, courseSubject) {
+        editCourseById: function (courseName, courseSubject) {
             return new Promise((resolve, reject) => {
-                let query = 'UPDATE COURSE SET NP_VERZIJA = ?, NP_NAZIV_PREDMETA = ? WHERE NP_PREDMET LIKE ?;';
+                let query = 'UPDATE COURSE SET NP_NAZIV_PREDMET = ? WHERE NP_PREDMET LIKE ?;';
 
-                dbcon.query(query, [courseVersion, courseName, courseSubject], (err, data) => {
+                dbcon.query(query, [courseName, courseSubject], (err, data) => {
                     if (!err) {
                         resolve(data);
                     } else {
