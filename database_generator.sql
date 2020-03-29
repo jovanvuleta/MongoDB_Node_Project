@@ -106,7 +106,7 @@ drop table if exists RESPONSIBLE_MANAGER;
 
 drop table if exists ROLE;
 
-drop table if exists "SCHEMA";
+drop table if exists `SCHEMA`;
 
 drop table if exists STATE;
 
@@ -814,9 +814,9 @@ create table ROLE
 );
 
 /*==============================================================*/
-/* Table: "SCHEMA"                                              */
+/* Table: `SCHEMA`                                              */
 /*==============================================================*/
-create table "SCHEMA"
+create table `SCHEMA`
 (
    TIP_UST              char(2) not null,
    ACT_VU_IDENTIFIKATOR int not null,
@@ -1140,10 +1140,10 @@ alter table RESPONSIBLE_MANAGER add constraint FK_RESPONSIBLE_MANAGER foreign ke
 alter table RESPONSIBLE_MANAGER add constraint FK_RESPONSIBLE_MANAGER2 foreign key (DOC_TIP_UST, VU_IDENTIFIKATOR, VD_OZNAKA, UG_GODINA, UG_BROJ_UGOVORA)
       references DOCCUMENTS_OF_EMPLOYMENT (TIP_UST, VU_IDENTIFIKATOR, VD_OZNAKA, UG_GODINA, UG_BROJ_UGOVORA) on delete restrict on update restrict;
 
-alter table "SCHEMA" add constraint FK_SCHEMA_IN_ACT foreign key (TIP_UST, ACT_VU_IDENTIFIKATOR, AO_REDNI_BROJ)
+alter table `SCHEMA` add constraint FK_SCHEMA_IN_ACT foreign key (TIP_UST, ACT_VU_IDENTIFIKATOR, AO_REDNI_BROJ)
       references ACT_OF_ORGANIZATION (TIP_UST, VU_IDENTIFIKATOR, AO_REDNI_BROJ) on delete restrict on update restrict;
 
-alter table "SCHEMA" add constraint FK_UN_IT_IN_SCHEMA foreign key (TIP_UST, ACT_VU_IDENTIFIKATOR, OJ_IDENTIFIKATOR)
+alter table `SCHEMA` add constraint FK_UN_IT_IN_SCHEMA foreign key (TIP_UST, ACT_VU_IDENTIFIKATOR, OJ_IDENTIFIKATOR)
       references ORGANIZATIONAL_UNIT (TIP_UST, VU_IDENTIFIKATOR, OJ_IDENTIFIKATOR) on delete restrict on update restrict;
 
 alter table STATE add constraint FK_LEGAL_SUCCESSOR foreign key (STA_DR_IDENTIFIKATOR)

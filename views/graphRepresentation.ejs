@@ -1,27 +1,8 @@
 <%- include('header') %>
 
-<head>
-    <title>Neovis.js Simple Example</title>
-    <style type="text/css">
-        html,
-        body {
-            font: 16pt arial;
-        }
-
-        #viz {
-            width: 900px;
-            height: 700px;
-            border: 1px solid lightgray;
-            font: 22pt arial;
-        }
-    </style>
-</head>
-
-<body onload="draw()">
-    <div id="viz"></div>
-</body>
 <script src="https://cdn.neo4jlabs.com/neovis.js/v1.4.0/neovis.js"></script>
 <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+
 <script type="text/javascript">
 
     var viz;
@@ -31,16 +12,11 @@
             container_id: "viz",
             server_url: "neo4j://localhost:7687",
             server_user: "neo4j",
-            server_password: "neo4j",
+            server_password: "root",
             labels: {
                 "State": {
                     "caption": "DR_NAZIV"
                 },
-
-<<<<<<< HEAD
-                "Institution": {
-                    "caption": "VU_NAZIV"
-=======
                 "HIGH_EDUCATION_INSTITUTION": {
                     "caption": "VU_NAZIV"
                 },
@@ -55,7 +31,6 @@
 
                 "DOCCUMENTS_OF_EMPLOYMENT": {
                     "caption": "UG_GODINA"
->>>>>>> 3c017bb9abd5391cea922c19574b6f13cdb78161
                 }
             },
             relationships: {
@@ -70,5 +45,9 @@
     }
 </script>
 
-</html>
+
+<body onload="draw()">
+    <div id="viz"></div>
+</body>
+
 <%- include('footer') %>

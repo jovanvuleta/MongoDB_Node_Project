@@ -40,16 +40,15 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
             })
     });
 
-    app.get('/addEmployee/:id/:type', (req, res) => {
+    app.get('/addEmployee/:type/:id', (req, res) => {
         employeesModel.getAllEmployeesByInstitution(req.params.id, req.params.type)   //Call amoel function that return all states from the database
             .then((data) => {
                 res.render('addEmployee', {
                     employees: data,
                     employee: data[0],
                     paramObject: {
-                        type_inst: req.params.type_inst,
-                        vu_id: req.params.vu_id,
-                        emp_id: req.params.emp_id
+                        type_inst: req.params.type,
+                        vu_id: req.params.id
                     }
                 });
             })
@@ -63,7 +62,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
 
     app.post('/addEmployee/:type_inst/:vu_id', (req, res) => {
         let mysqlAddEmployee = employeesModel.addEmployee(req.params.type_inst, req.params.vu_id, req.body.employeeId, req.body.employeeSurname, req.body.employeeMidLetter, req.body.employeeName);
-        let neo4jAddEmployee = Neo4jEmployeeModel.addEmployee(req.params.type_inst, parseInt(req.params.vu_id), req.body.employeeId, req.body.employeeSurname, req.body.employeeMidLetter, req.body.employeeName);
+        let neo4jAddEmployee = Neo4jEmployeeModel.addEmployee(req.params.type_inst, req.params.vu_id, req.body.employeeId, req.body.employeeSurname, req.body.employeeMidLetter, req.body.employeeName);
 
         Promise.all([mysqlAddEmployee, neo4jAddEmployee])
             .then((data) => {

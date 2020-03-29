@@ -4,8 +4,8 @@ exports.MysqlConnection = function () {
     let dbcon = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'password',
-        database: 'NonDB_schema'
+        password: 'root',
+        database: 'crud'
     });
 
     dbcon.connect((err) => {

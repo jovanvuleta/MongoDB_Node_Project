@@ -2,7 +2,7 @@
 <% if(employees.length === 0) { %>
 <form method="post" action="/addEmployee/<%= paramObject.type_inst %>/<%= paramObject.vu_id %>">
     <% } else{ %>
-    <form method="post" action="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.TIP_UST %>/">
+    <form method="post" action="/addEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>">
         <% } %>
         <div class="form-group">
             <label for="exampleInputEmail1">Employee ID</label>
