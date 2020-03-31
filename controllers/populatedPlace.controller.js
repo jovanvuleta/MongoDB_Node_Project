@@ -36,8 +36,8 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
     app.post('/addPopulatedPlace', (req, res) => {
 
         let getAllPopulatedPlaces = PopulatedPlaceModel.getAllPopulatedPlaces();
-        let mysqlAddPromise = PopulatedPlaceModel.addPopulatedPlace(req.body.stateId, parseInt(req.body.id, 10), req.body.name, req.body.pttCode);
-        let neo4jAddPromise = Neo4jPopulatedPlaceModel.addPopulatedPlace(req.body.stateId, parseInt(req.body.id, 10), req.body.name, req.body.pttCode);
+        let mysqlAddPromise = PopulatedPlaceModel.addPopulatedPlace(req.body.stateId, parseInt(req.body.id), req.body.name, req.body.pttCode);
+        let neo4jAddPromise = Neo4jPopulatedPlaceModel.addPopulatedPlace(req.body.stateId, parseInt(req.body.id), req.body.name, req.body.pttCode);
 
         Promise.all([getAllPopulatedPlaces, mysqlAddPromise, neo4jAddPromise])
             .then((data) => {

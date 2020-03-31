@@ -47,7 +47,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
                     employees: data,
                     employee: data[0],
                     paramObject: {
-                        type_inst: req.params.type_inst,
+                        type_inst: req.params.type,
                         vu_id: req.params.vu_id
                     }
                 });
@@ -100,7 +100,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
 
     app.get('/editEmployee/:type_ins/:vu_id/:emp_id', (req, res) => {
         let getAllTypes = institutionModel.getAllTypes();
-        let getEmployees = employeesModel.getAllEmployeesByInstitutionAndEmployeeId(req.params.vu_id, req.params.emp_id);
+        let getEmployees = employeesModel.getAllEmployeesByInstitutionAndEmployeeId(req.params.emp_id, req.params.vu_id);
 
         //Retrieves state's data in order to show the intinal data of the requested state to be dited
         Promise.all([getAllTypes, getEmployees]).then((data) => {

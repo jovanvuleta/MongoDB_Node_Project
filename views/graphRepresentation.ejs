@@ -12,32 +12,35 @@
             container_id: "viz",
             server_url: "neo4j://localhost:7687",
             server_user: "neo4j",
-            server_password: "root",
+            server_password: "neo4j",
             labels: {
-                "State": {
+                "STATE": {
                     "caption": "DR_NAZIV"
                 },
                 "HIGH_EDUCATION_INSTITUTION": {
                     "caption": "VU_NAZIV"
                 },
-
                 "Employee": {
                     "caption": "ZAP_IME"
                 },
-
                 "CONTRACT_HISTORY": {
                     "caption": "UG_BROJ_UGOVORA"
                 },
-
                 "DOCCUMENTS_OF_EMPLOYMENT": {
                     "caption": "UG_GODINA"
+                },
+                "CITY": {
+                    "caption": "name"
+                },
+                "COURSE": {
+                    "caption": "NP_NAZIV_PREDMETA"
                 }
             },
             relationships: {
 
             },
             initial_cypher:
-                "MATCH (n)-[r]->(m) RETURN n,r,m"
+                "MATCH (n) - [r] -> (m) RETURN n,r,m"
         };
 
         viz = new NeoVis.default(config);

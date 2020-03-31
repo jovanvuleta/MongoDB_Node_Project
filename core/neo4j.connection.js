@@ -2,7 +2,7 @@ exports.Neo4jConnection = () => {
     const config = {
         hostname: 'localhost',
         username: 'neo4j',
-        password: 'root'
+        password: 'neo4j'
     }
 
     const neo4jDriver = require('neo4j-driver');

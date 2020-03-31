@@ -41,9 +41,9 @@ exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
     });
 
     app.get('/addContractHistory/:type/:emp_vu_id/:emp_id', (req, res) => {
-        let getAllContractTypes = contractHistoryModel.getAllContractTypes().then();
-        let getAllContractYears = contractHistoryModel.getAllContractYears().then();
-        let getAllContractIds = contractHistoryModel.getAllContractIds().then();
+        let getAllContractTypes = contractHistoryModel.getAllContractTypes();
+        let getAllContractYears = contractHistoryModel.getAllContractYears();
+        let getAllContractIds = contractHistoryModel.getAllContractIds();
         let getAllContractHistory = contractHistoryModel.getAllContractHistory(req.params.type, req.params.emp_vu_id, req.params.emp_id);
 
         Promise.all([getAllContractTypes, getAllContractYears, getAllContractIds, getAllContractHistory])
@@ -71,7 +71,7 @@ exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
 
     app.post('/addContract/:type/:emp_vu_id/:emp_id', (req, res) => {
         let mysqlAddContractPromise = contractHistoryModel.addContractHistory(req.params.type, req.params.emp_vu_id, req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
-        let neo4jAddContractPromise = Neo4jDocumentOfEmploymentModel.addContract(req.params.type, req.params.emp_vu_id, req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
+        let neo4jAddContractPromise = Neo4jDocumentOfEmploymentModel.addContract(req.params.type, parseInt(req.params.emp_vu_id), req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
 
         Promise.all([mysqlAddContractPromise, neo4jAddContractPromise])
             .then((data) => {
