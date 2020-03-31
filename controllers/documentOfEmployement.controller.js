@@ -117,7 +117,7 @@ exports.DocumentOfEmployementController = (app, dbcon, mongo, neo4j) => {
 
     app.post('/addDocumentById/:type/:vu_id/:cnt_type/:year/:cnt_id', (req, res) => {
         let mysqlEditDocumentPromise = DocumentOfEmployementModel.addDocument(req.params.type, req.params.vu_id, req.body.cnt_type, req.body.cnt_year, req.body.cnt_id, req.body.cnt_start_date, req.body.cnt_end_date);
-        let neo4jEditDocumentByIdPromise = Neo4jDocumentOfEmploymentModel.addDocument(req.params.type, req.params.vu_id, req.body.cnt_type, req.body.cnt_year, req.body.cnt_id, req.body.cnt_start_date, req.body.cnt_end_date);
+        let neo4jEditDocumentByIdPromise = Neo4jDocumentOfEmploymentModel.addDocument(req.params.type, parseInt(req.params.vu_id), req.body.cnt_type, req.body.cnt_year, req.body.cnt_id, req.body.cnt_start_date, req.body.cnt_end_date);
 
         Promise.all([mysqlEditDocumentPromise, neo4jEditDocumentByIdPromise])
             .then(data => {

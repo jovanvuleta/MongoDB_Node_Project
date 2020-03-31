@@ -71,7 +71,7 @@ exports.ContractHistoryController = (app, dbcon, mongo, neo4j) => {
 
     app.post('/addContract/:type/:emp_vu_id/:emp_id', (req, res) => {
         let mysqlAddContractPromise = contractHistoryModel.addContractHistory(req.params.type, req.params.emp_vu_id, req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
-        let neo4jAddContractPromise = Neo4jDocumentOfEmploymentModel.addContract(req.params.type, req.params.emp_vu_id, req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
+        let neo4jAddContractPromise = Neo4jDocumentOfEmploymentModel.addContract(req.params.type, parseInt(req.params.emp_vu_id), req.params.emp_id, req.body.contractType, req.body.contractYear, req.body.contractID);
 
         Promise.all([mysqlAddContractPromise, neo4jAddContractPromise])
             .then((data) => {

@@ -23,7 +23,7 @@
             <select class="custom-select" id="contractType" name="contractType" required>
                 <option selected disabled value="">Select Contract Type...</option>
                 <% contractTypes.forEach(function(contract, index) { %>
-                <option value="<%= contract.VD_OZNAKA %>"><%= contract.VD_OZNAKA %></option>
+                <option value="<%= contract.VD_OZNAKA %>"><%= contract.VD_NAZIV %></option>
                 <% }); %>
             </select>
         </div>

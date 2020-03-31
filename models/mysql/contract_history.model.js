@@ -40,7 +40,7 @@ exports.ContractHistoryModel = (dbcon) => {
         },
         getAllContractTypes: () => {
             return new Promise((resolve, reject) => {
-                let query = 'SELECT DISTINCT VD_OZNAKA FROM CONTRACT_HISTORY;';
+                let query = 'SELECT * FROM DOCUMENT_TYPE;';
                 dbcon.query(query, (err, data) => {
                     if (!err) {
                         resolve(data);

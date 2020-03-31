@@ -47,7 +47,7 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
                     employees: data,
                     employee: data[0],
                     paramObject: {
-                        type_inst: req.params.type_inst,
+                        type_inst: req.params.type,
                         vu_id: req.params.vu_id
                     }
                 });

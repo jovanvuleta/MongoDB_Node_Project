@@ -193,7 +193,7 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
                 });
             })
             .then((statesDocuments) => {
-                StateCollection.insertStateDocuments(statesDocuments)
+                StateCollection.insertStatesDocuments(statesDocuments)
                     .then(() => {
                         res.redirect('statesDocuments');
                     });
