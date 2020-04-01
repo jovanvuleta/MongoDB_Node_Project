@@ -66,7 +66,6 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
             })
     });
 
-
     app.get('/deleteCourse/:id', (req, res) => {
         let mysqlDeleteCoursePromise = courseModel.deleteCourse(req.params.id);
         let neo4jDeleteCoursePromise = NeoCourseModel.deleteCourseById(req.params.id);

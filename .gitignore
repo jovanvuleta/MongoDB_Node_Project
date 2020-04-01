@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 core
+=======
+core/mysql.connection.js
+core/mongodb.connection.js
+core/neo4j.connection.js
+>>>>>>> 039284de65e2e2b1f67e7b452e843ac2070b2efb
 node_modules
