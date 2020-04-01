@@ -38,6 +38,23 @@
             return def.promise();
         }
 
+        $('#getDocumentOfEmployementByTypeInstVuId').click(function () {
+            dialog().done(function () {
+                var id = $('#dialogId').val();
+                var type = $('#dialogType').val();
+
+                link = "/getDocumentOfEmployementByTypeInstVuId/" + type + "/" + id;
+                if (id && type) {
+                    window.location = link;
+                } else {
+                    window.location = "/getAllInstitutions";
+                }
+            })
+                .fail(function () {
+                    // cry a little
+                });
+        });
+
         $('#employeesByInstitutionButton').click(function () {
             dialog().done(function () {
                 var id = $('#dialogId').val();
@@ -122,10 +139,17 @@
 
 <a type="button" class="btn btn-primary" id="employeesByInstitutionButton" href="#">Get employees</a>
 <a type="button" class="btn btn-primary" id="coursesByInstitution" href="#">Get Courses</a>
+<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)"
+    id="getDocumentOfEmployementByTypeInstVuId" href="#">Get
+    Doccument of Employment</a>
 <a type="button" class="btn btn-primary" id="editInstitution" href="#">Edit institution</a>
 <a type="button" class="btn btn-primary" id="deleteInstitution" href="#">Delete institution</a>
-<a type="button" class="btn btn-primary" href="/generateInstitutionsDocument">Generate institution docs</a>
-<a type="button" class="btn btn-primary" href="/institutionsDocuments">View institution docs</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue; margin-top: 10px;
+position: relative;
+left: 30%;" href="/generateInstitutionsDocument">Generate institution docs</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue; margin-top: 10px;
+position: relative;
+left: 30%;" href="/institutionsDocuments">View institution docs</a>
 
 <br><br>
 

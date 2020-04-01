@@ -24,7 +24,25 @@ exports.DocumentOfEmployementController = (app, dbcon, mongo, neo4j) => {
             })
     });
 
-    app.get('/getDocumentOfEmployementByContractId/:id', (req, res) => {
+    app.get('/getDocumentOfEmployementByTypeInstVuId/:type/:id', (req, res) => {
+        DocumentOfEmployementModel.getDocumentOfEmployementByTypeAndVuId(req.params.type, req.params.id)
+            .then(data => {
+                console.log(data);
+                res.render('documentsOfEmployement', {
+                    documents: data,
+                    document: data[0],
+                    moment: moment
+                })
+            })
+            .catch(err => {
+                res.render('message', {
+                    errorMessage: 'ERROR: ' + err + '!',
+                    link: 'ERROR: ' + err + ' <a href="/getAllStates">Go to states page!</a>'
+                });
+            })
+    });
+
+    app.get('/getDocumentOfEmployementBy/:id', (req, res) => {
         DocumentOfEmployementModel.getDocumentOfEmployementByContractId(req.params.id)
             .then(data => {
                 console.log(data);

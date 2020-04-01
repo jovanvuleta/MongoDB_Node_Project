@@ -13,6 +13,19 @@ exports.DocumentOfEmployementModel = (dbcon) => {
                 });
             });
         },
+        getDocumentOfEmployementByTypeAndVuId: (type, id) => {
+            return new Promise((resolve, reject) => {
+                let query = 'SELECT * FROM DOCCUMENTS_OF_EMPLOYMENT WHERE (TIP_UST = ? AND VU_IDENTIFIKATOR = ?);';
+                dbcon.query(query, [type, id], (err, data) => {
+                    if (!err) {
+                        resolve(data);
+                    } else {
+                        reject(data);
+                    }
+                });
+            });
+        },
+
         getDocumentOfEmployementByContractId: (id) => {
             return new Promise((resolve, reject) => {
                 let query = 'SELECT * FROM DOCCUMENTS_OF_EMPLOYMENT WHERE UG_BROJ_UGOVORA LIKE ?;';
