@@ -18,7 +18,7 @@
         }
     }
     function editCourse() {
-        var id = prompt("Please enter Employee Number:");
+        var id = prompt("Please enter Course name:");
         link = "/editCourse/<%= course.TIP_UST %>/<%= course.VU_IDENTIFIKATOR %>/<%= course.NP_PREDMET %>/<%= course.NP_VERZIJA %>" + id;
         if (id) {
             window.location = link;
@@ -27,7 +27,7 @@
         }
     }
     function deleteCourse() {
-        var id = prompt("Please enter Employee Number:");
+        var id = prompt("Please enter Course name:");
         link = "/deleteCourse/" + id;
         if (id) {
             confirm('This will delete the entire institution. Are you sure you want proceed?');

@@ -21,8 +21,8 @@ exports.StateModel = (neo4j) => {
         editStateById: (newId, stateName, oldId, stateDate) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
-                let query = 'MERGE(s:STATE {DR_IDENTIFIKATOR: $oldId}) ON CREATE SET s.DR_IDENTIFIKATOR = $newId, s.DR_NAZIV = $stateName ON MATCH SET s.DR_IDENTIFIKATOR = $newId, s.DR_NAZIV = $stateName';
-                session.run(query, { oldId: oldId, newId: newId, stateName: stateName })
+                let query = 'MERGE(s:STATE {DR_IDENTIFIKATOR: $oldId}) ON CREATE SET s.DR_IDENTIFIKATOR = $newId, s.DR_NAZIV = $stateName, s.DR_DATUM_OSNIVANJA = $stateDate ON MATCH SET s.DR_IDENTIFIKATOR = $newId, s.DR_NAZIV = $stateName, s.DR_DATUM_OSNIVANJA = $stateDate';
+                session.run(query, { oldId: oldId, newId: newId, stateName: stateName, stateDate: stateDate })
                     .then(result => {
                         resolve(result);
                     })

@@ -36,10 +36,10 @@
             <td><%= populatedPlace.NM_PTT_CODE %></td>
             <!--Assign IDs of each populated place to the links, so when we click on the link the ID is passed to funciton that will retrieve data of this row-->
             <td><a type="button" class="btn btn-warning"
-                    href="/editPopulatedPlaceById/<%= populatedPlace.NM_IDENTIFIKATOR %>">Edit</a></td>
+                    href="/editPopulatedPlaceById/<%= populatedPlace.DR_IDENTIFIKATOR %>/<%= populatedPlace.NM_IDENTIFIKATOR %>">Edit</a></td>
             <td><a type="button" class="btn btn-danger"
                     onClick="return confirm('Are you sure you want to delete this city?');"
-                    href="/deletePopulatedPlaceById/<%= populatedPlace.NM_IDENTIFIKATOR %>">Delete</a></td>
+                    href="/deletePopulatedPlaceById/<%= populatedPlace.DR_IDENTIFIKATOR %>/<%= populatedPlace.NM_IDENTIFIKATOR %>">Delete</a></td>
         </tr>
         <% }); %>
     </tbody>

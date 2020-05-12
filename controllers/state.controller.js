@@ -52,10 +52,7 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
 
         Promise.all([mysqlAddPromise, neo4jAddPromise])
             .then((data) => {
-                res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
-                    successMessage: 'State ' + req.body.stateName + ' was added successfully.',   //success message
-                    link: '<a href="/getAllStates"> Go Back</a>'   //provide a link that provides a links to another page
-                });
+                res.redirect("/getAllStates");
             })
             .catch((err) => {
                 res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
@@ -83,14 +80,11 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
     app.post('/editStateById/:id', (req, res) => {
         //After submitting the form, the function editStateById from the model state will be called to added the new state
         let mysqlEditPromise = StateModel.editStateById(req.body.stateId, req.body.stateName, req.body.date, req.params.id);
-        let neo4jEditPromise = Neo4jStateModel.editStateById(req.body.stateId, req.body.stateName, req.params.id);
+        let neo4jEditPromise = Neo4jStateModel.editStateById(req.body.stateId, req.body.stateName, req.params.id, req.body.date);
 
         Promise.all([mysqlEditPromise, neo4jEditPromise])
             .then((data) => {
-                res.render('message', {
-                    successMessage: 'State ' + req.body.stateName + ' was edited successfully!',  //success message
-                    link: '<a href="/getAllStates"> Go back!</a>'      //provide a link that provides a links to another page
-                });
+                res.redirect("/getAllStates");
             })
             .catch((err) => {
                 res.render('message', {      //In case the query fail. render 'message.ejs' and display the obtained error message
@@ -106,10 +100,7 @@ exports.StateController = function (app, dbcon, mongo, neo4j) {
 
         Promise.all([mysqlDeletePromise, neo4jDeletePromise])
             .then((data) => {
-                res.render('message', {  //after successfully excuting the query, render the 'message.ejs' view in order to display the message
-                    successMessage: 'State ' + req.params.name + ' was deleted successfully.',   //success message
-                    link: '<a href="/getAllStates"> Go Back</a>'
-                });
+                res.redirect("/getAllStates");
             })
             .catch((err) => {
                 res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
