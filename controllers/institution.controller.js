@@ -142,8 +142,8 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
 
     app.get('/deleteInstitutionById/:state/:id/:type', (req, res) => {
 
-        let mysqlDeletePromise = institutionModel.deleteInstitutionById(req.params.id, req.params.type);
-        let neo4jDeletePromise = Neo4jInstitutionModel.deleteInstitutionById(parseInt(req.params.id), req.params.type);
+        let mysqlDeletePromise = institutionModel.deleteInstitutionById(req.params.id, req.params.type).then();
+        let neo4jDeletePromise = Neo4jInstitutionModel.deleteInstitutionById(parseInt(req.params.id), req.params.type).then();
 
         Promise.all([mysqlDeletePromise, neo4jDeletePromise])
             .then((data) => {
