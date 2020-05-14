@@ -6,7 +6,7 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
     app.get('/getAllPopulatedPlaces', (req, res) => {
         PopulatedPlaceModel.getAllPopulatedPlaces()
             .then(data => {
-                res.render('populatedPlaces', {     //After obtaining all populated [laces successfully, render the populatedPlaces.ejs view and pass to it the obtained data in order ro display into the view
+                res.render('populatedPlaces', {
                     populatedPlaces: data
                 });
             })
@@ -19,7 +19,7 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
     });
 
     app.get('/addPopulatedPlace', (req, res) => {
-        StateModel.getAllStates()   //Call models's function that return all states from the database
+        StateModel.getAllStates()
             .then((data) => {
                 res.render('addPopulatedPlace', {
                     states: data,
@@ -41,12 +41,11 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
 
         Promise.all([getAllPopulatedPlaces, mysqlAddPromise, neo4jAddPromise])
             .then((data) => {
-                //Check whether a populated place with the same ID exists or no
-                for (let populatedPlace of data[0]) {   //data[0] represents the element of the array returned by Promise.all(), which is an array of objects of all populated places
+                for (let populatedPlace of data[0]) {
                     if (populatedPlace.NM_IDENTIFIKATOR == parseInt(req.body.id, 10) || populatedPlace.NM_NAZIV == req.body.name) {
                         return res.render('message', {
                             errorMessage: 'Populated place ' + req.body.name + ' or ID ' + req.body.id + ', already exists, try again!',
-                            link: '<a href="/addPopulatedPlace"> Go Back</a>'   //provide a link that provides a links to another page
+                            link: '<a href="/addPopulatedPlace"> Go Back</a>'
                         });
                     }
                 }
@@ -54,22 +53,22 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
                 res.redirect('/getAllPopulatedPlaces');
             })
             .catch((err) => {
-                res.render('message', {  //In case the query fail. Render 'message.ejs' and display the obtained error message
+                res.render('message', {
                     errorMessage: 'ERROR: ' + err,
-                    link: '<a href="/addPopulatedPlace"> Go Back</a>'   //provide a link that provides a links to another page
+                    link: '<a href="/addPopulatedPlace"> Go Back</a>'
                 });
             });
     });
 
     app.get('/editPopulatedPlaceById/:stateId/:id', (req, res) => {
 
-        let getAllStates = StateModel.getAllStates().then();   //get all states by calling the function getAllStates() from the StateModel{}
-        let getPopulatedPlace = PopulatedPlaceModel.getPopulatedPlaceById(req.params.stateId, parseInt(req.params.id)).then();   ////get all states by calling the function getPopulatedPlaceById() from the PopulatedPlaceModel{}
+        let getAllStates = StateModel.getAllStates().then();
+        let getPopulatedPlace = PopulatedPlaceModel.getPopulatedPlaceById(req.params.stateId, parseInt(req.params.id)).then();
 
         Promise.all([getAllStates, getPopulatedPlace]).then(data => {
             res.render('editPopulatedPlace', {
-                states: data[0],   //Because Promise.all() returns two arrays, the first one '[0]' will be the result of promise 'getAllStates'
-                populatedPlace: data[1][0]  //and the second one '[1]' will be the result of the promise getPopulatedPlace, which in turn returns only one row
+                states: data[0],
+                populatedPlace: data[1][0]
             });
         })
             .catch(err => {
@@ -80,8 +79,6 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
             });
     });
 
-    //This functio will be executed when the edit populated place form is submitted. 
-    //POST FUNCTIONS ARE EXECUTED WHEN A FORM WITH URL OF THE FUNCTION IS SUBMITTED
     app.post('/editPopulatedPlaceById/:stateId/:id', (req, res) => {
         let mysqlEditPromise = PopulatedPlaceModel.editPopulatedPlaceById(parseInt(req.body.id, 10), req.body.name, req.body.pttCode, parseInt(req.params.id), req.params.stateId);
         let neo4jEditPromise = Neo4jPopulatedPlaceModel.editPopulatedPlaceById(req.params.stateId, parseInt(req.body.id, 10), req.body.name, req.body.pttCode, parseInt(req.params.id));
@@ -91,7 +88,7 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
                 res.redirect('/getAllPopulatedPlaces');
             })
             .catch((err) => {
-                res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
+                res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/editPopulatedPlaceById/' + req.params.id + '"> Go Back</a>'
                 });
@@ -107,7 +104,7 @@ exports.PopulatedPlaceController = function (app, dbcon, mongo, neo4j) {
                 res.redirect('/getAllPopulatedPlaces');
             })
             .catch((err) => {
-                res.render('message', {      //In case the query fail. Render 'message.ejs' and display the obtained error message
+                res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/getAllPopulatedPlaces/' + req.params.id + '"> Go Back</a>'
                 });
