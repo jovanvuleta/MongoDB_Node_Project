@@ -23,7 +23,7 @@
                 <input type="checkbox" id="document-<%= document._id %>" class="d-none">
 
                 <div class="toggleable-states">
-                    <%- JSON.stringify(document.institutions, undefined, 4); %>
+                    <%- JSON.stringify(JSON.parse(document.institutions), undefined, 4); %>
                 </div>
             </td>
         </tr>
