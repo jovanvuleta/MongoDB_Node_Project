@@ -7,16 +7,13 @@ exports.AppConfig = function () {
     //require Node.js exrepss server package
     const express = require('express');
     let app = express();
-    var path = require('path')
 
 
     // Require body-parser package in order to encode URL IN jaon format
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    // app.use('/assets', express.static('assets'));
-    app.use('/assets', express.static(path.join(__dirname, "../assets")));
-
+    app.use('/public', express.static('public'));
 
     // Set EJS as a template engine (Enables passing from the back-end side to the front-end)
     app.set('view engine', 'ejs');

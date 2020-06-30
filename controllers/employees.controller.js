@@ -153,8 +153,9 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
     app.get('/generateEmployeeDocuments', (req, res) => {
         let allEmployees = employeesModel.getAllEmployees();
         let allContracts = contractHistoryModel.getAllContractHistoryForHeader();
+        let allInstitution = institutionModel.getAllInstitutions();
 
-        Promise.all([allEmployees, allContracts])
+        Promise.all([allEmployees, allContracts, allInstitution])
             .catch(err => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err,
@@ -162,34 +163,56 @@ exports.EmployeesController = (app, dbcon, mongo, neo4j) => {
                 })
             })
 
-            .then(([employees, contracts]) => {
+            .then(([employees, contracts, institutions]) => {
                 return new Promise((resolve, reject) => {
-                    employees = employees.map(employee => {
+                    institutions = institutions.map(institution => {
                         return {
-                            id: employee.ZAP_REDNI_BROJ,
-                            surname: employee.ZAP_PREZIME,
-                            name: employee.ZAP_IME,
-                            number_of_contracts: contracts.filter(contract => contract.ZAP_REDNI_BROJ == employee.ZAP_REDNI_BROJ).length,
-                            contracts: contracts.filter(contract => contract.ZAP_REDNI_BROJ == employee.ZAP_REDNI_BROJ)
-                                .map(contract => {
+                            name: institution.VU_NAZIV,
+                            employees: employees.filter(employee => (employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR && employee.TIP_UST === institution.TIP_UST))
+                                .map(employee => {
                                     return {
-                                        id: contract.UG_BROJ_UGOVORA,
-                                        contract_year: contract.UG_GODINA,
-                                        contract_institution: contract.TIP_UST,
-                                        contract_emp_id: contract.ZAP_REDNI_BROJ
+                                        id: employee.ZAP_REDNI_BROJ,
+                                        surname: employee.ZAP_PREZIME,
+                                        name: employee.ZAP_IME,
+                                        contracts: contracts.filter(contract => contract.ZAP_REDNI_BROJ == employee.ZAP_REDNI_BROJ)
+                                            .map(contract => {
+                                                return {
+                                                    id: contract.UG_BROJ_UGOVORA,
+                                                    contract_year: contract.UG_GODINA,
+                                                    contract_institution: contract.TIP_UST,
+                                                    contract_emp_id: contract.ZAP_REDNI_BROJ
+                                                }
+                                            })
                                     }
                                 })
                         }
-                    });
+                    })
+                    // employees = employees.map(employee => {
+                    //     return {
+                    //         id: employee.ZAP_REDNI_BROJ,
+                    //         surname: employee.ZAP_PREZIME,
+                    //         name: employee.ZAP_IME,
+                    //         number_of_contracts: contracts.filter(contract => contract.ZAP_REDNI_BROJ == employee.ZAP_REDNI_BROJ).length,
+                    //         contracts: contracts.filter(contract => contract.ZAP_REDNI_BROJ == employee.ZAP_REDNI_BROJ)
+                    //             .map(contract => {
+                    //                 return {
+                    //                     id: contract.UG_BROJ_UGOVORA,
+                    //                     contract_year: contract.UG_GODINA,
+                    //                     contract_institution: contract.TIP_UST,
+                    //                     contract_emp_id: contract.ZAP_REDNI_BROJ
+                    //                 }
+                    //             })
+                    //     }
+                    // });
 
-                    if (employees.length == 0) {
+                    if (institutions.length == 0) {
                         reject('No institutions!');
                     }
 
                     resolve({
                         created_at: JSON.stringify(new Date()),
-                        numberOfEmployees: employees.length,
-                        employees: employees
+                        numberOfInstitutions: institutions.length,
+                        institutions: institutions
                     });
                 });
             })

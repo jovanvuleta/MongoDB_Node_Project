@@ -5,7 +5,8 @@ exports.MysqlConnection = function () {
         host: 'localhost',
         user: 'root',
         password: 'password',
-        database: 'NonDB_schema'
+        database: 'NonDB_schema',
+        insecureAuth: true
     });
     dbcon.connect((err) => {
         if (!err) {
