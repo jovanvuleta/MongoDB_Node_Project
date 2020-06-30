@@ -175,52 +175,86 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
     });
 
     app.get('/generateInstitutionsDocument', (req, res) => {
+        const allStates = stateModel.getAllStates();
         const allInstitutions = institutionModel.getAllInstitutions();
         const allEmployees = employeesModel.getAllEmployees();
         const allCourses = courseModel.allCourses();
 
-        Promise.all([allInstitutions, allEmployees, allCourses])
+        Promise.all([allStates, allInstitutions, allEmployees, allCourses])
             .catch((err) => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/getAllInstitutions"> Go Back</a>'
                 })
             })
-            .then(([institutions, employees, courses]) => {
+            .then(([states, institutions, employees, courses]) => {
                 return new Promise((resolve, reject) => {
-                    institutions = institutions.map(institution => {
+
+                    institutionDocument = states.map(state => {
                         return {
-                            id: institution.VU_IDENTIFIKATOR,
-                            name: institution.VU_NAZIV,
-                            number_of_employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
-                            employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
-                                .map(employee => {
+                            id: state.DR_IDENTIFIKATOR,
+                            name: state.DR_NAZIV,
+                            institutions: institutions.filter(institution => institution.DR_IDENTIFIKATOR == state.DR_IDENTIFIKATOR)
+                                .map(institution => {
                                     return {
-                                        id: employee.ZAP_REDNI_BROJ,
-                                        surname: employee.ZAP_PREZIME,
-                                        name: employee.ZAP_IME
-                                    }
-                                }),
-                            number_of_courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
-                            courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
-                                .map(course => {
-                                    return {
-                                        code: course.NP_PREDMET,
-                                        version: course.NP_VERZIJA,
-                                        name: course.NP_NAZIV_PREDMETA
+                                        id: institution.VU_IDENTIFIKATOR,
+                                        name: institution.VU_NAZIV,
+                                        number_of_employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
+                                        employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                                            .map(employee => {
+                                                return {
+                                                    id: employee.ZAP_REDNI_BROJ,
+                                                    surname: employee.ZAP_PREZIME,
+                                                    name: employee.ZAP_IME
+                                                }
+                                            }),
+                                        number_of_courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
+                                        courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                                            .map(course => {
+                                                return {
+                                                    code: course.NP_PREDMET,
+                                                    version: course.NP_VERZIJA,
+                                                    name: course.NP_NAZIV_PREDMETA
+                                                }
+                                            })
                                     }
                                 })
                         }
-                    });
+                    })
 
-                    if (institutions.length == 0) {
+                    // institutions = institutions.map(institution => {
+                    //     return {
+                    //         id: institution.VU_IDENTIFIKATOR,
+                    //         name: institution.VU_NAZIV,
+                    //         number_of_employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
+                    //         employees: employees.filter(employee => employee.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                    //             .map(employee => {
+                    //                 return {
+                    //                     id: employee.ZAP_REDNI_BROJ,
+                    //                     surname: employee.ZAP_PREZIME,
+                    //                     name: employee.ZAP_IME
+                    //                 }
+                    //             }),
+                    //         number_of_courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR).length,
+                    //         courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
+                    //             .map(course => {
+                    //                 return {
+                    //                     code: course.NP_PREDMET,
+                    //                     version: course.NP_VERZIJA,
+                    //                     name: course.NP_NAZIV_PREDMETA
+                    //                 }
+                    //             })
+                    //     }
+                    // });
+
+                    if (institutionDocument.length == 0) {
                         reject('No institutions!');
                     }
 
                     resolve({
                         created_at: JSON.stringify(new Date()),
-                        numberOfInstitutions: institutions.length,
-                        institutions: institutions
+                        numberOfInstitutions: institutionDocument.length,
+                        institutions: institutionDocument
                     });
                 });
             })
