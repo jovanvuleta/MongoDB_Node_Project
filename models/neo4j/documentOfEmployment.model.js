@@ -4,7 +4,7 @@ exports.DocumentOfEmployementModel = (neo4j) => {
             return new Promise((resolve, reject) => {
                 const session = neo4j.session();
                 // let query = 'MERGE(e:Employee {TIP_UST: $inst_type, VU_IDENTIFIKATOR: $vu_id, ZAP_REDNI_BROJ: $emp_id, ZAP_PREZIME: $emp_last_name, ZAP_SREDNJE_SLOVO: $emp_middle_letter, ZAP_IME: $emp_name})';
-                let query = 'MERGE(dop:DOCCUMENTS_OF_EMPLOYMENT {TIP_UST: $inst_type, VU_IDENTIFIKATOR: $vu_id, VD_OZNAKA: $cnt_type, UG_GODINA: $cnt_year, UG_BROJ_UGOVORA: $cnt_id, UG_DATUM: $cnt_start_date, UG_DATUM_VAZENJA: $cnt_end_date}) MERGE ((e) - [wi:WORKS_IN] -> (hei))';
+                let query = 'MERGE(dop:DOCCUMENTS_OF_EMPLOYMENT {TIP_UST: $inst_type, VU_IDENTIFIKATOR: $vu_id, VD_OZNAKA: $cnt_type, UG_GODINA: $cnt_year, UG_BROJ_UGOVORA: $cnt_id, UG_DATUM: $cnt_start_date, UG_DATUM_VAZENJA: $cnt_end_date})';
                 session.run(query, { inst_type: inst_type, vu_id: vu_id, cnt_type: cnt_type, cnt_year: cnt_year, cnt_id: cnt_id, cnt_start_date: cnt_start_date, cnt_end_date: cnt_end_date })
                     .then(result => {
                         resolve(result);
