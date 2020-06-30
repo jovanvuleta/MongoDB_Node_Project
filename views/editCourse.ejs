@@ -1,5 +1,7 @@
 <%- include('header') %>
 
+
+<br> <h5>Editing course: <%= course.NP_NAZIV_PREDMETA  %> </h5> <br>
 <form method="post"
     action="/editCourse/<%= course.TIP_UST %>/<%= course.VU_IDENTIFIKATOR %>/<%= course.NP_PREDMET %>/<%= course.NP_VERZIJA %>">
     <div class="form-group">

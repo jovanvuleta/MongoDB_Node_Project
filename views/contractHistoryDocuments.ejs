@@ -23,7 +23,9 @@
                 <input type="checkbox" id="contract-<%= contract._id %>" class="d-none">
 
                 <div class="toggleable-states">
-                    <%- JSON.stringify(contract.contracts, undefined, 4); %>
+                    <pre> 
+                        <%- JSON.stringify(contract.contracts, undefined, "\t"); %>
+                    </pre>
                 </div>
             </td>
         </tr>

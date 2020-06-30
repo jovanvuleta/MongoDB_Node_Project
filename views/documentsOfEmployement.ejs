@@ -7,38 +7,6 @@
 </div>
 <% } else { %>
 
-<script>
-    function contractByDocument() {
-        var id = prompt("Please enter Contract ID:");
-        link = "/getContractsByDocuments/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            return false;
-            // window.location = "/getDocumentOfEmployement";
-        }
-    }
-    function editDocument() {
-        var id = prompt("Please enter Contract ID:");
-        link = "/editDocumentById/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/<%= document.VD_OZNAKA %>/<%= document.UG_GODINA %>/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            return false;
-            // window.location = "/getDocumentOfEmployement";
-        }
-    }
-    function deleteDocument() {
-        var id = prompt("Please enter Contract ID:");
-        link = "/deleteDocumentById/" + id;
-        if (id) {
-            confirm('This will delete the entire institution. Are you sure you want proceed?');
-            window.location = link;
-        } else {
-            window.location = "/getDocumentOfEmployement/<%= document.UG_BROJ_UGOVORA %>";
-        }
-    }
-</script>
 
 <br>
 <a type="button" class="btn btn-primary"
@@ -58,7 +26,10 @@
     of Document of Employment
     Documents</a>
 <br><br>
-<table class="table">
+
+<div> Selected document of employment: <h5 id="selectedDocument"></h5> </div>
+
+<table class="table" id="dataTable">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
@@ -101,6 +72,76 @@
         <% }); %>
     </tbody>
 </table>
+
+
+<script>
+
+    var id = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedDocument').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[5].innerHTML) {
+                id = null;
+                document.getElementById('selectedDocument').innerHTML = "None!";
+            } else {
+                id = cells[5].innerHTML;
+                document.getElementById('selectedDocument').innerHTML = "ID " + cells[5].innerHTML;
+            }
+        }
+    }
+
+    $("#dataTable tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+
+    function contractByDocument() {
+        link = "/getContractsByDocuments/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+            // window.location = "/getDocumentOfEmployement";
+        }
+    }
+    function editDocument() {
+        link = "/editDocumentById/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/<%= document.VD_OZNAKA %>/<%= document.UG_GODINA %>/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+            // window.location = "/getDocumentOfEmployement";
+        }
+    }
+    function deleteDocument() {
+        link = "/deleteDocumentById/" + window.id;
+        if (window.id) {
+            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            window.location = "/getDocumentOfEmployement/<%= document.UG_BROJ_UGOVORA %>";
+        }
+    }
+</script>
+
+
 <% } %>
 
 <%- include('footer') %>

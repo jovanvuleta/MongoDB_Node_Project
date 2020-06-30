@@ -8,30 +8,6 @@
 </div>
 <% } else { %>
 
-<script>
-    function doccumentByContract() {
-        var id = prompt("Please enter contract ID:");
-        link = "/getDocumentOfEmployementByContractId/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            return false;
-            // window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
-        }
-    }
-    function deleteContractHistory() {
-        var id = prompt("Please enter Contract ID:");
-        link = "/deleteContractById/" + id;
-        if (id) {
-            confirm('This will delete the contract history of a given employee. Are you sure you want proceed?');
-            window.location = link;
-        } else {
-            // window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
-            return false;
-        }
-    }
-</script>
-
 <br>
 <a type="button" class="btn btn-primary"
     href="/addContractHistory/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>">Add
@@ -46,7 +22,10 @@
     Contract
     Documents</a>
 <br><br>
-<table class="table">
+
+<div> Selected contract history: <h5 id="selectedContract"></h5> </div>
+
+<table class="table" id="dataTable">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
@@ -76,6 +55,64 @@
         <% }); %>
     </tbody>
 </table>
-<% } %>
 
+<script>
+    var id = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedContract').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[6].innerHTML) {
+                id = null;
+                document.getElementById('selectedContract').innerHTML = "None!";
+            } else {
+                id = cells[6].innerHTML;
+                document.getElementById('selectedContract').innerHTML = "ID " + cells[6].innerHTML;
+            }
+        }
+    }
+
+    $("#dataTable tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+    
+    function doccumentByContract() {
+        link = "/getDocumentOfEmployementByContractId/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+            // window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+        }
+    }
+    function deleteContractHistory() {
+        link = "/deleteContractById/" + window.id;
+        if (window.id) {
+            confirm('This will delete the contract history of a given employee. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            // window.location = "/getContractHistoryByEmployeeId/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>";
+            return false;
+        }
+    }
+</script>
+
+<% } %>
 <%- include('footer') %>

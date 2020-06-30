@@ -1,5 +1,7 @@
 <%- include('header') %>
 
+<br> <h5>Editing institution: <%= institution.VU_NAZIV %></h5> <br>
+
     <form method="post" action="/editInstitutionById/<%= institution.DR_IDENTIFIKATOR %>/<%= institution.VU_IDENTIFIKATOR %>/<%= institution.TIP_UST %>">
         <div class="form-group">
             <label for="exampleInputPassword1">Institution name</label>

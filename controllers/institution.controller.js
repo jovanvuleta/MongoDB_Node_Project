@@ -2,6 +2,7 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const employeesModel = require('../models/mysql/employees.model.js').EmployeesModel(dbcon);
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
+    const stateModel = require('../models/mysql/state.model.js').StateModel(dbcon);
     const institutionCollection = require('../models/mongodb/institution.collection.js').InstitutionCollectionModel(mongo);
     const Neo4jInstitutionModel = require('../models/neo4j/institution.model.js').InstitutionModel(neo4j);
 
@@ -69,16 +70,17 @@ exports.InstitutionController = function (app, dbcon, mongo, neo4j) {
 
     app.get('/addInstitution/:state', (req, res) => {
 
-        // let getAllStates = institutionModel.getAllStates().then();
+        let getState = stateModel.getStateById(req.params.state).then();
         let getAllTypes = institutionModel.getAllTypes().then();
         let getAllOwnerships = institutionModel.getAllOwnerships().then();
 
-        Promise.all([req.params.state, getAllTypes, getAllOwnerships])
+        Promise.all([req.params.state, getAllTypes, getAllOwnerships, getState])
             .then((data) => {
                 res.render('addInstitution', {
                     state: data[0],
                     types: data[1],
-                    ownerships: data[2]
+                    ownerships: data[2],
+                    stateCurrent: data[3][0]
                 });
             })
             .catch((err) => {
