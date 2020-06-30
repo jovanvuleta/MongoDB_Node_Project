@@ -7,37 +7,6 @@
 </div>
 <% } else { %>
 
-<script>
-    function courseByInstitution() {
-        var id = prompt("Please enter Course name:");
-        link = "/getAllCourses/" + id + "/<%= course.TIP_UST %>";
-        if (id) {
-            window.location = link;
-        } else {
-            return false;
-        }
-    }
-    function editCourse() {
-        var id = prompt("Please enter Course name:");
-        link = "/editCourse/<%= course.TIP_UST %>/<%= course.VU_IDENTIFIKATOR %>/<%= course.NP_PREDMET %>/<%= course.NP_VERZIJA %>" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            return false;
-        }
-    }
-    function deleteCourse() {
-        var id = prompt("Please enter Course name:");
-        link = "/deleteCourse/" + id;
-        if (id) {
-            confirm('This will delete the entire institution. Are you sure you want proceed?');
-            window.location = link;
-        } else {
-            return false;
-        }
-    }
-</script>
-
 <br>
 <a type="button" class="btn btn-primary" href="/addCourse/<%= vu_id %>/<%= tip_ust %>">Add Course</a>
 <a type="button" class="btn btn-primary" onclick="editCourse()" href="#">Edit Course</a>
@@ -45,7 +14,11 @@
 <a type="button" class="btn btn-primary" href="/coursesDocuments">View Course Documents</a>
 <a type="button" class="btn btn-primary" href="/generateCoursesDocument">Generate Course Documents</a>
 <br><br>
-<table class="table">
+
+
+<div> Selected course: <h5 id="selectedCourse"></h5> </div>
+
+<table class="table" id="dataTable">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
@@ -75,6 +48,73 @@
         <% }); %>
     </tbody>
 </table>
+
+
+<script>
+
+    var id = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedCourse').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[3].innerHTML) {
+                id = null;
+                document.getElementById('selectedCourse').innerHTML = "None!";
+            } else {
+                id = cells[3].innerHTML;
+                document.getElementById('selectedCourse').innerHTML = cells[5].innerHTML;
+            }
+        }
+    }
+
+    $("#dataTable tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+
+    function courseByInstitution() {
+        link = "/getAllCourses/" + window.id + "/<%= course.TIP_UST %>";
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+    function editCourse() {
+        link = "/editCourse/<%= course.TIP_UST %>/<%= course.VU_IDENTIFIKATOR %>/<%= course.NP_PREDMET %>/<%= course.NP_VERZIJA %>" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+    function deleteCourse() {
+        link = "/deleteCourse/" + window.id;
+        if (window.id) {
+            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+</script>
+
 <% } %>
 
 <%- include('footer') %>

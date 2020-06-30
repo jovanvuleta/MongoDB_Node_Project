@@ -9,37 +9,6 @@
 </div>
 <% } else { %>
 
-<script>
-    function contractByEmployee() {
-        var id = prompt("Please enter Employee Number:");
-        link = "/getContractHistoryByEmployeeId/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            return false;
-        }
-    }
-    function editEmployee() {
-        var id = prompt("Please enter Employee Number:");
-        link = "/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            return false;
-        }
-    }
-    function deleteEmployee() {
-        var id = prompt("Please enter Employee Number:");
-        link = "/deleteEmployee/" + id;
-        if (id) {
-            confirm('This will delete the entire institution. Are you sure you want proceed?');
-            window.location = link;
-        } else {
-            return false;
-        }
-    }
-</script>
-
 <br>
 <a type="button" class="btn btn-primary"
     href="/addEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>">Add Employee</a>
@@ -55,7 +24,11 @@
 <a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/employeesDocuments">View Employee
     Documents</a>
 <br><br>
-<table class="table">
+
+<div> Selected employee: <h5 id="selectedEmployee"></h5> </div>
+<br>
+
+<table class="table" id="dataTable">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
@@ -96,6 +69,73 @@
         <% }); %>
     </tbody>
 </table>
+
+<script>
+    var id = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedEmployee').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[3].innerHTML) {
+                id = null;
+                document.getElementById('selectedEmployee').innerHTML = "None!";
+            } else {
+                id = cells[3].innerHTML;
+                document.getElementById('selectedEmployee').innerHTML = cells[6].innerHTML + " " + cells[5].innerHTML + " " + cells[4].innerHTML;
+            }
+        }
+    }
+    
+    $("#dataTable tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+
+    function contractByEmployee() {
+        link = "/getContractHistoryByEmployeeId/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+
+    function editEmployee() {
+        link = "/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+    
+    function deleteEmployee() {
+        link = "/deleteEmployee/" + window.id;
+        if (window.id) {
+            confirm('This will delete the employee. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+</script>
+
 <% } %>
 
 <%- include('footer') %>

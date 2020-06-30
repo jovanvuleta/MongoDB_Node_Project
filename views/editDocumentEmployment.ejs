@@ -1,5 +1,7 @@
 <%- include('header') %>
 
+
+<br> <h5>Editing document of employment: ID <%= document.UG_BROJ_UGOVORA %> </h5> <br>
 <form method="post"
     action="/editDocumentById/<%= document.TIP_UST %>/<%= document.VU_IDENTIFIKATOR %>/<%= document.VD_OZNAKA %>/<%= document.UG_GODINA %>/<%= document.UG_BROJ_UGOVORA %>">
     <div class="form-group">

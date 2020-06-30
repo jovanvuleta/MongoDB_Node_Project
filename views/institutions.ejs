@@ -10,140 +10,11 @@
 
 <a type="button" class="btn btn-primary" href="/addInstitution/<%= state.DR_IDENTIFIKATOR %>">Add institution</a>
 
-<script>
-
-    $.noConflict();
-    jQuery(document).ready(function ($) {
-        function dialog() {
-            var def = $.Deferred();
-
-            $('#employeesByInstitution').dialog({
-                autoOpen: true,
-                modal: true,
-                overlay: {
-                    opacity: 0.7,
-                    background: "black"
-                },
-                buttons: {
-                    "OK": function () {
-                        def.resolve();
-                        $(this).dialog('close');
-                    },
-                    "CANCEL": function () {
-                        def.reject();
-                        $(this).dialog('close');
-                    }
-                }
-            });
-            return def.promise();
-        }
-
-        $('#getDocumentOfEmployementByTypeInstVuId').click(function () {
-            dialog().done(function () {
-                var id = $('#dialogId').val();
-                var type = $('#dialogType').val();
-
-                link = "/getDocumentOfEmployementByTypeInstVuId/" + type + "/" + id;
-                if (id && type) {
-                    window.location = link;
-                } else {
-                    window.location = "/getAllInstitutions";
-                }
-            })
-                .fail(function () {
-                    // cry a little
-                });
-        });
-
-        $('#employeesByInstitutionButton').click(function () {
-            dialog().done(function () {
-                var id = $('#dialogId').val();
-                var type = $('#dialogType').val();
-
-                var link = "/getAllEmployeesByInstitution/" + type + "/" + id;
-                if (id && type) {
-                    window.location = link;
-                } else {
-                    window.location = "/getAllInstitutions";
-                }
-            })
-                .fail(function () {
-                    // cry a little
-                });
-        });
-
-        $('#editInstitution').click(function () {
-            dialog().done(function () {
-                var id = $('#dialogId').val();
-                var type = $('#dialogType').val();
-
-                link = "/editInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
-                if (id && type) {
-                    window.location = link;
-                } else {
-                    window.location = "/getAllInstitutions";
-                }
-            })
-                .fail(function () {
-                    // cry a little
-                });
-        });
-
-        $('#deleteInstitution').click(function () {
-            dialog().done(function () {
-                var id = $('#dialogId').val();
-                var type = $('#dialogType').val();
-
-                link = "/deleteInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + id + "/" + type;
-                if (id && type) {
-                    confirm('This will delete the entire institution. Are you sure you want proceed?');
-                    window.location = link;
-                } else {
-                    window.location = "/getAllInstitutions";
-                }
-            })
-                .fail(function () {
-                    // cry a little
-                });
-        });
-
-        $('#coursesByInstitution').click(function () {
-            dialog().done(function () {
-                var id = $('#dialogId').val();
-                var type = $('#dialogType').val();
-
-                link = "/getCoursesByInstitutionId/" + id + "/" + type;
-                if (id) {
-                    window.location = link;
-                } else {
-                    window.location = "/getAllInstitutions";
-                }
-            })
-                .fail(function () {
-                    // cry a little
-                });
-        });
-    })
-
-    function coursesByInstitution() {
-        var id = prompt("Please enter institution ID:");
-        link = "/getAllCourses/" + id;
-        if (id) {
-            window.location = link;
-        } else {
-            window.location = "/getAllInstitutions";
-        }
-    }
-
-</script>
-
-<a type="button" class="btn btn-primary" id="employeesByInstitutionButton" href="#">Get employees</a>
-<a type="button" class="btn btn-primary" id="coursesByInstitution" href="#">Get Courses</a>
-<a type="button" class="btn btn-primary" style="background-color:rgb(0, 205, 144)"
-    id="getDocumentOfEmployementByTypeInstVuId" href="#">Get
-    Doccument of Employment</a>
-<a type="button" class="btn btn-primary" id="editInstitution" href="#">Edit institution</a>
-<a type="button" class="btn btn-primary" id="deleteInstitution" href="#">Delete institution</a>
+<a type="button" class="btn btn-primary" onclick="employeesByInstitution()" href="#">Get employees</a>
+<a type="button" class="btn btn-primary" onclick="coursesByInstitution()" href="#">Get Courses</a>
+<a type="button" class="btn btn-primary" onclick="documentsOfEmployment()" style="background-color:rgb(0, 205, 144)" href="#">Get Document of Employment</a> <br>
+<a type="button" class="btn btn-primary" onclick="editInstitution()" href="#">Edit institution</a>
+<a type="button" class="btn btn-primary" onclick="deleteInstitution()" href="#">Delete institution</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue;
 position: relative;" href="/generateInstitutionsDocument">Generate institution docs</a>
 <a type="button" class="btn btn-primary" style="background-color:mediumblue;
@@ -151,22 +22,9 @@ position: relative;" href="/institutionsDocuments">View institution docs</a>
 
 <br><br>
 
-<div title="Institution information" id="employeesByInstitution" style="display:none;">
-    <div class="modal-body">
-        <form>
-            <label>Institution ID</label>
-            <input type="text" id="dialogId" />
-            <label>Institution Type</label>
-            <select class="custom-select" id="dialogType" required>
-                <% types.forEach(function(type, index) { %>
-                <option value="<%= type.TIP_UST %>"><%= type.TIP_NAZIV %></option>
-                <% }); %>
-            </select>
-        </form>
-    </div>
-</div>
+<div> Selected institution: <h5 id="selectedInstitution"></h5> </div>
 
-<table class="table">
+<table class="table" id="dataTable">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
@@ -188,6 +46,85 @@ position: relative;" href="/institutionsDocuments">View institution docs</a>
         <% }); %>
     </tbody>
 </table>
+
+<script>
+
+    var id = null;
+    var type = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedInstitution').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[1].innerHTML && type == cells[4].innerHTML) {
+                id = null;
+                document.getElementById('selectedInstitution').innerHTML = "None!";
+            } else {
+                id = cells[1].innerHTML;
+                type = cells[4].innerHTML;
+                document.getElementById('selectedInstitution').innerHTML = cells[3].innerHTML;
+            }
+        }
+    }
+
+    $("#dataTable tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+
+    function employeesByInstitution() {
+        link = "/getAllEmployeesByInstitution/" + window.type + "/" + window.id;
+        if (window.id && window.type) {
+            window.location = link;
+        }
+    }
+
+    function coursesByInstitution() {
+        link = "/getCoursesByInstitutionId/" + window.id + "/" + window.type;
+        if (window.id && window.type) {
+            window.location = link;
+        }
+    }
+
+    function documentsOfEmployment() {
+        link = "/getDocumentOfEmployementByTypeInstVuId/" + window.type + "/" + window.id;
+        if (window.id && window.type) {
+            window.location = link;
+        }
+    }
+
+    function editInstitution() {
+        link = "/editInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + window.id + "/" + window.type;
+        if (window.id && window.type) {
+            window.location = link;
+        }
+    }
+
+    function deleteInstitution() {
+        link = "/deleteInstitutionById/<%= state.DR_IDENTIFIKATOR %>/" + window.id + "/" + window.type;
+        if (window.id && window.type) {
+            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            window.location = link;
+        }
+    }
+
+</script>
+
 <% } %>
 
 <%- include('footer') %>
