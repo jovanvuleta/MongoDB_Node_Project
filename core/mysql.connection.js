@@ -4,10 +4,10 @@ exports.MysqlConnection = function () {
     let dbcon = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'password',
-        database: 'NonDB_schema',
-        insecureAuth: true
+        password: 'root',
+        database: 'mobilnitelefoni'
     });
+
     dbcon.connect((err) => {
         if (!err) {
             console.log('MySQL database is successfully connected!');

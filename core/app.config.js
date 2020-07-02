@@ -8,7 +8,6 @@ exports.AppConfig = function () {
     const express = require('express');
     let app = express();
 
-
     // Require body-parser package in order to encode URL IN jaon format
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
