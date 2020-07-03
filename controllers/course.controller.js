@@ -157,7 +157,7 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
                     states = states.map(state => {
                         return {
                             id:state.DR_IDENTIFIKATOR,
-                            name: state.DDR_NAZIV,
+                            name: state.DR_NAZIV,
                             number_of_institutions: institutions.filter(institution => institution.DR_IDENTIFIKATOR == state.DR_IDENTIFIKATOR).length,
                             institutions: institutions.filter(institution => institution.DR_IDENTIFIKATOR == state.DR_IDENTIFIKATOR)
                             .map(institution => {
