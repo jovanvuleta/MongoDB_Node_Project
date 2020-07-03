@@ -4,6 +4,7 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
     const courseModel = require('../models/mysql/course.model.js').CourseModel(dbcon);
     const institutionModel = require('../models/mysql/institution.model.js').InstitutionModel(dbcon);
     const NeoCourseModel = require('../models/neo4j/course.model.js').CourseModel(neo4j);
+    const StateModel = require('../models/mysql/state.model.js').StateModel(dbcon);
 
     app.get('/getAllCourses', (req, res) => {
         courseModel.allCourses()
@@ -139,53 +140,59 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
 
     app.get('/generateCoursesDocument', (req, res) => {
 
+        const allStates = StateModel.getAllStates();
         const allInstitutions = institutionModel.getAllInstitutions();
         const allCourses = courseModel.allCourses();
 
 
-        Promise.all([allInstitutions, allCourses])
+        Promise.all([allStates,allInstitutions, allCourses])
             .catch((err) => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err,
                     link: '<a href="/getAllCourses"> Go Back</a>'
                 })
             })
-            .then(([institutions, courses]) => {
+            .then(([states,institutions, courses]) => {
                 return new Promise((resolve, reject) => {
-                    institutions = institutions.map(institution => {
+                    states = states.map(state => {
                         return {
-                            id: institution.VU_IDENTIFIKATOR,
-                            name: institution.VU_NAZIV,
-                            number_of_courses: courses.filter(course => institution.VU_IDENTIFIKATOR == course.VU_IDENTIFIKATOR).length,
-                            Courses: courses.filter(course => course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR)
-                                .map(course => {
-                                    return {
-
-                                        name: course.NP_PREDMET,
-                                        fullName: course.NP_NAZIV_PREDMETA
-
-
-
+                            id:state.DR_IDENTIFIKATOR,
+                            name: state.DDR_NAZIV,
+                            number_of_institutions: institutions.filter(institution => institution.DR_IDENTIFIKATOR == state.DR_IDENTIFIKATOR).length,
+                            institutions: institutions.filter(institution => institution.DR_IDENTIFIKATOR == state.DR_IDENTIFIKATOR)
+                            .map(institution => {
+                                return {
+                                    id: institution.VU_IDENTIFIKATOR,
+                                    name: institution.VU_NAZIV,
+                                    courses: courses.filter(course =>course.VU_IDENTIFIKATOR == institution.VU_IDENTIFIKATOR && course.TIP_UST == institution.TIP_UST)
+                                    .map(course=>{
+                                        return{
+                                            id:course.NP_PREDMET,
+                                            courseCode: course.NP_NAZIV_PREDMETA
+                                        }
                                     }
+
+                                    )
+                                }
                                 })
                         }
                     });
 
-                    if (institutions.length == 0) {
-                        reject('No Institutions!');
+                    if (states.length == 0) {
+                        reject('No states!');
                     }
 
                     resolve({
                         created_at: JSON.stringify(new Date()),
-                        numberOfInstitutions: institutions.length,
-                        institutions: institutions
+                        numberOfStates: states.length,
+                        states: states
                     });
                 });
             })
             .catch((err) => {
                 res.render('message', {
                     errorMessage: 'ERROR: ' + err,
-                    link: '<a href="/getAllInstitutions"> Go Back</a>'
+                    link: '<a href="/getAllStates"> Go Back</a>'
                 });
             })
             .then((coursesDocuments) => {
@@ -195,5 +202,6 @@ exports.CourseController = function (app, dbcon, mongo, neo4j) {
                     });
             });
     });
+   
 
 }
