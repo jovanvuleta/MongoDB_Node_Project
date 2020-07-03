@@ -1,0 +1,40 @@
+#add {
+    margin: 5px;
+    color: white;
+}
+
+span {
+    color: rgb(17, 22, 32);
+    text-align: center;
+}
+
+.toggleable-states {
+    display: none;
+}
+
+input[type="checkbox"]:checked+.toggleable-states {
+    display: block;
+}
+
+footer {
+    position: relative;
+    bottom: 10px;
+    width: 100%;
+    height: 50px;
+    margin-top: 30px;
+}
+
+table tr.active {
+    background: rgb(54, 199, 204);
+}
+
+a {
+    margin-top: 5px;
+}
+
+#viz {
+    width: 100%;
+    height: 900px;
+    border: 1px solid lightgray;
+    font: 22pt arial;
+}

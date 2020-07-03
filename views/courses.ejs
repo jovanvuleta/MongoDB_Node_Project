@@ -1,41 +1,120 @@
 <%- include('header') %>
 
 <% if (courses.length === 0) { %>
-    <div class="alert alert-info" role="alert">
-        <p>There are no institutions to show, click <a href="/addCourse">here</a> to add an course.</p>    
-    </div>
+<div class="alert alert-info" role="alert">
+    <p>There are no courses to show, click <a href="/addCourse/<%= vu_id %>/<%= tip_ust %>">here</a> to add an course.
+    </p>
+</div>
 <% } else { %>
-    <br>
-    <a type="button" class="btn btn-primary" href="/addCourse/<%= course.VU_IDENTIFIKATOR %>">Add Course</a>
-    <br><br>
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Institution type</th>
-                <th scope="col">Institution ID</th>
-                <th scope="col">Course Code</th>
-                <th scope="col">Course Version</th>
-                <th scope="col">Course Name</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% courses.forEach(function(course, index) { %>
-            <tr>
-                <td><strong><%= index+1 %></strong></td>
-                <td><%= course.TIP_UST %></td>
-                <td><%= course.VU_IDENTIFIKATOR %></td>
-                <td><%= course.NP_PREDMET %></td>
-                <td><%= course.NP_VERZIJA %></td>
-                <td><%= course.NP_NAZIV_PREDMETA %></td>
-                <td><a type="button" class="btn btn-warning" href="/editInstitutionById/<%= course.VU_IDENTIFIKATOR %>">Edit</a></td>
-                <td><a type="button" class="btn btn-danger" href="/deleteInstitutionById/<%= course.VU_IDENTIFIKATOR %>" onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a></td>
-            </tr>
-            <% }); %>
-        </tbody>
-    </table>
+
+<br>
+<a type="button" class="btn btn-primary" href="/addCourse/<%= vu_id %>/<%= tip_ust %>">Add Course</a>
+<a type="button" class="btn btn-primary" onclick="editCourse()" href="#">Edit Course</a>
+<a type="button" class="btn btn-primary" onclick="deleteCourse()" href="#">Delete Course</a>
+<a type="button" class="btn btn-primary" href="/coursesDocuments">View Course Documents</a>
+<a type="button" class="btn btn-primary" href="/generateCoursesDocument">Generate Course Documents</a>
+<br><br>
+
+
+<div> Selected course: <h5 id="selectedCourse"></h5> </div>
+
+<table class="table" id="dataTable">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Institution type</th>
+            <th scope="col">Institution ID</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Course Version</th>
+            <th scope="col">Course Full Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% courses.forEach(function(course, index) { %>
+        <tr>
+            <td><strong><%= index+1 %></strong></td>
+            <td><%= course.TIP_UST %></td>
+            <td><%= course.VU_IDENTIFIKATOR %></td>
+            <td><%= course.NP_PREDMET %></td>
+            <td><%= course.NP_VERZIJA %></td>
+            <td><%= course.NP_NAZIV_PREDMETA %></td>
+            <!-- <td><a type="button" class="btn btn-warning"
+                    href="/editCourse/<%= course.TIP_UST %>/<%= course.VU_IDENTIFIKATOR %>/<%= course.NP_PREDMET %>/<%= course.NP_VERZIJA %>">Edit</a>
+            </td> 
+            <td><a type="button" class="btn btn-danger" href="/deleteCourse/<%= course.NP_PREDMET%>"
+                    onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a>
+            </td> -->
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+
+<script>
+
+    var id = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedCourse').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[3].innerHTML) {
+                id = null;
+                document.getElementById('selectedCourse').innerHTML = "None!";
+            } else {
+                id = cells[3].innerHTML;
+                document.getElementById('selectedCourse').innerHTML = cells[5].innerHTML;
+            }
+        }
+    }
+
+    $("#dataTable tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+
+    function courseByInstitution() {
+        link = "/getAllCourses/" + window.id + "/<%= course.TIP_UST %>";
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+    function editCourse() {
+        link = "/editCourse/<%= course.TIP_UST %>/<%= course.VU_IDENTIFIKATOR %>/<%= course.NP_PREDMET %>/<%= course.NP_VERZIJA %>" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+    function deleteCourse() {
+        link = "/deleteCourse/" + window.id;
+        if (window.id) {
+            confirm('This will delete the entire institution. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+</script>
+
 <% } %>
 
 <%- include('footer') %>

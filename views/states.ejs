@@ -1,73 +1,111 @@
 <%- include('header') %>
 
 <% if (states.length === 0) { %>
-    <div class="alert alert-info" role="alert">
-        <p>There are no states to show, click <a href="/addState">here</a> to add a new state.</p>    
-    </div>
+<div class="alert alert-info" role="alert">
+    <p>There are no states to show, click <a href="/addState">here</a> to add a new state.</p>
+</div>
 <% } else { %>
-    <br>
-    <a type="button" class="btn btn-primary" href="/addState">Add new state</a>
+<br>
 
-    <script>
-        function institutionsByState() {
-            var id = prompt("Please enter state ID:");
-            link = "/getInstitutionsByStateId/" + id;
-            if (id) {
-                window.location = link;
+<a type="button" class="btn btn-primary" href="/addState">Add new state</a>
+<a type="button" class="btn btn-primary" onclick="institutionsByState()" style="background-color:lightseagreen" href="#">Get institutions by state</a>
+<a type="button" class="btn btn-primary" onClick="editState()" href="#">Edit state</a>
+<a type="button" class="btn btn-primary" onClick="deleteState()" href="#">Delete state</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/generateStatesDocument">Generate
+    state docs</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/statesDocuments">View state docs</a>
+
+<br><br>
+<div> Selected state: <h5 id="selectedState"></h5> </div>
+<br>
+<table class="table" id="dataTable">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">State ID</th>
+            <th scope="col">State Name</th>
+            <th scope="col">Foundation date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% states.forEach(function(state, index) { %>
+        <tr>
+            <td><strong><%= index+1 %></strong></td>
+            <td><%= state.DR_IDENTIFIKATOR %></td>
+            <td><%= state.DR_NAZIV %></td>
+            <td><%= moment(state.DR_DATUM_OSNIVANJA).format('DD/MM/YYYY');%></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<script>
+
+    var id = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedState').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[1].innerHTML) {
+                id = null;
+                document.getElementById('selectedState').innerHTML = "None!";
             } else {
-                window.location = "/getAllStates";
+                id = cells[1].innerHTML;
+                document.getElementById('selectedState').innerHTML = cells[2].innerHTML;
             }
         }
+    }
 
-        function editState() {
-            var id = prompt("Please enter state ID:");
-            link = "/editStateById/" + id;
-            if (id) {
-                window.location = link;
-            } else {
-                window.location = "/getAllStates";
-            }
+    $("#dataTable tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+
+    function institutionsByState() {
+        link = "/getInstitutionsByStateId/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            window.location = "/getAllStates";
         }
+    }
 
-        function deleteState() {
-            var id = prompt("Please enter state ID:");
-            link = "/deleteStateById/" + id;
-            if (id) {
-                confirm('This will delete all institutions of this state, are you sure you want proceed?');
-                window.location = link;
-            } else {
-                window.location = "/getAllStates";
-            }
+    function editState() {
+        link = "/editStateById/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            window.location = "/getAllStates";
         }
-    </script>
+    }
 
-    <a type="button" class="btn btn-primary" onClick="institutionsByState()" href="#">Get institutions by state</a>
-    <a type="button" class="btn btn-primary" onClick="editState()" href="#">Edit state</a>
-    <a type="button" class="btn btn-primary" onClick="deleteState()" href="#">Delete state</a>
-    <a type="button" class="btn btn-primary" href="/generateStatesDocument">Generate state docs</a>
-    <a type="button" class="btn btn-primary" href="/statesDocuments">View state docs</a>
+    function deleteState() {
+        link = "/deleteStateById/" + window.id;
+        if (window.id) {
+            confirm('This will delete all institutions of this state, are you sure you want proceed?');
+            window.location = link;
+        } else {
+            window.location = "/getAllStates";
+        }
+    }
+</script>
 
-    <br><br>
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">State ID</th>
-                <th scope="col">State Name</th>
-                <th scope="col">Foundation date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% states.forEach(function(state, index) { %>
-            <tr>
-                <td><strong><%= index+1 %></strong></td>
-                <td><%= state.DR_IDENTIFIKATOR %></td>
-                <td><%= state.DR_NAZIV %></td>
-                <td><%= moment(state.DR_DATUM_OSNIVANJA).format('DD/MM/YYYY');%></td>
-            </tr>
-            <% }); %>
-        </tbody>
-    </table>
 <% } %>
 
 <%- include('footer') %>

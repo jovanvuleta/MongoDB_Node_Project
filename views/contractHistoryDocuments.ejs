@@ -1,0 +1,35 @@
+<%- include('header') %>
+<table class="table table-hover" style="table-layout: fixed;">
+    <thead class="table-dark">
+        <tr>
+            <th>Contract ID</th>
+            <th>Creation Date</th>
+            <th>Number of Contracts</th>
+            <th>Option</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% contracts.forEach((contract, index) => { %>
+        <tr>
+            <td><%= contract._id  %></td>
+            <td><%= contract.created_at %></td>
+            <td><%= contract.numberOfContracts %></td>
+            <td>
+                <label for="contract-<%= contract._id %>">Show/Hide</label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <input type="checkbox" id="contract-<%= contract._id %>" class="d-none">
+
+                <div class="toggleable-states">
+                    <pre> 
+                        <%- JSON.stringify(contract.contracts, undefined, "\t"); %>
+                    </pre>
+                </div>
+            </td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+<%- include('footer')  %>

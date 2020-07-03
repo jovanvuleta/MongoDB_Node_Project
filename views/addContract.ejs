@@ -1,0 +1,30 @@
+<%- include('header') %>
+
+<% if (contracts.length === 0) { %>
+<form method="post"
+    action="/addContract/<%= first_object.type %>/<%= first_object.emp_vu_id %>/<%= first_object.emp_id %>">
+    <% } else { %>
+    <form method="post"
+        action="/addContract/<%= contract.TIP_UST %>/<%= contract.EMP_VU_IDENTIFIKATOR %>/<%= contract.ZAP_REDNI_BROJ %>">
+        <% } %>
+        <div class="form-group">
+            <label for="contractID">Contract ID</label>
+            <input type="text" class="form-control" id="contractID" name="contractID">
+        </div>
+        <div class="form-group">
+            <label for="contractType">Contract Type </label>
+            <select class="custom-select" id="contractType" name="contractType" required>
+                <option selected disabled value="">Select Contract Type...</option>
+                <% contractTypes.forEach(function(contract, index) { %>
+                <option value="<%= contract.VD_OZNAKA %>"><%= contract.VD_NAZIV %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="contractYear">Contract Year</label>
+            <input type="text" class="form-control" id="contractYear" name="contractYear">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <%- include('footer') %>

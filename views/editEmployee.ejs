@@ -1,5 +1,6 @@
 <%- include('header') %>
 
+<br> <h5>Editing employee: <%= employee.ZAP_PREZIME %> <%= employee.ZAP_IME %> </h5> <br>
 <form method="post"
     action="/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">
     <div class="form-group">

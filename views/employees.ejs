@@ -2,13 +2,33 @@
 
 <% if (employees.length === 0) { %>
 <div class="alert alert-info" role="alert">
-    <p>There are no institutions to show, click <a href="/addEmployee">here</a> to add an institution.</p>
+    <p>There are no employees to show, click <a
+            href="/addEmployee/<%= paramObject.type_inst %>/<%= paramObject.vu_id %>">here</a>
+        to add an
+        employee.</p>
 </div>
 <% } else { %>
+
 <br>
+<a type="button" class="btn btn-primary"
+    href="/addEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>">Add Employee</a>
+<a type="button" class="btn btn-primary" onclick="editEmployee()" href="#">Edit Employee</a>
+<a type="button" class="btn btn-primary" onclick="deleteEmployee()" href="#">Delete
+    Employee</a>
+<a type="button" class="btn btn-primary" onclick="contractByEmployee()" style="background-color:rgb(0, 205, 144)"
+    href="#">Get
+    Contract History</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/generateEmployeeDocuments">Insert
+    Employee
+    Document</a>
+<a type="button" class="btn btn-primary" style="background-color:mediumblue" href="/employeesDocuments">View Employee
+    Documents</a>
 <br><br>
-<a type="button" class="btn btn-primary" href="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>">Add Employee</a>
-<table class="table">
+
+<div> Selected employee: <h5 id="selectedEmployee"></h5> </div>
+<br>
+
+<table class="table" id="dataTable">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
@@ -18,8 +38,9 @@
             <th scope="col">Employee Last Name</th>
             <th scope="col">Employee Middle letter</th>
             <th scope="col">Employee Name</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
+            <!-- <th scope="col">Edit</th> -->
+            <!-- <th scope="col">View Employee Contract History</th> -->
+            <!-- <th scope="col">Delete</th> -->
         </tr>
     </thead>
     <tbody>
@@ -32,17 +53,89 @@
             <td><%= employee.ZAP_PREZIME %></td>
             <td><%= employee.ZAP_SREDNJE_SLOVO %></td>
             <td><%= employee.ZAP_IME %></td>
-            <td><a type="button" class="btn btn-warning"
+            <!-- <td><a type="button" class="btn btn-warning"
                     href="/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">Edit
                 </a>
-            </td>
-            <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= employee.ZAP_REDNI_BROJ %>"
+            </td> -->
+            <!-- <td><a type="button" class="btn btn-warning"
+                    href="/getContractHistoryByEmployeeId/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.ZAP_REDNI_BROJ %>">View
+                    Employee Contract History
+                </a>
+            </td> -->
+            <!-- <td><a type="button" class="btn btn-danger" href="/deleteEmployee/<%= employee.ZAP_REDNI_BROJ %>"
                     onClick="return confirm('This will delete all cities of this state, are you sure you want proceed!');">Delete</a>
-            </td>
+            </td> -->
         </tr>
         <% }); %>
     </tbody>
 </table>
+
+<script>
+    var id = null;
+
+    run();
+    document.getElementById('dataTable').addEventListener("click", run, false);
+    document.getElementById('selectedEmployee').innerHTML = "None!";
+
+    function run() {
+        var t = document.getElementById('dataTable');
+        t.onclick = function(event) {
+            event = event;
+            var target = event.target;
+            while (target && target.nodeName != 'TR') {
+                target = target.parentElement; 
+            }
+
+            var cells = target.cells;
+
+            if (!cells.length || target.parentNode.nodeName == 'THEAD') {
+                return;
+            }
+
+            if (id == cells[3].innerHTML) {
+                id = null;
+                document.getElementById('selectedEmployee').innerHTML = "None!";
+            } else {
+                id = cells[3].innerHTML;
+                document.getElementById('selectedEmployee').innerHTML = cells[6].innerHTML + " " + cells[5].innerHTML + " " + cells[4].innerHTML;
+            }
+        }
+    }
+    
+    $("table tr").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).toggleClass('active')
+    });
+
+    function contractByEmployee() {
+        link = "/getContractHistoryByEmployeeId/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+
+    function editEmployee() {
+        link = "/editEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>/" + window.id;
+        if (window.id) {
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+    
+    function deleteEmployee() {
+        link = "/deleteEmployee/" + window.id;
+        if (window.id) {
+            confirm('This will delete the employee. Are you sure you want proceed?');
+            window.location = link;
+        } else {
+            return false;
+        }
+    }
+</script>
+
 <% } %>
 
 <%- include('footer') %>

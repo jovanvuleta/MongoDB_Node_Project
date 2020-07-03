@@ -1,0 +1,31 @@
+<%- include('header') %>
+
+
+<br> <h5>Adding populated place</h5> <br>
+<form method="post" action="/addPopulatedPlace">
+    <div class="form-group">
+        <label for="stateId">State ID</label>
+        <select class="custom-select" id="stateId" name="stateId" required>
+            <option selected disabled value="">Select state ID...</option>
+            <!--Display all states as a dropdown list so the user does not enter a state ID that does bit exist-->
+            <% states.forEach(function(state, index) { %>
+            <option value="<%= state.DR_IDENTIFIKATOR %>"><%= state.DR_IDENTIFIKATOR %></option>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="populatedPlaceID">ID</label>
+        <input type="text" class="form-control" id="id" name="id">
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="form-group">
+        <label for="pttCode">PTT Code</label>
+        <input type="text" class="form-control" id="pttCode" name="pttCode">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<%- include('footer') %>

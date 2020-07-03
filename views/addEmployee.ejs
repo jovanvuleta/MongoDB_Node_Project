@@ -1,23 +1,29 @@
 <%- include('header') %>
+<% if(employees.length === 0) { %>
 
-<form method="post" action="/addEmployee/<%= employee.VU_IDENTIFIKATOR %>/<%= employee.TIP_UST %>/">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Employee ID</label>
-        <input type="text" class="form-control" id="employeeId" name="employeeId">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Employee surname </label>
-        <input type="text" class="form-control" id="employeeName" name="employeeSurname">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Employee middle letter</label>
-        <input type="text" class="form-control" id="employeeMidLetter" name="employeeMidLetter">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Employee name</label>
-        <input type="text" class="form-control" id="employeeName" name="employeeName">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
 
-<%- include('footer') %>
+<br> <h5>Adding employee to institution  </h5> <br>
+<form method="post" action="/addEmployee/<%= paramObject.type_inst %>/<%= paramObject.vu_id %>">
+    <% } else{ %>
+    <form method="post" action="/addEmployee/<%= employee.TIP_UST %>/<%= employee.VU_IDENTIFIKATOR %>">
+        <% } %>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Employee ID</label>
+            <input type="text" class="form-control" id="employeeId" name="employeeId">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Employee surname </label>
+            <input type="text" class="form-control" id="employeeName" name="employeeSurname">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Employee middle letter</label>
+            <input type="text" class="form-control" id="employeeMidLetter" name="employeeMidLetter">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Employee name</label>
+            <input type="text" class="form-control" id="employeeName" name="employeeName">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <%- include('footer') %>

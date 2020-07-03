@@ -1,0 +1,52 @@
+<%- include('header') %>
+
+<script src="https://cdn.neo4jlabs.com/neovis.js/v1.4.0/neovis.js"></script>
+<script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+
+<script type="text/javascript">
+
+    var viz;
+
+    function draw() {
+        var config = {
+            container_id: "viz",
+            server_url: "neo4j://localhost:7687",
+            server_user: "neo4j",
+            server_password: "root",
+            labels: {
+                "STATE": {
+                    "caption": "DR_NAZIV"
+                },
+                "HIGH_EDUCATION_INSTITUTION": {
+                    "caption": "VU_NAZIV"
+                },
+                "Employee": {
+                    "caption": "ZAP_IME"
+                },
+                "CONTRACT_HISTORY": {
+                    "caption": "UG_BROJ_UGOVORA"
+                },
+                "DOCCUMENTS_OF_EMPLOYMENT": {
+                    "caption": "UG_GODINA"
+                },
+                "CITY": {
+                    "caption": "NM_NAZIV"
+                },
+                "COURSE": {
+                    "caption": "NP_NAZIV_PREDMETA"
+                }
+            },
+            initial_cypher:
+                "MATCH (n) OPTIONAL MATCH (n)-[r]-() RETURN n, r;"
+        };
+
+        viz = new NeoVis.default(config);
+        viz.render();
+    }
+</script>
+
+<body onload="draw()">
+    <div id="viz"></div>
+</body>
+
+<%- include('footer') %>

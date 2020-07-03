@@ -1,19 +1,21 @@
 <%- include('header') %>
 
-    <form method="post" action="/editStateById/<%= state.DR_IDENTIFIKATOR %>">
-        <div class="form-group">
-            <label for="exampleInputEmail1">State ID</label>
-            <input type="text" class="form-control" id="stateId" name="stateId" value="<%= state.DR_IDENTIFIKATOR %>">
-        </div>
-        <div class="form-group">
-            <label for="exampleInputPassword1">State name</label>
-            <input type="text" class="form-control" id="stateName" name="stateName" value="<%= state.DR_NAZIV %>">
-        </div>
-        <div class="md-form">
-            <label for="date">State foundation date</label>
-            <input type="text" id="date" name="date" class="form-control datepicker", value="<%= moment(state.DR_DATUM_OSNIVANJA).format('YYYY-MM-DD');%>">
-        </div> <br>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<br> <h5>Editing state: <%= state.DR_NAZIV %></h5> <br>
+<form method="post" action="/editStateById/<%= state.DR_IDENTIFIKATOR %>">
+    <div class="form-group">
+        <label for="exampleInputEmail1">State ID</label>
+        <input type="text" class="form-control" id="stateId" name="stateId" value="<%= state.DR_IDENTIFIKATOR %>">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">State name</label>
+        <input type="text" class="form-control" id="stateName" name="stateName" value="<%= state.DR_NAZIV %>">
+    </div>
+    <div class="md-form">
+        <label for="date">State foundation date</label>
+        <input type="text" id="date" name="date" class="form-control datepicker"
+            value="<%= moment(state.DR_DATUM_OSNIVANJA).format('YYYY-MM-DD');%>">
+    </div> <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 
 <%- include('footer') %>
